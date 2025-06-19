@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compte rendu projet</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<header>
+  <img src="logo.png" class="zoom" alt="Logo">
+  <div class="seco">
+    <a href="logout.php" class="bindex">Se déconnecter</a>
+  </div>
+  <div class="haut">
+    <h1>Compte-rendu projet</h1>
+    <p>QUENET Noa - LAFILOLIE Lilian - HADROT Melchior - SALIÈGE Tom - ASSSAILLY Allan</p>
+  </div>
+</header>
+
+<body>
+<nav>
+    <section class="navigation">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="navigation">
+            <nav id="navmenu">
+              <ul>
+                <li class="active"><a href="dashboard.php">ACCUEIL</a></li>
+                <li><a href="client.html">CLIENT</a></li>
+                <li><a href="#">RAPPORT ▼</a>
+                  <ul>
+                    <li><a href="infra.html">INFRASTRUCTURE</a></li>
+                    <li><a href="switch.html">SWITCH</a></li>
+                    <li><a href="routeur.html">ROUTEUR</a></li>
+                    <li><a href="#">SERVEUR LINUX ▶</a>
+                      <ul>
+                        <li><a href="dhcp.html">DHCP</a></li>
+                        <li><a href="apache.html">APACHE</a></li>
+                        <li><a href="ssh.html">SSH</a></li>
+                        <li><a href="rsync.html">RSYNC</a></li>
+                        <li><a href="swap.html">MEMOIRE SWAP</a></li>
+                        <li><a href="ftp.html">FTP</a></li>
+                        <li><a href="mail.html">MAIL</a></li>
+                        <li><a href="fail.html">FAIL2BAN</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">SERVEUR WINDOWS ▶</a>
+                      <ul>
+                        <li><a href="dns.html">DNS</a></li>
+                        <li><a href="ad.html">USERS / GROUPS</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="wifi.html">AP WIFI</a></li>
+                    <li><a href="#">TELEPHONIE ▶</a>
+                      <ul>
+                        <li><a href="call.html">CALL SERVER</a></li>
+                        <li><a href="tel.html">TELEPHONES</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="pf.html">PARE-FEU</a></li>                    
+                  </ul>
+                </li>
+                <li><a href="#">ATTAQUES / MESURES ▼</a>
+                  <ul>
+                    <li><a href="dhcpss.html">DHCP</a></li>
+                    <li><a href="public.html">VLAN PUBLIC</a></li>
+                    <li><a href="parefeu.html">PARE-FEU</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">LOGS ▼</a>
+                  <ul>
+                    <li><a href="config.html">CONFIGURATION</a></li>
+                    <li><a href="">RAPPORT DE LOGS ▶</a>
+		       <ul>
+			  <li><a href="rl.php">LOG DHCP</a></li>
+			  <li><a href="rapportlog.php">DETECTION</a></li>
+		       </ul>
+		    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</nav>
+
+  <main>
+    <section class="content">
+      <h2>Configuration de RSYNC, CRON et des clés privées/publiques</h2>
+    </section>
+    <br>
+    <section class="content">
+      <h3>Configuration de RSYNC</h3>
+      <br>
+      <p>RSYN est un outil de synchronisation de fichiers très utilisé sous Linux. Il permet de copier, sauvegarder ou synchroniser des fichiers et des dossiers entre deux emplacements, que ce soit en local ou à travers un réseau.</p>
+      <br>
+      <p>Commande d’installation : <code>apt-get install rsync</code></p>
+      <p>On commence par configurer le serveur RSYNC.</p>
+      <p>Dans <code>/etc/default/rsync</code>, on active le service en remplaçant <code>false</code> par <code>true</code> :</p>
+      <p><code>RSYNC_ENABLE=true</code></p>
+      <p>Lors de la configuration, les commandes <code>adduser</code> et <code>useradd</code> n’étaient pas reconnues. On a donc utilisé :</p>
+      <p><code>export PATH=$PATH:/usr/sbin</code></p>
+      <p>Cette commande ajoute le chemin des exécutables administratifs à la variable PATH.</p>
+    </section>
+    <br>
+    <section class="content">
+      <h3>Configuration de CRON</h3>
+      <br>
+      <p>CRON permet de planifier l’exécution automatique de tâches à des moments précis ou à intervalles réguliers.</p>
+      <br>
+      <p>Commande d’installation : <code>apt install cron</code></p>
+      <p>On configure <code>crontab</code> pour sauvegarder les dossiers tous les soirs à 17h20 :</p>
+      
+      <p>Utilisateur <strong>rh</strong> :</p>
+      <p><code>20 17 * * * /usr/bin/rsync -avz /home/rh patate@192.168.0.100:/sauvegarde/ >> /var/log/rsync-backup.log 2>&1</code></p>
+      
+      <p>Utilisateur <strong>patate</strong> :</p>
+      <p><code>20 17 * * * /usr/bin/rsync -avz /home/patate patate@192.168.0.100:/sauvegarde/ >> /var/log/rsync-backup.log 2>&1</code></p>
+      
+      <p>Détails :</p>
+      <ul>
+        <li><code>20 17 * * *</code> : tous les jours à 17h20</li>
+        <li><code>-a</code> : archive (conserve les attributs)</li>
+        <li><code>-v</code> : verbose (détails du transfert)</li>
+        <li><code>-z</code> : compression</li>
+        <li><code>/home/rh</code> : dossier à sauvegarder</li>
+        <li><code>patate@192.168.0.100:/sauvegarde/</code> : destination distante via SSH</li>
+        <li><code>> /var/log/rsync-backup.log 2>&1</code> : redirection des logs et erreurs</li>
+      </ul>
+    </section>
+    <br>
+    <section class="content">
+      <h3>Utilisation des clés privées et publiques</h3>
+      <br>
+      <p>CRON ne dispose pas d’interface pour entrer un mot de passe SSH, donc on utilise une authentification par clé.</p>
+      <br>
+      <p>Génération des clés :</p>
+      <p><code>ssh-keygen -t rsa</code></p>
+      <p>La clé privée est stockée dans <code>~/.ssh/id_rsa</code>, la publique dans <code>~/.ssh/id_rsa.pub</code>.</p>
+      <p>On ne définit pas de paraphrase pour permettre l’automatisation.</p>
+      <p>Ajout de la clé publique sur le serveur distant :</p>
+      <p><code>ssh-copy-id patate@192.168.0.100</code></p>
+      <p>Le serveur vérifie que la clé publique est autorisée dans <code>~/.ssh/authorized_keys</code>.</p>
+      <p>Protection des clés :</p>
+      <p><code>chmod 600 ~/.ssh/id_rsa; chmod 700 ~/.ssh</code></p>
+      <p>Maintenant, CRON peut exécuter RSYNC sans intervention manuelle.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - Réseaux & CO. Tous droits réservés.</p>
+  </footer>
+</body>
+</html>

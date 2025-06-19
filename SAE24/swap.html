@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compte rendu projet</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<header>
+  <img src="logo.png" class="zoom">
+  <div class="seco">
+    <a href="logout.php" class="bindex">Se déconnecter</a>
+  </div>
+  <div class="haut">
+    <h1>Compte-rendu projet</h1>
+    <p>QUENET Noa - LAFILOLIE Lilian - HADROT Melchior - SALIÈGE Tom - ASSSAILLY Allan</p>
+  </div>
+</header>
+
+<body>
+<nav>
+    <section class="navigation">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="navigation">
+            <nav id="navmenu">
+              <ul>
+                <li class="active"><a href="dashboard.php">ACCUEIL</a></li>
+                <li><a href="client.html">CLIENT</a></li>
+                <li><a href="#">RAPPORT ▼</a>
+                  <ul>
+                    <li><a href="infra.html">INFRASTRUCTURE</a></li>
+                    <li><a href="switch.html">SWITCH</a></li>
+                    <li><a href="routeur.html">ROUTEUR</a></li>
+                    <li><a href="#">SERVEUR LINUX ▶</a>
+                      <ul>
+                        <li><a href="dhcp.html">DHCP</a></li>
+                        <li><a href="apache.html">APACHE</a></li>
+                        <li><a href="ssh.html">SSH</a></li>
+                        <li><a href="rsync.html">RSYNC</a></li>
+                        <li><a href="swap.html">MEMOIRE SWAP</a></li>
+                        <li><a href="ftp.html">FTP</a></li>
+                        <li><a href="mail.html">MAIL</a></li>
+                        <li><a href="fail.html">FAIL2BAN</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">SERVEUR WINDOWS ▶</a>
+                      <ul>
+                        <li><a href="dns.html">DNS</a></li>
+                        <li><a href="ad.html">USERS / GROUPS</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="wifi.html">AP WIFI</a></li>
+                    <li><a href="#">TELEPHONIE ▶</a>
+                      <ul>
+                        <li><a href="call.html">CALL SERVER</a></li>
+                        <li><a href="tel.html">TELEPHONES</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="pf.html">PARE-FEU</a></li>                    
+                  </ul>
+                </li>
+                <li><a href="#">ATTAQUES / MESURES ▼</a>
+                  <ul>
+                    <li><a href="dhcpss.html">DHCP</a></li>
+                    <li><a href="public.html">VLAN PUBLIC</a></li>
+                    <li><a href="parefeu.html">PARE-FEU</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">LOGS ▼</a>
+                  <ul>
+                    <li><a href="config.html">CONFIGURATION</a></li>
+                    <li><a href="">RAPPORT DE LOGS ▶</a>
+		       <ul>
+			  <li><a href="rl.php">LOG DHCP</a></li>
+			  <li><a href="rapportlog.php">DETECTION</a></li>
+		       </ul>
+		    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</nav>
+
+  <main>
+    <section class="content">
+      <h2>Ajout d’un espace swap sur le serveur Debian</h2>
+    </section>
+    <br>
+    <section class="content">
+      <h3>Pourquoi avons-nous ajouté du swap ?</h3>
+      <p>Le serveur Debian dispose de seulement 4 Go de RAM DDR3, ce qui peut s’avérer insuffisant lorsqu’il exécute plusieurs services simultanément, comme le serveur FTP pour les transferts de fichiers, Apache2 pour le site web ou encore le serveur DHCP.</p>
+      <p>Dans ce contexte, l’ajout d’un fichier swap est essentiel. Le swap, ou mémoire virtuelle, agit comme une extension de la RAM sur le disque dur. Il permet de déplacer temporairement certaines données peu utilisées de la RAM vers le disque, libérant ainsi de l’espace pour les processus actifs.</p>
+      <p>Cela réduit fortement les risques de saturation de la mémoire, donc les ralentissements ou plantages du système, tout en assurant une meilleure stabilité du serveur.</p>
+    </section>
+    <br>
+    <section class="content">
+      <h3>Commandes utilisées</h3>
+      <p>Nous avons créé un fichier swap de 8 Go sur la partition <code>sda3</code> avec les commandes suivantes :</p>
+      <p><code>sudo fallocate -l 8G /swapfile</code></p>
+      <p><code>sudo chmod 600 /swapfile</code></p>
+      <p><code>sudo mkswap /swapfile</code></p>
+      <p><code>sudo swapon /swapfile</code></p>
+      <p><code>echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab</code></p>
+      <br>
+      <p>Pour que le système utilise ce swap de manière plus proactive, nous avons défini la valeur de swappiness à 70 :</p>
+      <p><code>sudo sysctl vm.swappiness=70</code></p>
+      <p><code>echo 'vm.swappiness=70' | sudo tee -a /etc/sysctl.conf</code></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - Réseaux & CO. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

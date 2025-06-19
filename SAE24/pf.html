@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compte rendu projet</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header>
+    <img src="logo.png" class="zoom" alt="Logo" />
+    <div class="seco">
+      <a href="logout.php" class="bindex">Se déconnecter</a>
+    </div>
+    <div class="haut">
+      <h1>Compte-rendu projet</h1>
+      <p>QUENET Noa - LAFILOLIE Lilian - HADROT Melchior - SALIÈGE Tom - ASSSAILLY Allan</p>
+    </div>
+  </header>
+
+<nav>
+    <section class="navigation">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="navigation">
+            <nav id="navmenu">
+              <ul>
+                <li class="active"><a href="dashboard.php">ACCUEIL</a></li>
+                <li><a href="client.html">CLIENT</a></li>
+                <li><a href="#">RAPPORT ▼</a>
+                  <ul>
+                    <li><a href="infra.html">INFRASTRUCTURE</a></li>
+                    <li><a href="switch.html">SWITCH</a></li>
+                    <li><a href="routeur.html">ROUTEUR</a></li>
+                    <li><a href="#">SERVEUR LINUX ▶</a>
+                      <ul>
+                        <li><a href="dhcp.html">DHCP</a></li>
+                        <li><a href="apache.html">APACHE</a></li>
+                        <li><a href="ssh.html">SSH</a></li>
+                        <li><a href="rsync.html">RSYNC</a></li>
+                        <li><a href="swap.html">MEMOIRE SWAP</a></li>
+                        <li><a href="ftp.html">FTP</a></li>
+                        <li><a href="mail.html">MAIL</a></li>
+                        <li><a href="fail.html">FAIL2BAN</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">SERVEUR WINDOWS ▶</a>
+                      <ul>
+                        <li><a href="dns.html">DNS</a></li>
+                        <li><a href="ad.html">USERS / GROUPS</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="wifi.html">AP WIFI</a></li>
+                    <li><a href="#">TELEPHONIE ▶</a>
+                      <ul>
+                        <li><a href="call.html">CALL SERVER</a></li>
+                        <li><a href="tel.html">TELEPHONES</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="pf.html">PARE-FEU</a></li>                    
+                  </ul>
+                </li>
+                <li><a href="#">ATTAQUES / MESURES ▼</a>
+                  <ul>
+                    <li><a href="dhcpss.html">DHCP</a></li>
+                    <li><a href="public.html">VLAN PUBLIC</a></li>
+                    <li><a href="parefeu.html">PARE-FEU</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">LOGS ▼</a>
+                  <ul>
+                    <li><a href="config.html">CONFIGURATION</a></li>
+                    <li><a href="">RAPPORT DE LOGS ▶</a>
+		       <ul>
+			  <li><a href="rl.php">LOG DHCP</a></li>
+			  <li><a href="rapportlog.php">DETECTION</a></li>
+		       </ul>
+		    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</nav>
+
+<main>
+  <section class="content">
+    <h2>Configuration du pare-feu</h2>
+  </section>
+  <br>
+  <section class="content">
+    <h3>1re étape : connexion à l’interface</h3>
+    <br>
+    <ul>
+      <li>Brancher un câble RJ45 entre un PC et un port LAN du switch</li>
+      <li>Mettre l’IP du PC en 10.0.0.1/8 </li>
+      <li>Dans un navigateur, saisir : https://10.0.0.254/admin</li>
+      <li>Identifiant : admin</li>
+      <li>Mot de passe : admin</li>
+    </ul>
+  </section>
+  <br>
+  <section class="content">
+    <h3>2e étape : configuration de base</h3>
+    <br>
+    <p>Passer en mode lecture/écriture :</p>
+    <img src="pf1.png" alt="Lecture/écriture">
+    <p>Attribuer un nom au pare-feu et changer la langue :</p>
+    <img src="pf2.png" alt="Nom et langue">
+    <p>Modifier les paramètres d'heure dans CONFIGURATION ⇒ SYSTÈME ⇒ CONFIGURATION</p>
+    <img src="pf3.png" alt="Paramètres d'heure">
+  </section>
+  <br>
+  <section class="content">
+    <h3>3e étape : configuration des paramètres réseau</h3>
+    <br>
+    <p>Passer les interfaces en statique et attribuer une IP à chaque interface :</p>
+    <p>Dans CONFIGURATION ⇒ RÉSEAU ⇒ INTERFACES</p>
+    <p>Pour l’interface OUT (connectée au réseau de la salle) :</p>
+    <img src="pf4.png" alt="Interface OUT 1">
+    <img src="pf5.png" alt="Interface OUT 2">
+    <br>
+    <p>Pour l’interface IN (connectée au routeur de notre réseau local) :</p>
+    <img src="pf6.png" alt="Interface IN">
+  </section>
+  <br>
+  <section class="content">
+    <h3>4e étape : configuration du NAT</h3>
+    <br>
+    <p>Création des objets dans : CONFIGURATION ⇒ OBJETS RÉSEAU</p>
+    <p>Ajouter une machine pour l’interface OUT :</p>
+    <img src="pf7.png" alt="Objet OUT">
+    <br>
+    <p>Ajouter un objet réseau représentant le réseau local :</p>
+    <img src="pf8.png" alt="Objet réseau local">
+    <br>
+    <p>Ajout des règles NAT :</p>
+    <img src="pf9.png" alt="Règles NAT">
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2025 - Réseaux & CO. Tous droits réservés.</p>
+</footer>
+
+</body>
+</html>
