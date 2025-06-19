@@ -394,6 +394,10 @@
             <input type="checkbox" class="char-option" value="$" id="dollar">
             <label for="dollar">$ (dollar)</label>
           </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="remove-emojis" checked>
+            <label for="remove-emojis">🫥 Supprimer les emojis</label>
+          </div>
         </div>
       </div>
 
@@ -424,24 +428,30 @@
 
     function updateOutput() {
       let text = input.value;
-      
-      // Handle triple dash removal
+
+      // Supprimer les groupes de 3 tirets ou plus
       if (tripleDash.checked) {
         text = text.replace(/-{3,}/g, '');
       }
-      
-      // Handle individual character removal
+
+      // Supprimer les caractères simples cochés
       const selectedChars = Array.from(checkboxes)
         .filter(cb => cb.checked)
         .map(cb => cb.value)
         .join('');
-      
+
       if (selectedChars.length > 0) {
         const escapedChars = selectedChars.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
         const regex = new RegExp(`[${escapedChars}]`, 'g');
         text = text.replace(regex, '');
       }
-      
+
+      // Supprimer les emojis si l'option est cochée
+      const removeEmojis = document.getElementById('remove-emojis');
+      if (removeEmojis.checked) {
+        text = text.replace(/[\p{Extended_Pictographic}]/gu, '');
+      }
+
       output.value = text;
     }
 
