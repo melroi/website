@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Compte rendu projet</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<header>
+  <img src="logo.png" class="zoom" alt="Logo" />
+  <div class="seco">
+    <a href="logout.php" class="bindex">Se déconnecter</a>
+  </div>
+  <div class="haut">
+    <h1>Compte-rendu projet</h1>
+    <p>QUENET Noa - LAFILOLIE Lilian - HADROT Melchior - SALIÈGE Tom - ASSSAILLY Allan</p>
+  </div>
+</header>
+
+<body>
+<nav>
+    <section class="navigation">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="navigation">
+            <nav id="navmenu">
+              <ul>
+                <li class="active"><a href="dashboard.php">ACCUEIL</a></li>
+                <li><a href="client.html">CLIENT</a></li>
+                <li><a href="#">RAPPORT ▼</a>
+                  <ul>
+                    <li><a href="infra.html">INFRASTRUCTURE</a></li>
+                    <li><a href="switch.html">SWITCH</a></li>
+                    <li><a href="routeur.html">ROUTEUR</a></li>
+                    <li><a href="#">SERVEUR LINUX ▶</a>
+                      <ul>
+                        <li><a href="dhcp.html">DHCP</a></li>
+                        <li><a href="apache.html">APACHE</a></li>
+                        <li><a href="ssh.html">SSH</a></li>
+                        <li><a href="rsync.html">RSYNC</a></li>
+                        <li><a href="swap.html">MEMOIRE SWAP</a></li>
+                        <li><a href="ftp.html">FTP</a></li>
+                        <li><a href="mail.html">MAIL</a></li>
+                        <li><a href="fail.html">FAIL2BAN</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">SERVEUR WINDOWS ▶</a>
+                      <ul>
+                        <li><a href="dns.html">DNS</a></li>
+                        <li><a href="ad.html">USERS / GROUPS</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="wifi.html">AP WIFI</a></li>
+                    <li><a href="#">TELEPHONIE ▶</a>
+                      <ul>
+                        <li><a href="call.html">CALL SERVER</a></li>
+                        <li><a href="tel.html">TELEPHONES</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="pf.html">PARE-FEU</a></li>                    
+                  </ul>
+                </li>
+                <li><a href="#">ATTAQUES / MESURES ▼</a>
+                  <ul>
+                    <li><a href="dhcpss.html">DHCP</a></li>
+                    <li><a href="public.html">VLAN PUBLIC</a></li>
+                    <li><a href="parefeu.html">PARE-FEU</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">LOGS ▼</a>
+                  <ul>
+                    <li><a href="config.html">CONFIGURATION</a></li>
+                    <li><a href="">RAPPORT DE LOGS ▶</a>
+		       <ul>
+			  <li><a href="rl.php">LOG DHCP</a></li>
+			  <li><a href="rapportlog.php">DETECTION</a></li>
+		       </ul>
+		    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</nav>
+  <main>
+    <section class="content">
+      <h2>Configuration du Point d’Accès WiFi D-Link DAP-1360</h2>
+    </section>
+    <br />
+    <section class="content">
+      <h3>1. Connexion initiale</h3>
+      <p>Réinitialiser le point d’accès WiFi en maintenant le bouton reset 10 à 15 secondes.</p>
+      <p>Brancher le DAP-1360 à une prise électrique et relier un câble Ethernet entre un PC et le port LAN du point d’accès.</p>
+      <p>Ouvrir un navigateur et accéder à l’interface via l’adresse :</p>
+      <p><code>http://192.168.0.50</code></p>
+      <p>Choisir <strong>Access Point</strong> comme mode d’opération si ce n’est pas déjà sélectionné.</p>
+      <p>Cliquer sur <strong>Manual Wireless Network Setup</strong> pour une configuration avancée.</p>
+      <img src="wifi.png" alt="Interface configuration WiFi" />
+    </section>
+    <br />
+    <section class="content">
+      <h3>2. Paramétrage IP</h3>
+      <p>Pour le paramétrage IP, il faut suivre les captures d'écran :</p>
+      <img src="wifi2.png" alt="Paramétrage IP" />
+    </section>
+    <br />
+    <section class="content">
+      <h3>3. Paramétrage sécurité</h3>
+      <p>Pour le paramétrage sécurité, il faut aller dans l'onglet :</p>
+      <p><strong>ADVANCED &rarr; ADVANCED WIRELESS</strong></p>
+      <img src="wifi3.png" alt="Paramétrage sécurité" />
+    </section>
+    <br />
+    <section class="content">
+      <h3>Finalisation</h3>
+      <p>Sauvegarder la configuration.</p>
+      <p>Redémarrer l’appareil.</p>
+      <p>Reconnecter le point d’accès au réseau via un port du switch appartenant au bon VLAN.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - Réseaux & CO. Tous droits réservés.</p>
+  </footer>
+</body>
+</html>
