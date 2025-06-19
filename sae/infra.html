@@ -20,7 +20,7 @@
   </header>
   
 <body>
-<nav>
+  <nav>
     <section class="navigation">
     <div class="container">
       <div class="row">
@@ -44,7 +44,6 @@
                         <li><a href="swap.html">MEMOIRE SWAP</a></li>
                         <li><a href="ftp.html">FTP</a></li>
                         <li><a href="mail.html">MAIL</a></li>
-                        <li><a href="fail.html">FAIL2BAN</a></li>
                       </ul>
                     </li>
                     <li><a href="#">SERVEUR WINDOWS ▶</a>
@@ -73,12 +72,7 @@
                 <li><a href="#">LOGS ▼</a>
                   <ul>
                     <li><a href="config.html">CONFIGURATION</a></li>
-                    <li><a href="">RAPPORT DE LOGS ▶</a>
-		       <ul>
-			  <li><a href="rl.php">LOG DHCP</a></li>
-			  <li><a href="rapportlog.php">DETECTION</a></li>
-		       </ul>
-		    </li>
+                    <li><a href="rapportlog.php">RAPPORT DE LOGS</a></li>
                   </ul>
                 </li>
               </ul>
@@ -109,6 +103,182 @@
       </ul>
     </section>
   </main>
+
+  <main>
+  <section class="content">
+  <h2>Installation Windows 11 (Client)</h2>
+  <ol>
+    <li>Démarrage sur la clé USB :
+      <ul>
+        <li>Allumer le PC.</li>
+        <li>Appuyer plusieurs fois sur F12 (ou F10/ESC selon la carte mère).</li>
+        <li>Sélectionner la clé USB avec mention UEFI puis appuyer sur Entrée.</li>
+      </ul>
+    </li>
+    <li>Écran d’installation Windows :
+      <ul>
+        <li>Choisir la langue puis cliquer sur Suivant.</li>
+        <li>Cliquer sur Installer maintenant.</li>
+        <li>Si demandé, cliquer sur "Je n'ai pas de clé de produit".</li>
+        <li>Choisir Windows 11 Pro.</li>
+        <li>Accepter les termes et cliquer sur Suivant.</li>
+      </ul>
+    </li>
+    <li>Erreur GPT ("Windows ne peut pas être installé…") :
+      <ul>
+        <li>Appuyer sur Shift + F10 pour ouvrir l’invite de commande.</li>
+        <li>Taper : diskpart → list disk → select disk 0 → clean → convert gpt → exit.</li>
+      </ul>
+    </li>
+    <li>Création de la partition :
+      <ul>
+        <li>Cliquer sur le disque vide, Nouveau → Appliquer → OK.</li>
+        <li>Sélectionner la partition principale la plus grande et cliquer sur Suivant.</li>
+      </ul>
+    </li>
+    <li>Installation automatique : Laisser Windows copier les fichiers (5-15 min).</li>
+    <li>Réglage du boot au redémarrage :
+      <ul>
+        <li>Appuyer sur F12 ou F10, Boot Settings, Windows Boot Manager en priorité, sauvegarder (F10).</li>
+      </ul>
+    </li>
+    <li>Bypass NRO / Réseau :
+      <ul>
+        <li>Appuyer Shift + F10, taper oobe\bypassnro, redémarrage automatique.</li>
+        <li>Cliquer sur “Je n’ai pas Internet” → Continuer avec configuration limitée.</li>
+      </ul>
+    </li>
+    <li>Création de l’utilisateur : client1, mot de passe simple, questions sécurité aléatoires.</li>
+  </ol>
+</section>
+</main>
+
+<main>
+<section class="content">
+  <h2>Installation Windows Server 2022</h2>
+  <ol>
+    <li>Boot sur la clé USB :
+      <ul>
+        <li>Redémarrer le PC.</li>
+        <li>Appuyer sur F12 ou F10.</li>
+        <li>Sélectionner UEFI : clé USB puis appuyer sur Entrée.</li>
+      </ul>
+    </li>
+    <li>Démarrage de l’installation :
+      <ul>
+        <li>Langue / clavier → Suivant.</li>
+        <li>Cliquer sur Installer maintenant.</li>
+        <li>Choisir Windows Server 2022 Standard (expérience utilisateur).</li>
+        <li>Pas de clé → Suivant → accepter conditions.</li>
+        <li>Sélectionner Installation personnalisée.</li>
+      </ul>
+    </li>
+    <li>Partition (GPT recommandé) :
+      <ul>
+        <li>Cliquer sur la partition.</li>
+        <li>Nettoyer avec Shift + F10 → diskpart → clean → convert gpt.</li>
+        <li>Cliquer sur Suivant.</li>
+      </ul>
+    </li>
+    <li>Installation automatique, redémarrage automatique après installation.</li>
+    <li>Mot de passe administrateur : définir et confirmer un mot de passe sécurisé.</li>
+    <li>Configuration IP :
+      <ul>
+        <li>Panneau de configuration → Réseau → Modifier adapteur.</li>
+        <li>Clic droit Ethernet → Propriétés → IPv4 → Propriétés.</li>
+        <li>IP : 192.168.0.200, Masque : 255.255.255.0, Passerelle : 192.168.0.1, DNS : 192.168.117.181.</li>
+      </ul>
+    </li>
+    <li>Installer rôles : Active Directory, DHCP, DNS, Web Server (IIS).</li>
+    <li>Boot Manager : priorité Windows Boot Manager (F10/F12).</li>
+  </ol>
+</section>
+</main>
+
+
+<main><section class="content">
+  <h2>Installation de Debian 12 - Guide détaillé</h2>
+  <ol>
+    <li>
+      Démarrage sur la clé USB :<br>
+      Allumez le PC puis appuyez immédiatement et plusieurs fois sur F12 ou F10 pour accéder au menu de démarrage.<br>
+      Dans le menu qui s'affiche, sélectionnez l'entrée UEFI : [Nom de votre clé USB] puis appuyez sur Entrée.<br>
+      Choisissez ensuite l'option Install Graphique dans le menu Debian.
+    </li>
+
+    <li>
+      Configuration de base :<br>
+      Sélectionnez :
+      <ul>
+        <li>Langue : Français</li>
+        <li>Pays : France</li>
+        <li>Clavier : Français</li>
+      </ul>
+    </li>
+
+    <li>
+      Nom de la machine et domaine :<br>
+      <ul>
+        <li>Nom d’hôte (hostname) : srv-debian</li>
+        <li>Domaine : garage.local</li>
+      </ul>
+    </li>
+
+    <li>
+      Utilisateurs et mots de passe :<br>
+      <ul>
+        <li>Mot de passe root (administrateur complet)</li>
+        <li>Créer un utilisateur classique, par exemple : admin</li>
+        <li>Définir un mot de passe fort pour cet utilisateur</li>
+      </ul>
+    </li>
+
+    <li>
+      Partitionnement :<br>
+      Choisissez Assisté - utiliser un disque entier avec schéma LVM (Volume Logique) pour une gestion simplifiée des partitions.<br>
+      Confirmez le disque à utiliser (ex: /dev/sda) et validez les changements proposés.
+    </li>
+
+    <li>
+      Sélection des paquets logiciels :<br>
+      À l’étape du choix de l’environnement de bureau :
+      <ul>
+        <li>Sélectionnez : GNOME </li>
+      </ul>
+    </li>
+
+    <li>
+      Installation du chargeur de démarrage (GRUB) :<br>
+      Lorsqu’on vous demande où installer GRUB, choisissez /dev/sda (ou le disque principal).<br>
+      Cela rend Debian amorçable au démarrage.
+    </li>
+
+    <li>
+      Configuration du Boot Prioritaire :<br>
+      Une fois l’installation terminée, redémarrez le PC.<br>
+      Appuyez sur F12 ou F10 pour accéder au menu de démarrage.<br>
+      Allez dans les Boot Settings (ou ordre de démarrage) et placez Debian / GRUB comme premier choix.<br>
+      Sauvegardez avec F10.
+    </li>
+  </ol>
+</section>
+
+
+  <main>
+    <section class="content">
+      <h2>Présentation de Webmin</h2>
+      <img src="webminok.png" width="250">
+      <ul>
+        <li>Webmin est une interface web  permettant d’administrer un serveur Linux à distance, sans avoir besoin de passer par la ligne de commande. Il offre une gestion graphique des services  (FTP, DHCP, etc).
+</li>
+
+
+    </section>
+    <br>
+
+  </main>
+
+</main>
 
   <footer>
     <p>&copy; 2025 - Réseaux & CO. Tous droits réservés.</p>
