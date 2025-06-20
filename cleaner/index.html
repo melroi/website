@@ -17,9 +17,22 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(
+  135deg,
+  #ff9800 0%,
+  #ffa533 10%,
+  #ffb347 20%,
+  #ff74c4 40%,
+  #ff5eae 50%,
+  #9167b6 80%,
+  #7b56aa 90%,
+  #764ba2 100%
+);
+
       position: relative;
       overflow-x: hidden;
+      animation: gradientShift 20s ease-in-out infinite; 
+      background-size: 200% 200%; 
     }
 
     /* Animated background elements */
