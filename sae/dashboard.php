@@ -18,7 +18,7 @@
     </div>
     <div class="haut">
     <h1>Compte-rendu projet</h1>
-    <p>QUENET Noa - LAFILOLIE Lilian - HADROT Melchior - SALIEGE Tom - ASSSAILLY Allan</p>
+    <p>QUENET Noa - LAFILOLIE Lilian - HADROT Melchior - SALIEGE Tom - ASSAILLY Allan</p>
     </div>
   </header>
   
