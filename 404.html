@@ -4,69 +4,181 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
   <title>404 - Page non trouvée</title>
   <link rel="icon" type="image/png" href="logo.png">
   <style>
-    /* Tout le CSS du site d'origine ici */
-    /* ... (copie/colle l'intégralité du style que tu m'as donné) */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(
+        135deg,
+        #ff9800 0%,
+        #ffa533 10%,
+        #ffb347 20%,
+        #ff74c4 40%,
+        #ff5eae 50%,
+        #9167b6 80%,
+        #7b56aa 90%,
+        #764ba2 100%
+      );
+      position: relative;
+      overflow-x: hidden;
+      animation: gradientShift 20s ease-in-out infinite;
+      background-size: 200% 200%;
+    }
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+      animation: float 20s ease-in-out infinite;
+      z-index: -1;
+    }
+    @keyframes float {
+      0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(120deg); }
+      66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+    .particle {
+      position: fixed;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .particle:nth-child(1) {
+      width: 80px; height: 80px; top: 20%; left: 10%;
+      animation: drift 15s infinite linear;
+    }
+    .particle:nth-child(2) {
+      width: 60px; height: 60px; top: 60%; right: 10%;
+      animation: drift 20s infinite linear reverse;
+    }
+    .particle:nth-child(3) {
+      width: 40px; height: 40px; top: 80%; left: 60%;
+      animation: drift 25s infinite linear;
+    }
+    @keyframes drift {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      z-index: 1;
+      position: relative;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      animation: liquid 10s ease-in-out infinite;
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+    }
+    @keyframes liquid {
+      0%, 100% { border-radius: 30px 30px 30px 30px; }
+      25% { border-radius: 40px 25px 35px 38px; }
+      50% { border-radius: 25px 40px 38px 32px; }
+      75% { border-radius: 38px 35px 25px 40px; }
+    }
+    .error-code {
+      font-size: 7rem;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.95);
+      letter-spacing: -3px;
+      margin-bottom: 20px;
+      text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    .error-message {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 30px;
+    }
+    .action-button {
+      display: inline-block;
+      padding: 14px 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.95);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .action-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    .action-button:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .action-button:hover::before {
+      left: 100%;
+    }
+    @media (max-width: 600px) {
+      .error-code {
+        font-size: 4.5rem;
+      }
+      .error-message {
+        font-size: 1.2rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Particules animées -->
   <div class="particle"></div>
   <div class="particle"></div>
   <div class="particle"></div>
-
   <div class="container">
-    <div class="glass-card" style="text-align: center;">
-      <h1>🚫 Erreur 404</h1>
-      <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.1rem; margin-bottom: 25px;">
-        La page que vous cherchez n'existe pas ou a été déplacée.
-      </p>
-      <a href="/" class="action-button">🏠 Revenir à l'accueil</a>
+    <div class="glass-card">
+      <div class="error-code">404</div>
+      <div class="error-message">
+        Oups ! La page que vous cherchez semble introuvable.
+      </div>
+      <a href="/" class="action-button">Retour à l'accueil</a>
     </div>
   </div>
-
-  <script>
-    // Animation de particules comme dans l'original
-    document.addEventListener('click', (e) => {
-      if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'A') {
-        createRipple(e.clientX, e.clientY);
-      }
-    });
-
-    function createRipple(x, y) {
-      const ripple = document.createElement('div');
-      ripple.style.position = 'fixed';
-      ripple.style.left = x + 'px';
-      ripple.style.top = y + 'px';
-      ripple.style.width = '10px';
-      ripple.style.height = '10px';
-      ripple.style.background = 'rgba(255, 255, 255, 0.3)';
-      ripple.style.borderRadius = '50%';
-      ripple.style.pointerEvents = 'none';
-      ripple.style.transform = 'translate(-50%, -50%)';
-      ripple.style.animation = 'rippleEffect 0.6s ease-out forwards';
-      ripple.style.zIndex = '999';
-      
-      document.body.appendChild(ripple);
-      
-      setTimeout(() => {
-        ripple.remove();
-      }, 600);
-    }
-
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes rippleEffect {
-        to {
-          transform: translate(-50%, -50%) scale(20);
-          opacity: 0;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-  </script>
 </body>
 </html>
