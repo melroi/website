@@ -1,165 +1,280 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Fate Strange Fake Countdown</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fate/Strange Fake – Countdown</title>
+  <link rel="preload" href="image1.jpg" as="image" />
+  <link rel="preload" href="image2.png" as="image" />
   <style>
+    :root { --hud-gap: 16px; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
       margin: 0;
       overflow: hidden;
-      background: linear-gradient(45deg, magenta, cyan, yellow, lime);
-      font-family: "Comic Sans MS", "Papyrus", cursive;
-      color: #000;
-      height: 100vh;
+      font-family: "Comic Sans MS", cursive, system-ui, sans-serif;
+      color: #fff;
+      text-shadow: 2px 2px 5px rgba(0,0,0,.75);
+      background: linear-gradient(135deg, #ff00ff, #00ffff, #ffff00);
+      background-size: 600% 600%;
+      animation: gradientShift 10s ease infinite;
+      height: 100dvh;
       width: 100vw;
+      position: relative;
+      touch-action: manipulation;
+      -webkit-user-select: none; user-select: none;
     }
 
-    #countdown {
+    @keyframes gradientShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .hud {
       position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.7);
-      padding: 15px 30px;
-      border: 5px dashed black;
-      font-size: 2em;
-      z-index: 1000;
-      text-align: center;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      padding: 24px;
     }
+    .hud-inner {
+      display: flex;
+      flex-direction: column;
+      gap: var(--hud-gap);
+      text-align: center;
+      z-index: 2;
+      background: rgba(0,0,0,.15);
+      padding: 8px 14px;
+      border-radius: 8px;
+    }
+    h1 { font-size: clamp(1.4rem, 3vw, 3rem); margin: 0; }
+    #timer { font-size: clamp(1.2rem, 6vw, 2.6rem); font-weight: 800; }
 
-    canvas {
-      display: block;
+    .bouncer {
+      position: absolute;
+      left: 0; top: 0;
+      width: clamp(64px, 18vw, 140px);
+      height: auto;
+      will-change: transform;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,.5));
+      transform-style: preserve-3d;
+      z-index: 1;
+      -webkit-user-drag: none; user-drag: none;
+      pointer-events: none; /* pour éviter de choper les clics */
     }
   </style>
 </head>
 <body>
-  <div id="countdown">Chargement...</div>
-  <canvas id="canvas"></canvas>
+  <div class="hud">
+    <div class="hud-inner" id="hudBox">
+      <h1>Fate/Strange Fake dans :</h1>
+      <div id="timer">Chargement…</div>
+      <div style="opacity:.85; font-size:.9rem; pointer-events:none;">
+        Appuie sur <strong>Entrée</strong> ou <strong>tape l'écran</strong> pour ajouter une image.
+      </div>
+    </div>
+  </div>
 
   <script>
-    // ====== Countdown ======
-    function updateCountdown() {
-      const target = new Date("2025-01-03T00:00:00");
-      const now = new Date();
-      const diff = target - now;
-
-      if (diff <= 0) {
-        document.getElementById("countdown").textContent = "C'est sorti !!!";
-        return;
-      }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      document.getElementById("countdown").textContent =
-        `${days}j ${hours}h ${minutes}m ${seconds}s avant Fate Strange Fake`;
+    // ===== Timer (je garde ta date telle quelle) =====
+    const TARGET_DATE = new Date("2026-01-02T16:00:00+01:00").getTime();
+    const $timer = document.getElementById("timer");
+    function updateTimer() {
+      const now = Date.now();
+      const diff = TARGET_DATE - now;
+      if (diff <= 0) { $timer.textContent = "C'est sorti !!!"; return; }
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
+      $timer.textContent = `${d}j ${h}h ${m}m ${s}s`;
     }
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+    setInterval(updateTimer, 1000); updateTimer();
 
-    // ====== DVD Logo Bounce ======
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    // ===== Bouncers (vertical only + rotateY) =====
+    const SPRITES = ["image1.jpg", "image2.png"];
 
-    const countdownBox = document.getElementById("countdown").getBoundingClientRect();
+    function viewportSize() {
+      return { w: window.innerWidth, h: window.innerHeight };
+    }
+    function hudRect() {
+      return document.getElementById("hudBox").getBoundingClientRect();
+    }
+    function rand(min, max) { return Math.random() * (max - min) + min; }
 
-    let images = [];
-    const img = new Image();
-    img.src = "image1.jpg"; // Ton image DVD
+    function createBouncer(src, x, y) {
+      const el = new Image();
+      el.src = src;
+      el.className = "bouncer";
+      document.body.appendChild(el);
 
-    function spawnImage() {
-      const size = 100;
-      let x = Math.random() * (canvas.width - size);
-      let y = Math.random() * (canvas.height - size);
+      const speed = rand(2, 4.5) * (Math.random() < 0.5 ? -1 : 1); // dy uniquement
+      const sizeGuess = 100;
 
-      // éviter la zone countdown
-      if (
-        x < countdownBox.right &&
-        x + size > countdownBox.left &&
-        y < countdownBox.bottom &&
-        y + size > countdownBox.top
-      ) {
-        y = countdownBox.bottom + 20; 
-      }
+      const b = {
+        el,
+        x: x ?? 0,
+        y: y ?? 0,
+        dx: 0,         // pas de déplacement horizontal
+        dy: speed,     // déplacement vertical
+        rot: 0,
+        w: sizeGuess,
+        h: sizeGuess
+      };
 
-      images.push({
-        x, y,
-        dx: (Math.random() * 4 + 2) * (Math.random() < 0.5 ? -1 : 1),
-        dy: (Math.random() * 4 + 2) * (Math.random() < 0.5 ? -1 : 1),
-        size,
-        angle: 0,
-      });
+      el.onload = () => {
+        b.w = el.width || b.w;
+        b.h = el.height || b.h;
+      };
+
+      // Positionnement initial : éviter la HUD
+      placeOutsideHud(b);
+
+      return b;
     }
 
-    img.onload = () => {
-      spawnImage();
-      animate();
-    };
+    function placeOutsideHud(b) {
+      const { w: W, h: H } = viewportSize();
+      const hud = hudRect();
 
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Si on n’a pas d’x/y fournis : choisir une colonne à gauche ou à droite de la HUD
+      if (b.x === 0 && b.y === 0) {
+        const leftSpace = hud.left - 10;
+        const rightSpaceStart = hud.right + 10;
 
-      for (let i = 0; i < images.length; i++) {
-        let logo = images[i];
-
-        logo.x += logo.dx;
-        logo.y += logo.dy;
-        logo.angle += 0.05;
-
-        // rebond sur murs
-        if (logo.x <= 0 || logo.x + logo.size >= canvas.width) logo.dx *= -1;
-        if (logo.y <= 0 || logo.y + logo.size >= canvas.height) logo.dy *= -1;
-
-        // éviter zone countdown
-        if (
-          logo.x < countdownBox.right &&
-          logo.x + logo.size > countdownBox.left &&
-          logo.y < countdownBox.bottom &&
-          logo.y + logo.size > countdownBox.top
-        ) {
-          logo.dy *= -1;
-          logo.y = countdownBox.bottom + 5;
+        const chooseLeft = Math.random() < 0.5 && leftSpace > b.w + 10;
+        if (chooseLeft) {
+          b.x = rand(0, Math.max(0, leftSpace - b.w));
+        } else {
+          b.x = rand(rightSpaceStart, Math.max(rightSpaceStart, W - b.w));
         }
-
-        // collisions entre images
-        for (let j = i + 1; j < images.length; j++) {
-          let other = images[j];
-          let dx = logo.x - other.x;
-          let dy = logo.y - other.y;
-          let dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < logo.size) {
-            logo.dx *= -1;
-            logo.dy *= -1;
-            other.dx *= -1;
-            other.dy *= -1;
-          }
-        }
-
-        // dessiner image
-        ctx.save();
-        ctx.translate(logo.x + logo.size/2, logo.y + logo.size/2);
-        ctx.rotate(logo.angle);
-        ctx.drawImage(img, -logo.size/2, -logo.size/2, logo.size, logo.size);
-        ctx.restore();
+        b.y = rand(0, Math.max(0, H - b.h));
       }
 
-      requestAnimationFrame(animate);
+      // Si l’élément tombe dans la HUD, décaler l’X en dehors vers le bord le plus proche
+      const overlapsHud = () => (
+        b.x < hud.right && b.x + b.w > hud.left &&
+        b.y < hud.bottom && b.y + b.h > hud.top
+      );
+      if (overlapsHud()) {
+        if (b.x + b.w / 2 < hud.left + (hud.width / 2)) {
+          b.x = Math.max(0, hud.left - b.w - 8);
+        } else {
+          b.x = Math.min(W - b.w, hud.right + 8);
+        }
+        // Pour l’axe vertical (on bouge), on décale aussi Y juste au-dessus/dessous si besoin
+        if (b.y + b.h / 2 < hud.top + (hud.height / 2)) {
+          b.y = Math.max(0, hud.top - b.h - 8);
+        } else {
+          b.y = Math.min(H - b.h, hud.bottom + 8);
+        }
+      }
     }
 
-    // Ajouter une image si on appuie sur Entrée
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        spawnImage();
+    const bouncers = [
+      createBouncer(SPRITES[0]),
+      createBouncer(SPRITES[1])
+    ];
+
+    // Entrée => ajoute une image (spawn hors HUD)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const src = SPRITES[Math.floor(Math.random() * SPRITES.length)];
+        bouncers.push(createBouncer(src));
       }
     });
 
-    window.addEventListener("resize", () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    // Clique/tap => ajoute une image à l’endroit du clic, mais on corrige si c’est dans la HUD
+    document.addEventListener('pointerdown', (e) => {
+      const src = SPRITES[Math.floor(Math.random() * SPRITES.length)];
+      const b = createBouncer(src, e.clientX, e.clientY);
+      placeOutsideHud(b);
+      bouncers.push(b);
+    });
+
+    // Collisions entre images (uniquement verticales)
+    function handleCollisions() {
+      for (let i = 0; i < bouncers.length; i++) {
+        const a = bouncers[i];
+        for (let j = i + 1; j < bouncers.length; j++) {
+          const c = bouncers[j];
+          const intersect =
+            a.x < c.x + c.w && a.x + a.w > c.x &&
+            a.y < c.y + c.h && a.y + a.h > c.y;
+
+          if (intersect) {
+            // On résout sur l’axe vertical uniquement
+            const overlapY = Math.min(a.y + a.h, c.y + c.h) - Math.max(a.y, c.y);
+            const push = overlapY / 2;
+
+            if (a.y < c.y) { a.y -= push; c.y += push; }
+            else           { a.y += push; c.y -= push; }
+
+            // Inverser les vitesses verticales
+            const temp = a.dy;
+            a.dy = -c.dy;
+            c.dy = -temp;
+          }
+        }
+      }
+    }
+
+    function keepOffHud(b) {
+      const { w: W, h: H } = viewportSize();
+      const hud = hudRect();
+
+      // murs haut/bas
+      if (b.y <= 0) { b.y = 0; b.dy *= -1; }
+      if (b.y + b.h >= H) { b.y = H - b.h; b.dy *= -1; }
+
+      // éviter la HUD : si on la touche en passant verticalement, on rebondit
+      const hitsHud =
+        b.x < hud.right && b.x + b.w > hud.left &&
+        b.y < hud.bottom && b.y + b.h > hud.top;
+
+      if (hitsHud) {
+        if (b.dy > 0) { // descend
+          b.y = hud.top - b.h - 1;
+        } else {        // monte
+          b.y = hud.bottom + 1;
+        }
+        b.dy *= -1;
+      }
+
+      // On ne bouge pas sur X, mais clamp au cas où resize
+      if (b.x < 0) b.x = 0;
+      if (b.x + b.w > W) b.x = Math.max(0, W - b.w);
+    }
+
+    function animate() {
+      const { w: W, h: H } = viewportSize();
+
+      for (const b of bouncers) {
+        // tailles réelles
+        b.w = b.el.offsetWidth || b.w;
+        b.h = b.el.offsetHeight || b.h;
+
+        // déplacement vertical seulement
+        b.y += b.dy;
+
+        // rotation "sur l’axe vertical"
+        b.rot = (b.rot + 5) % 360;
+        b.el.style.transform = `translate(${b.x}px, ${b.y}px) rotateY(${b.rot}deg)`;
+
+        keepOffHud(b);
+      }
+
+      handleCollisions();
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Ajuster si resize
+    window.addEventListener('resize', () => {
+      for (const b of bouncers) keepOffHud(b);
     });
   </script>
 </body>
