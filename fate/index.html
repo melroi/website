@@ -1,17 +1,144 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!DOCTYPE html><html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>fate</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Fate Strange Fake Countdown</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      background: linear-gradient(135deg, #ff00ff, #00ffff, #ffff00);
+      background-size: 600% 600%;
+      animation: gradientShift 10s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      color: white;
+      text-shadow: 2px 2px 5px black;
+    }@keyframes gradientShift {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+#timer {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.bouncer {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  will-change: transform;
+}
+
+  </style>
 </head>
 <body>
   <h1>Fate/Strange Fake dans :</h1>
-  <div id="timer">Chargement...</div>
+  <div id="timer">Chargement...</div>  <img class="bouncer" src="image1.png" alt="image1" />  <script>
+    // ===== TIMER =====
+    const targetDate = new Date("2026-01-02T16:00:00+01:00").getTime();
+    const timer = document.getElementById("timer");
 
-  <img id="dvd" src="image1.jpg" alt="DVD" />
+    function updateTimer() {
+      const now = new Date().getTime();
+      const diff = targetDate - now;
 
-  <script src="script.js"></script>
-</body>
+      if (diff <= 0) {
+        timer.textContent = "C'est sorti !!!";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      timer.textContent = `${days}j ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    // ===== MULTI-IMAGES QUI REBONDISSENT =====
+    const images = ["image1.png", "image2.png"];
+    const bouncers = [];
+
+    function createBouncer(src, startX, startY) {
+      const img = document.createElement("img");
+      img.src = src;
+      img.className = "bouncer";
+      document.body.appendChild(img);
+
+      return {
+        el: img,
+        x: startX,
+        y: startY,
+        dx: (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 2),
+        dy: (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 2),
+        angle: 0,
+      };
+    }
+
+    // Crée un bouncer de base
+    bouncers.push(createBouncer("image1.png", 100, 100));
+
+    // Ajoute un nouveau bouncer à chaque touche "Entrée"
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const src = images[Math.floor(Math.random() * images.length)];
+        bouncers.push(createBouncer(src, Math.random() * window.innerWidth/2, Math.random() * window.innerHeight/2));
+      }
+    });
+
+    function animate() {
+      const sw = window.innerWidth;
+      const sh = window.innerHeight;
+
+      for (let i = 0; i < bouncers.length; i++) {
+        const b = bouncers[i];
+        const w = b.el.offsetWidth;
+        const h = b.el.offsetHeight;
+
+        b.x += b.dx;
+        b.y += b.dy;
+
+        if (b.x <= 0 || b.x + w >= sw) b.dx *= -1;
+        if (b.y <= 0 || b.y + h >= sh) b.dy *= -1;
+
+        // Collision simple entre images
+        for (let j = i+1; j < bouncers.length; j++) {
+          const other = bouncers[j];
+          const ow = other.el.offsetWidth;
+          const oh = other.el.offsetHeight;
+
+          if (b.x < other.x + ow && b.x + w > other.x && b.y < other.y + oh && b.y + h > other.y) {
+            b.dx *= -1;
+            b.dy *= -1;
+            other.dx *= -1;
+            other.dy *= -1;
+          }
+        }
+
+        b.angle = (b.angle + 5) % 360;
+        b.el.style.transform = `translate(${b.x}px, ${b.y}px) rotateY(${b.angle}deg)`;
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script></body>
 </html>
