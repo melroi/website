@@ -63,7 +63,7 @@
       transform-style: preserve-3d;
       z-index: 1;
       -webkit-user-drag: none; user-drag: none;
-      pointer-events: none; /* pour éviter de choper les clics */
+      pointer-events: none;
     }
   </style>
 </head>
@@ -73,13 +73,13 @@
       <h1>Fate/Strange Fake dans :</h1>
       <div id="timer">Chargement…</div>
       <div style="opacity:.85; font-size:.9rem; pointer-events:none;">
-        Appuie sur <strong>Entrée</strong> ou <strong>tape l'écran</strong> pour ajouter une image.
+        Appuie sur <strong>Entrée</strong> ou <strong>tape l'écran</strong>
       </div>
     </div>
   </div>
 
   <script>
-    // ===== Timer (je garde ta date telle quelle) =====
+    // ===== Timer =====
     const TARGET_DATE = new Date("2026-01-02T16:00:00+01:00").getTime();
     const $timer = document.getElementById("timer");
     function updateTimer() {
@@ -94,8 +94,8 @@
     }
     setInterval(updateTimer, 1000); updateTimer();
 
-    // ===== Bouncers (vertical only + rotateY) =====
-    const SPRITES = ["image1.jpg", "image2.png"];
+    // ===== Bouncers =====
+    const SPRITES = ["image1.jpg"];
 
     function viewportSize() {
       return { w: window.innerWidth, h: window.innerHeight };
@@ -111,18 +111,19 @@
       el.className = "bouncer";
       document.body.appendChild(el);
 
-      const speed = rand(2, 4.5) * (Math.random() < 0.5 ? -1 : 1); // dy uniquement
-      const sizeGuess = 100;
+      const speed = rand(2, 4);
+      const angle = rand(0, Math.PI * 2);
 
       const b = {
         el,
-        x: x ?? 0,
-        y: y ?? 0,
-        dx: 0,         // pas de déplacement horizontal
-        dy: speed,     // déplacement vertical
-        rot: 0,
-        w: sizeGuess,
-        h: sizeGuess
+        x: x ?? rand(0, window.innerWidth - 120),
+        y: y ?? rand(0, window.innerHeight - 120),
+        dx: Math.cos(angle) * speed,
+        dy: Math.sin(angle) * speed,
+        rotY: rand(0, 360),
+        rotZ: rand(0, 360),
+        w: 100,
+        h: 100
       };
 
       el.onload = () => {
@@ -130,48 +131,23 @@
         b.h = el.height || b.h;
       };
 
-      // Positionnement initial : éviter la HUD
       placeOutsideHud(b);
-
       return b;
     }
 
     function placeOutsideHud(b) {
       const { w: W, h: H } = viewportSize();
       const hud = hudRect();
-
-      // Si on n’a pas d’x/y fournis : choisir une colonne à gauche ou à droite de la HUD
-      if (b.x === 0 && b.y === 0) {
-        const leftSpace = hud.left - 10;
-        const rightSpaceStart = hud.right + 10;
-
-        const chooseLeft = Math.random() < 0.5 && leftSpace > b.w + 10;
-        if (chooseLeft) {
-          b.x = rand(0, Math.max(0, leftSpace - b.w));
-        } else {
-          b.x = rand(rightSpaceStart, Math.max(rightSpaceStart, W - b.w));
-        }
-        b.y = rand(0, Math.max(0, H - b.h));
-      }
-
-      // Si l’élément tombe dans la HUD, décaler l’X en dehors vers le bord le plus proche
-      const overlapsHud = () => (
+      const overlapsHud =
         b.x < hud.right && b.x + b.w > hud.left &&
-        b.y < hud.bottom && b.y + b.h > hud.top
-      );
-      if (overlapsHud()) {
-        if (b.x + b.w / 2 < hud.left + (hud.width / 2)) {
-          b.x = Math.max(0, hud.left - b.w - 8);
-        } else {
-          b.x = Math.min(W - b.w, hud.right + 8);
-        }
-        // Pour l’axe vertical (on bouge), on décale aussi Y juste au-dessus/dessous si besoin
-        if (b.y + b.h / 2 < hud.top + (hud.height / 2)) {
-          b.y = Math.max(0, hud.top - b.h - 8);
-        } else {
-          b.y = Math.min(H - b.h, hud.bottom + 8);
-        }
+        b.y < hud.bottom && b.y + b.h > hud.top;
+      if (overlapsHud) {
+        b.y = hud.bottom + 10;
       }
+      if (b.x < 0) b.x = 0;
+      if (b.y < 0) b.y = 0;
+      if (b.x + b.w > W) b.x = W - b.w;
+      if (b.y + b.h > H) b.y = H - b.h;
     }
 
     const bouncers = [
@@ -179,7 +155,6 @@
       createBouncer(SPRITES[1])
     ];
 
-    // Entrée => ajoute une image (spawn hors HUD)
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         const src = SPRITES[Math.floor(Math.random() * SPRITES.length)];
@@ -187,7 +162,6 @@
       }
     });
 
-    // Clique/tap => ajoute une image à l’endroit du clic, mais on corrige si c’est dans la HUD
     document.addEventListener('pointerdown', (e) => {
       const src = SPRITES[Math.floor(Math.random() * SPRITES.length)];
       const b = createBouncer(src, e.clientX, e.clientY);
@@ -195,86 +169,73 @@
       bouncers.push(b);
     });
 
-    // Collisions entre images (uniquement verticales)
     function handleCollisions() {
       for (let i = 0; i < bouncers.length; i++) {
         const a = bouncers[i];
         for (let j = i + 1; j < bouncers.length; j++) {
           const c = bouncers[j];
-          const intersect =
-            a.x < c.x + c.w && a.x + a.w > c.x &&
-            a.y < c.y + c.h && a.y + a.h > c.y;
-
-          if (intersect) {
-            // On résout sur l’axe vertical uniquement
+          if (a.x < c.x + c.w && a.x + a.w > c.x &&
+              a.y < c.y + c.h && a.y + a.h > c.y) {
+            const overlapX = Math.min(a.x + a.w, c.x + c.w) - Math.max(a.x, c.x);
             const overlapY = Math.min(a.y + a.h, c.y + c.h) - Math.max(a.y, c.y);
-            const push = overlapY / 2;
-
-            if (a.y < c.y) { a.y -= push; c.y += push; }
-            else           { a.y += push; c.y -= push; }
-
-            // Inverser les vitesses verticales
-            const temp = a.dy;
-            a.dy = -c.dy;
-            c.dy = -temp;
+            if (overlapX < overlapY) {
+              const push = overlapX / 2;
+              if (a.x < c.x) { a.x -= push; c.x += push; }
+              else { a.x += push; c.x -= push; }
+              a.dx *= -1; c.dx *= -1;
+            } else {
+              const push = overlapY / 2;
+              if (a.y < c.y) { a.y -= push; c.y += push; }
+              else { a.y += push; c.y -= push; }
+              a.dy *= -1; c.dy *= -1;
+            }
           }
         }
       }
     }
 
-    function keepOffHud(b) {
+    function keepInBounds(b) {
       const { w: W, h: H } = viewportSize();
       const hud = hudRect();
 
-      // murs haut/bas
-      if (b.y <= 0) { b.y = 0; b.dy *= -1; }
-      if (b.y + b.h >= H) { b.y = H - b.h; b.dy *= -1; }
+      if (b.x <= 0 || b.x + b.w >= W) b.dx *= -1;
+      if (b.y <= 0 || b.y + b.h >= H) b.dy *= -1;
 
-      // éviter la HUD : si on la touche en passant verticalement, on rebondit
       const hitsHud =
         b.x < hud.right && b.x + b.w > hud.left &&
         b.y < hud.bottom && b.y + b.h > hud.top;
-
       if (hitsHud) {
-        if (b.dy > 0) { // descend
-          b.y = hud.top - b.h - 1;
-        } else {        // monte
-          b.y = hud.bottom + 1;
+        if (Math.abs(b.dx) > Math.abs(b.dy)) {
+          if (b.x < hud.left) b.x = hud.left - b.w - 2;
+          else b.x = hud.right + 2;
+          b.dx *= -1;
+        } else {
+          if (b.y < hud.top) b.y = hud.top - b.h - 2;
+          else b.y = hud.bottom + 2;
+          b.dy *= -1;
         }
-        b.dy *= -1;
       }
-
-      // On ne bouge pas sur X, mais clamp au cas où resize
-      if (b.x < 0) b.x = 0;
-      if (b.x + b.w > W) b.x = Math.max(0, W - b.w);
     }
 
     function animate() {
-      const { w: W, h: H } = viewportSize();
-
       for (const b of bouncers) {
-        // tailles réelles
         b.w = b.el.offsetWidth || b.w;
         b.h = b.el.offsetHeight || b.h;
-
-        // déplacement vertical seulement
+        b.x += b.dx;
         b.y += b.dy;
+        keepInBounds(b);
 
-        // rotation "sur l’axe vertical"
-        b.rot = (b.rot + 5) % 360;
-        b.el.style.transform = `translate(${b.x}px, ${b.y}px) rotateY(${b.rot}deg)`;
-
-        keepOffHud(b);
+        b.rotY = (b.rotY + 5) % 360;
+        b.rotZ = (b.rotZ + 2) % 360;
+        b.el.style.transform = `translate(${b.x}px, ${b.y}px) rotateY(${b.rotY}deg) rotateZ(${b.rotZ}deg)`;
       }
-
       handleCollisions();
       requestAnimationFrame(animate);
     }
     animate();
 
-    // Ajuster si resize
     window.addEventListener('resize', () => {
-      for (const b of bouncers) keepOffHud(b);
+      for (const b of bouncers) placeOutsideHud(b);
     });
   </script>
 </body>
