@@ -4,433 +4,83 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-
-  <title>Nettoyeur de texte </title>
-  <link rel="icon" type="image/png" href="logo.png">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      min-height: 100vh;
-      background: linear-gradient(
-  135deg,
-  #ff9800 0%,
-  #ffa533 10%,
-  #ffb347 20%,
-  #ff74c4 40%,
-  #ff5eae 50%,
-  #9167b6 80%,
-  #7b56aa 90%,
-  #764ba2 100%
-);
-
-      position: relative;
-      overflow-x: hidden;
-      animation: gradientShift 20s ease-in-out infinite; 
-      background-size: 200% 200%; 
-    }
-
-    /* Animated background elements */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: 
-        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
-      animation: float 20s ease-in-out infinite;
-      z-index: -1;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
-      33% { transform: translate(30px, -30px) rotate(120deg); }
-      66% { transform: translate(-20px, 20px) rotate(240deg); }
-    }
-
-    /* Floating particles */
-    .particle {
-      position: fixed;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .particle:nth-child(1) {
-      width: 80px;
-      height: 80px;
-      top: 20%;
-      left: 10%;
-      animation: drift 15s infinite linear;
-    }
-
-    .particle:nth-child(2) {
-      width: 60px;
-      height: 60px;
-      top: 60%;
-      right: 10%;
-      animation: drift 20s infinite linear reverse;
-    }
-
-    .particle:nth-child(3) {
-      width: 40px;
-      height: 40px;
-      top: 80%;
-      left: 60%;
-      animation: drift 25s infinite linear;
-    }
-
-    @keyframes drift {
-      0% { transform: translateY(0px) rotate(0deg); }
-      100% { transform: translateY(-100vh) rotate(360deg); }
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px 15px;
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-    }
-
-    /* Glass card effect */
-    .glass-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 24px;
-      padding: 25px;
-      box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-    }
-
-    .glass-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    }
-
-    h1 {
-      text-align: center;
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 2rem;
-      font-weight: 300;
-      margin-bottom: 20px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      letter-spacing: -0.5px;
-    }
-
-    .input-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 1rem;
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 80px;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 0.95rem;
-      font-family: inherit;
-      resize: vertical;
-      transition: all 0.3s ease;
-      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    textarea:focus {
-      outline: none;
-      border-color: rgba(255, 255, 255, 0.3);
-      background: rgba(255, 255, 255, 0.12);
-      box-shadow: 
-        inset 0 2px 10px rgba(0, 0, 0, 0.1),
-        0 0 0 3px rgba(255, 255, 255, 0.1);
-    }
-
-    textarea::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .options-panel {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 15px;
-      position: relative;
-    }
-
-    .options-title {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-    }
-
-    .options-title::before {
-      content: '⚙️';
-      margin-right: 8px;
-      font-size: 1.2rem;
-    }
-
-    .checkbox-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-    }
-
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .checkbox-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .checkbox-item input[type="checkbox"] {
-      margin-right: 8px;
-      width: 16px;
-      height: 16px;
-      accent-color: rgba(255, 255, 255, 0.8);
-      cursor: pointer;
-    }
-
-    .checkbox-item label {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 0.9rem;
-      margin: 0;
-      cursor: pointer;
-      flex: 1;
-    }
-
-    .action-button {
-      display: block;
-      width: 100%;
-      max-width: 250px;
-      margin: 15px auto 0;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50px;
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .action-button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .action-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      border-color: rgba(255, 255, 255, 0.4);
-    }
-
-    .action-button:hover::before {
-      left: 100%;
-    }
-
-    .action-button:active {
-      transform: translateY(-1px);
-    }
-
-    .output-section {
-      margin-top: 15px;
-    }
-
-    .copy-notification {
-      position: fixed;
-      top: 30px;
-      right: 30px;
-      background: rgba(0, 255, 0, 0.1);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 255, 0, 0.3);
-      border-radius: 12px;
-      padding: 15px 25px;
-      color: rgba(255, 255, 255, 0.9);
-      font-weight: 500;
-      transform: translateX(400px);
-      transition: transform 0.3s ease;
-      z-index: 1000;
-    }
-
-    .copy-notification.show {
-      transform: translateX(0);
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .container {
-        padding: 15px 10px;
-      }
-
-      .glass-card {
-        padding: 20px;
-        border-radius: 20px;
-      }
-
-      h1 {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-      }
-
-      .checkbox-grid {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-
-      .action-button {
-        max-width: 100%;
-      }
-
-      textarea {
-        min-height: 70px;
-      }
-    }
-
-    /* Liquid animation effect */
-    @keyframes liquid {
-      0%, 100% { border-radius: 24px 24px 24px 24px; }
-      25% { border-radius: 30px 20px 25px 28px; }
-      50% { border-radius: 20px 30px 28px 22px; }
-      75% { border-radius: 28px 25px 20px 30px; }
-    }
-
-    .glass-card {
-      animation: liquid 8s ease-in-out infinite;
-    }
-  </style>
+  <title>Nettoyeur de texte</title>
 </head>
 <body>
-  <!-- Floating particles -->
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-
   <div class="container">
-    <div class="glass-card">
-      <h1>✨ Nettoyeur de Texte</h1>
-      
-      <div class="input-group">
-        <label for="input">📝 Texte à nettoyer</label>
-        <textarea id="input" placeholder="Collez votre texte brut ici..."></textarea>
-      </div>
-
-      <div class="options-panel">
-        <div class="options-title">Options de nettoyage</div>
-        <div class="checkbox-grid">
-          <div class="checkbox-item">
-            <input type="checkbox" class="char-option" value="#" id="hash" checked>
-            <label for="hash"># (hashtags)</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" class="char-option" value="-" id="dash">
-            <label for="dash">- (tirets simples)</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="triple-dash" checked>
-            <label for="triple-dash">--- (groupes de 3+)</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" class="char-option" value="`" id="backtick" checked>
-            <label for="backtick">` (backticks)</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" class="char-option" value="*" id="asterisk" checked>
-            <label for="asterisk">* (astérisques)</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" class="char-option" value="@" id="at">
-            <label for="at">@ (arobase)</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" class="char-option" value="$" id="dollar">
-            <label for="dollar">$ (dollar)</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="remove-emojis" checked>
-            <label for="remove-emojis">🫥 Supprimer les emojis</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="output-section">
-        <div class="input-group">
-          <label for="output">✨ Texte nettoyé</label>
-          <textarea id="output" readonly></textarea>
-        </div>
-      </div>
-
-      <button class="action-button" id="copy">
-        📋 Copier le texte nettoyé
-      </button>
+    <h1>Nettoyeur de Texte</h1>
+    
+    <div class="input-group">
+      <label for="input">Texte à nettoyer</label>
+      <textarea id="input" placeholder="Collez votre texte brut ici..."></textarea>
     </div>
+
+    <div class="options-panel">
+      <div class="options-title">Options de nettoyage</div>
+      <div class="checkbox-grid">
+        <div class="checkbox-item">
+          <input type="checkbox" class="char-option" value="#" id="hash" checked>
+          <label for="hash"># (hashtags)</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" class="char-option" value="-" id="dash">
+          <label for="dash">- (tirets simples)</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="triple-dash" checked>
+          <label for="triple-dash">--- (groupes de 3+)</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" class="char-option" value="`" id="backtick" checked>
+          <label for="backtick">` (backticks)</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" class="char-option" value="*" id="asterisk" checked>
+          <label for="asterisk">* (astérisques)</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" class="char-option" value="@" id="at">
+          <label for="at">@ (arobase)</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" class="char-option" value="$" id="dollar">
+          <label for="dollar">$ (dollar)</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="remove-emojis" checked>
+          <label for="remove-emojis">Supprimer les emojis</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="remove-invisible" checked>
+          <label for="remove-invisible">Supprimer les watermarks IA et caractères invisibles</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="smart-dashes" checked>
+          <label for="smart-dashes">Gestion intelligente des tirets</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="show-stats" checked>
+          <label for="show-stats">Afficher les statistiques</label>
+        </div>
+      </div>
+    </div>
+
+    <div id="stats-panel" style="display: none;">
+      <h3>Statistiques de nettoyage</h3>
+      <div id="stats-content"></div>
+    </div>
+
+    <div class="output-section">
+      <div class="input-group">
+        <label for="output">Texte nettoyé</label>
+        <textarea id="output" readonly></textarea>
+      </div>
+    </div>
+
+    <button id="copy">Copier le texte nettoyé</button>
   </div>
 
-  <div class="copy-notification" id="notification">
-    ✅ Texte copié dans le presse-papiers !
-  </div>
+  <div id="notification" style="display: none;">Texte copié dans le presse-papiers !</div>
 
   <script>
     const input = document.getElementById('input');
@@ -442,13 +92,25 @@
 
     function updateOutput() {
       let text = input.value;
+      const stats = {
+        invisible: 0,
+        zeroWidth: 0,
+        watermarks: 0,
+        emDashes: 0
+      };
 
-      // Supprimer les groupes de 3 tirets ou plus
+      const smartDashes = document.getElementById('smart-dashes');
+      if (smartDashes.checked) {
+        // Remplace les tirets longs par des tirets simples
+        const emDashCount = (text.match(/[\u2014\u2015]/g) || []).length;
+        text = text.replace(/[\u2014\u2015]/g, '-');
+        stats.emDashes = emDashCount;
+      }
+
       if (tripleDash.checked) {
         text = text.replace(/-{3,}/g, '');
       }
 
-      // Supprimer les caractères simples cochés
       const selectedChars = Array.from(checkboxes)
         .filter(cb => cb.checked)
         .map(cb => cb.value)
@@ -460,23 +122,62 @@
         text = text.replace(regex, '');
       }
 
-      // Supprimer les emojis si l'option est cochée
       const removeEmojis = document.getElementById('remove-emojis');
       if (removeEmojis.checked) {
         text = text.replace(/[\p{Extended_Pictographic}]/gu, '');
       }
 
+      const removeInvisible = document.getElementById('remove-invisible');
+      if (removeInvisible.checked) {
+        // Compte et supprime les caractères invisibles
+        const invisibleCount = (text.match(/[\u0000-\u001F\u007F-\u009F]/g) || []).length;
+        text = text.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+        stats.invisible = invisibleCount;
+
+        // Compte et supprime les caractères zero-width
+        const zeroWidthCount = (text.match(/[\u200B\u200C\u200D\u200E\u200F\uFEFF]/g) || []).length;
+        text = text.replace(/[\u200B\u200C\u200D\u200E\u200F\uFEFF]/g, '');
+        stats.zeroWidth = zeroWidthCount;
+
+        // Compte et supprime les watermarks
+        const watermarkCount = (text.match(/[\u202A-\u202E]/g) || []).length;
+        text = text.replace(/[\u202A-\u202E]/g, '');
+        stats.watermarks = watermarkCount;
+
+        // Normalise les espaces
+        text = text.replace(/[\u2000-\u200A\u2028\u2029\u202F\u205F\u3000]/g, ' ');
+        text = text.replace(/\s+/g, ' ');
+      }
+
       output.value = text;
+      updateStats(stats);
+    }
+
+    function updateStats(stats) {
+      const showStats = document.getElementById('show-stats');
+      const statsPanel = document.getElementById('stats-panel');
+      const statsContent = document.getElementById('stats-content');
+
+      if (showStats.checked && (stats.invisible > 0 || stats.zeroWidth > 0 || stats.watermarks > 0 || stats.emDashes > 0)) {
+        statsPanel.style.display = 'block';
+        statsContent.innerHTML = `
+          ${stats.invisible > 0 ? `<p>📍 ${stats.invisible} caractères invisibles supprimés</p>` : ''}
+          ${stats.zeroWidth > 0 ? `<p>🔍 ${stats.zeroWidth} espaces de largeur nulle supprimés</p>` : ''}
+          ${stats.watermarks > 0 ? `<p>🏷️ ${stats.watermarks} watermarks supprimés</p>` : ''}
+          ${stats.emDashes > 0 ? `<p>➖ ${stats.emDashes} tirets longs convertis</p>` : ''}
+        `;
+      } else {
+        statsPanel.style.display = 'none';
+      }
     }
 
     function showNotification() {
-      notification.classList.add('show');
+      notification.style.display = 'block';
       setTimeout(() => {
-        notification.classList.remove('show');
+        notification.style.display = 'none';
       }, 2000);
     }
 
-    // Event listeners
     input.addEventListener('input', updateOutput);
     checkboxes.forEach(cb => cb.addEventListener('change', updateOutput));
     tripleDash.addEventListener('change', updateOutput);
@@ -486,56 +187,16 @@
         await navigator.clipboard.writeText(output.value);
         showNotification();
       } catch (err) {
-        // Fallback for older browsers
         output.select();
         document.execCommand('copy');
         showNotification();
       }
     });
 
-    // Initialize
+    document.getElementById('show-stats').addEventListener('change', updateOutput);
+    document.getElementById('smart-dashes').addEventListener('change', updateOutput);
+
     updateOutput();
-
-    // Add some interactive particles on click
-    document.addEventListener('click', (e) => {
-      if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') {
-        createRipple(e.clientX, e.clientY);
-      }
-    });
-
-    function createRipple(x, y) {
-      const ripple = document.createElement('div');
-      ripple.style.position = 'fixed';
-      ripple.style.left = x + 'px';
-      ripple.style.top = y + 'px';
-      ripple.style.width = '10px';
-      ripple.style.height = '10px';
-      ripple.style.background = 'rgba(255, 255, 255, 0.3)';
-      ripple.style.borderRadius = '50%';
-      ripple.style.pointerEvents = 'none';
-      ripple.style.transform = 'translate(-50%, -50%)';
-      ripple.style.animation = 'rippleEffect 0.6s ease-out forwards';
-      ripple.style.zIndex = '999';
-      
-      document.body.appendChild(ripple);
-      
-      setTimeout(() => {
-        ripple.remove();
-      }, 600);
-    }
-
-    // Add ripple animation
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes rippleEffect {
-        to {
-          transform: translate(-50%, -50%) scale(20);
-          opacity: 0;
-        }
-      }
-    `;
-    document.head.appendChild(style);
   </script>
 </body>
 </html>
-
