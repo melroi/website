@@ -3,60 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nettoyeur de texte </title>
+<title>Nettoyeur de texte avancé</title>
 <style>
   body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
   textarea { width: 100%; min-height: 100px; margin-bottom: 10px; padding: 10px; font-size: 1rem; white-space: pre-wrap; }
-  .checkbox-item { display: flex; align-items: center; margin-bottom: 5px; }
-  button { padding: 10px 20px; font-size: 1rem; cursor: pointer; margin-top: 10px; }
-  mark { background: yellow; }
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+  .checkbox-item { display: flex; align-items: center; gap: 5px; }
+  button { padding: 10px 15px; font-size: 1rem; cursor: pointer; margin: 5px 5px 10px 0; }
 </style>
 </head>
 <body>
 
-<h1>Nettoyeur de texte v2.2</h1>
+<h1>Nettoyeur de texte avancé</h1>
 
 <label for="input">Texte à nettoyer :</label>
 <textarea id="input" placeholder="Collez votre texte ici..."></textarea>
 
-<div>
-  <h3>Options de nettoyage :</h3>
-  <!-- Caractères classiques -->
+<h3>Options de nettoyage :</h3>
+<div class="checkbox-grid">
   <div class="checkbox-item"><input type="checkbox" class="char-option" value="#" id="hash" checked> <label for="hash"># (hashtags)</label></div>
   <div class="checkbox-item"><input type="checkbox" class="char-option" value="-" id="dash" checked> <label for="dash">- (tirets)</label></div>
   <div class="checkbox-item"><input type="checkbox" class="char-option" value="`" id="backtick" checked> <label for="backtick">` (backticks)</label></div>
   <div class="checkbox-item"><input type="checkbox" class="char-option" value="*" id="asterisk" checked> <label for="asterisk">* (astérisques)</label></div>
   <div class="checkbox-item"><input type="checkbox" class="char-option" value="@" id="at"> <label for="at">@ (arobase)</label></div>
   <div class="checkbox-item"><input type="checkbox" class="char-option" value="$" id="dollar"> <label for="dollar">$ (dollar)</label></div>
-
-  <!-- Emojis -->
   <div class="checkbox-item"><input type="checkbox" id="remove-emojis" checked> <label for="remove-emojis">Supprimer les emojis</label></div>
-
-  <!-- Tirets triples / em-dashes -->
-  <div class="checkbox-item"><input type="checkbox" id="triple-dash" checked> <label for="triple-dash">Supprimer les groupes de 3 tirets ou plus / em-dashes</label></div>
-
-  <!-- Caractères invisibles / zero-width -->
-  <div class="checkbox-item"><input type="checkbox" id="remove-invisible" checked> <label for="remove-invisible">Supprimer les caractères invisibles (IA / watermark)</label></div>
-
-  <!-- Références cite -->
-  <div class="checkbox-item"><input type="checkbox" id="remove-cite" checked> <label for="remove-cite">Supprimer [cite: ...] et [cite_start]</label></div>
-
-  <!-- Références numériques [3][4] -->
-  <div class="checkbox-item"><input type="checkbox" id="remove-num-ref" checked> <label for="remove-num-ref">Supprimer les références numériques [3][4][5]</label></div>
-
-  <!-- Exposants -->
-  <div class="checkbox-item"><input type="checkbox" id="remove-superscript" checked> <label for="remove-superscript">Supprimer les exposants ¹²³⁴…</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="triple-dash" checked> <label for="triple-dash">Supprimer 3+ tirets / em-dashes</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="remove-invisible" checked> <label for="remove-invisible">Supprimer caractères invisibles</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="remove-cite" checked> <label for="remove-cite">Supprimer [cite:...] et [cite_start]</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="remove-num-ref" checked> <label for="remove-num-ref">Supprimer références numériques [3][4][5]</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="remove-superscript" checked> <label for="remove-superscript">Supprimer exposants ¹²³…</label></div>
 </div>
 
 <button id="clean">Nettoyer le texte</button>
 <button id="highlight">Surligner ce qui serait supprimé</button>
 
-<label for="output">Texte nettoyé :</label>
+<h3>Texte nettoyé :</h3>
 <textarea id="output" readonly></textarea>
+<br>
+<button id="copy">📋 Copier le texte nettoyé</button>
 
 <script>
 const input = document.getElementById('input');
 const output = document.getElementById('output');
+const copyBtn = document.getElementById('copy');
 
 const checkboxes = {
   chars: document.querySelectorAll('.char-option'),
@@ -69,99 +64,69 @@ const checkboxes = {
 };
 
 function cleanText(text) {
-  // Tirets triples / em-dashes
   if(checkboxes.tripleDash.checked){
     text = text.replace(/-{3,}/g,'').replace(/—/g,'');
   }
-
-  // Caractères classiques
   const selectedChars = Array.from(checkboxes.chars).filter(cb=>cb.checked).map(cb=>cb.value).join('');
   if(selectedChars.length>0){
     const escaped = selectedChars.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
     text = text.replace(new RegExp(`[${escaped}]`,'g'),'');
   }
-
-  // Emojis
   if(checkboxes.emojis.checked){
     text = text.replace(/[\p{Extended_Pictographic}]/gu,'');
   }
-
-  // Caractères invisibles
   if(checkboxes.invisible.checked){
     text = text.replace(/[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g,'');
   }
-
-  // Références cite
   if(checkboxes.cite.checked){
     text = text.replace(/\[cite:[^\]]*\]/g,'').replace(/\[cite_start\]/g,'');
   }
-
-  // Références numériques
   if(checkboxes.numRef.checked){
     text = text.replace(/(\[\d+\])+/g,'');
   }
-
-  // Exposants
   if(checkboxes.superscript.checked){
     text = text.replace(/[¹²³⁴⁵⁶⁷⁸⁹⁰]/g,'');
   }
-
   return text;
 }
 
 function highlightText(text){
   let highlighted = text;
-
-  // Tirets triples / em-dashes
   if(checkboxes.tripleDash.checked){
-    highlighted = highlighted.replace(/-{3,}/g,m=>`<mark>${m}</mark>`).replace(/—/g,m=>`<mark>${m}</mark>`);
+    highlighted = highlighted.replace(/-{3,}/g,m=>`[${m}]`).replace(/—/g,m=>`[${m}]`);
   }
-
-  // Caractères classiques
   const selectedChars = Array.from(checkboxes.chars).filter(cb=>cb.checked).map(cb=>cb.value).join('');
   if(selectedChars.length>0){
     const escaped = selectedChars.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
-    highlighted = highlighted.replace(new RegExp(`[${escaped}]`,'g'),m=>`<mark>${m}</mark>`);
+    highlighted = highlighted.replace(new RegExp(`[${escaped}]`,'g'),m=>`[${m}]`);
   }
-
-  // Emojis
   if(checkboxes.emojis.checked){
-    highlighted = highlighted.replace(/[\p{Extended_Pictographic}]/gu,m=>`<mark>${m}</mark>`);
+    highlighted = highlighted.replace(/[\p{Extended_Pictographic}]/gu,m=>`[${m}]`);
   }
-
-  // Caractères invisibles
   if(checkboxes.invisible.checked){
-    highlighted = highlighted.replace(/[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g,m=>`<mark>${m}</mark>`);
+    highlighted = highlighted.replace(/[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g,m=>`[${m}]`);
   }
-
-  // Références cite
   if(checkboxes.cite.checked){
-    highlighted = highlighted.replace(/\[cite:[^\]]*\]/g,m=>`<mark>${m}</mark>`);
-    highlighted = highlighted.replace(/\[cite_start\]/g,m=>`<mark>${m}</mark>`);
+    highlighted = highlighted.replace(/\[cite:[^\]]*\]/g,m=>`[${m}]`);
+    highlighted = highlighted.replace(/\[cite_start\]/g,m=>`[${m}]`);
   }
-
-  // Références numériques
   if(checkboxes.numRef.checked){
-    highlighted = highlighted.replace(/(\[\d+\])+/g,m=>`<mark>${m}</mark>`);
+    highlighted = highlighted.replace(/(\[\d+\])+/g,m=>`[${m}]`);
   }
-
-  // Exposants
   if(checkboxes.superscript.checked){
-    highlighted = highlighted.replace(/[¹²³⁴⁵⁶⁷⁸⁹⁰]/g,m=>`<mark>${m}</mark>`);
+    highlighted = highlighted.replace(/[¹²³⁴⁵⁶⁷⁸⁹⁰]/g,m=>`[${m}]`);
   }
-
   return highlighted;
 }
 
 document.getElementById('clean').addEventListener('click',()=>{output.value = cleanText(input.value);});
-document.getElementById('highlight').addEventListener('click',()=>{
-  // Affichage avec crochets dans le textarea
-  const temp = document.createElement('textarea');
-  temp.style.width='100%';
-  temp.style.minHeight='150px';
-  temp.value = highlightText(input.value).replace(/<mark>/g,'[').replace(/<\/mark>/g,']');
-  output.value = temp.value;
+document.getElementById('highlight').addEventListener('click',()=>{output.value = highlightText(input.value);});
+copyBtn.addEventListener('click', ()=>{
+  output.select();
+  document.execCommand('copy');
+  alert('Texte nettoyé copié dans le presse-papiers !');
 });
 </script>
+
 </body>
 </html>
