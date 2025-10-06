@@ -1,365 +1,138 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="light">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nettoyeur de texte</title>
-
-<link rel="stylesheet" href="/css/style.css"> 
+<title>Nettoyeur de texte avancé</title>
 <style>
-    /* ------------------------------------- */
-    /* LAYOUT GLOBAL COPIÉ DE ACCUEIL.HTML   */
-    /* ------------------------------------- */
-    .page-layout {
-        display: grid;
-        grid-template-areas: 
-            "header"
-            "main"
-            "footer";
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr auto;
-        min-height: 100vh;
-    }
-
-    .page-header {
-        grid-area: header;
-        background: var(--bg-primary);
-        border-bottom: var(--border-width) solid var(--border-color);
-        padding: var(--spacing-lg) 0;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-    
-    .page-footer {
-        grid-area: footer;
-        background: var(--bg-secondary);
-        border-top: var(--border-width) solid var(--border-color);
-        padding: var(--spacing-xl) 0;
-    }
-    
-    /* Styles pour le bouton de thème */
-    .theme-toggle {
-        width: 60px;
-        height: 30px;
-        border: 2px solid var(--border-color);
-        border-radius: 15px;
-        position: relative;
-        cursor: pointer;
-        transition: all var(--transition-normal);
-        overflow: hidden;
-        background: var(--bg-tertiary);
-    }
-    
-    #themeToggleCircle {
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        width: 22px;
-        height: 22px;
-        background: linear-gradient(135deg, var(--orange-primary), var(--violet-primary));
-        border-radius: 50%;
-        transition: all var(--transition-normal);
-        box-shadow: 0 2px 10px var(--shadow-color);
-    }
-
-    /* ------------------------------------- */
-    /* STYLES SPÉCIFIQUES À INDEX.HTML       */
-    /* ------------------------------------- */
-
-    /* La div principale devient le main-content */
-    .main-content {
-        grid-area: main;
-        padding: var(--spacing-xl);
-        overflow-y: auto;
-    }
-    
-    /* Surcharge ou ajustement des éléments spécifiques pour utiliser les variables */
-    #input {
-        width: 100%;
-        min-height: 250px;
-        margin-bottom: var(--spacing-lg);
-        padding: var(--spacing-md);
-        font-size: var(--font-size-base);
-        font-family: var(--font-family-secondary);
-        white-space: pre-wrap;
-        
-        border: var(--border-width) solid var(--border-color);
-        border-radius: var(--border-radius-md);
-        background: var(--bg-secondary);
-        color: var(--text-primary);
-        transition: all var(--transition-normal);
-    }
-    
-    #input:focus {
-        border-color: var(--orange-primary);
-        box-shadow: 0 0 0 3px var(--orange-light);
-        outline: none;
-    }
-    
-    /* FIX pour les cases : alignement vertical parfait des cases */
-    .checkbox-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-        gap: var(--spacing-md);
-        margin-bottom: var(--spacing-lg);
-    }
-    
-    .checkbox-item { 
-        display: flex; 
-        align-items: center; /* ALIGNEMENT VERTICAL FIXÉ */
-        gap: var(--spacing-sm); 
-    }
+  body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+  textarea { width: 100%; min-height: 100px; margin-bottom: 10px; padding: 10px; font-size: 1rem; white-space: pre-wrap; }
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+  .checkbox-item { display: flex; align-items: center; gap: 5px; }
+  button { padding: 10px 15px; font-size: 1rem; cursor: pointer; margin: 5px 5px 10px 0; }
 </style>
 </head>
-<body data-theme="light">
+<body>
 
-<div class="page-layout">
-    <header class="page-header">
-        <div class="container">
-            <div class="flex-between">
-                <div class="flex" style="align-items: center; gap: var(--spacing-md);">
-                    <button class="btn btn-outline" style="visibility: hidden;">☰</button>
-                    <h1 class="text-gradient" style="margin: 0; font-size: var(--font-size-2xl);">
-                        Nettoyeur de Texte 
-                    </h1>
-                </div>
-                <div class="theme-toggle tooltip" id="themeToggle" data-tooltip="Changer de thème">
-                    <div id="themeToggleCircle"></div>
-                </div>
-            </div>
-        </div>
-    </header>
+<h1>Nettoyeur de texte avancé</h1>
 
-    <main class="main-content">
-        <div class="container p-4">
+<label for="input">Texte à nettoyer :</label>
+<textarea id="input" placeholder="Collez votre texte ici..."></textarea>
 
-            <label for="input" class="font-weight-medium">Texte à nettoyer :</label>
-            <textarea id="input" placeholder="Collez votre texte ici..."></textarea>
+<button id="paste">📋 Coller le texte</button>
 
-            <div class="flex flex-wrap" style="gap: var(--spacing-md);">
-                <button id="cleanBtn" class="btn btn-primary hover-lift">Nettoyer le texte</button>
-                <button id="resetBtn" class="btn btn-secondary hover-scale">Réinitialiser</button>
-                <button id="copyBtn" class="btn btn-outline hover-rotate">Copier le texte</button>
-                <button id="highlightBtn" class="btn btn-outline hover-tilt">Mettre en évidence</button>
-            </div>
-            
-            <h3 class="mt-5 text-secondary">Options de nettoyage :</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" id="smartQuotes" name="chars" value="“" checked> <label for="smartQuotes">Guillemets typographiques</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="tabs" name="spaces" value="\t"> <label for="tabs">Tabulations</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="nbsp" name="spaces" value="\u00A0"> <label for="nbsp">Espaces insécables (&amp;nbsp;)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="leadingTrailingSpaces" checked> <label for="leadingTrailingSpaces">Espaces en début/fin de ligne</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="duplicateSpaces" checked> <label for="duplicateSpaces">Espaces doubles</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="lineBreaks" checked> <label for="lineBreaks">Sauts de ligne doubles (paragraphes)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="unicode" checked> <label for="unicode">Caractères Unicode inhabituels</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="hyphens" name="chars" value="–"> <label for="hyphens">Tirets longs (— / –)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="zeroWidth" name="chars" value="\u200B"> <label for="zeroWidth">Caractères invisibles (ZWSP)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="emojis" checked> <label for="emojis">Emojis et symboles</label></div>
-            </div>
-            
-            <h3 class="mt-5 text-secondary">Options de mise en évidence :</h3>
-            <div class="checkbox-grid">
-                <div class="checkbox-item"><input type="checkbox" id="hyphensHighlight"> <label for="hyphensHighlight">Tirets longs (— / –)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="emojisHighlight"> <label for="emojisHighlight">Emojis</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="invisibleHighlight"> <label for="invisibleHighlight">Caractères invisibles</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="citeHighlight"> <label for="citeHighlight">Références de citation</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="numRefHighlight"> <label for="numRefHighlight">Références numériques</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="markupHighlight"> <label for="markupHighlight">Markup résiduel</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="longSpacesHighlight"> <label for="longSpacesHighlight">Séquences d'espaces longues</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="nonAsciiHighlight"> <label for="nonAsciiHighlight">Caractères non-ASCII</label></div>
-            </div>
-            
-            
-            
-        </div>
-    </main>
+<h3>Options de nettoyage :</h3>
+<div class="checkbox-grid">
+  <div class="checkbox-item"><input type="checkbox" class="char-option" value="#" id="hash" checked> <label for="hash"># (hashtags)</label></div>
+  <div class="checkbox-item"><input type="checkbox" class="char-option" value="-" id="dash" checked> <label for="dash">- (tirets)</label></div>
+  <div class="checkbox-item"><input type="checkbox" class="char-option" value="`" id="backtick" checked> <label for="backtick">` (backticks)</label></div>
+  <div class="checkbox-item"><input type="checkbox" class="char-option" value="*" id="asterisk" checked> <label for="asterisk">* (astérisques)</label></div>
+  <div class="checkbox-item"><input type="checkbox" class="char-option" value="@" id="at"> <label for="at">@ (arobase)</label></div>
+  <div class="checkbox-item"><input type="checkbox" class="char-option" value="$" id="dollar"> <label for="dollar">$ (dollar)</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="remove-emojis" checked> <label for="remove-emojis">Supprimer les emojis</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="triple-dash" checked> <label for="triple-dash">Supprimer 3+ tirets / em-dashes</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="remove-invisible" checked> <label for="remove-invisible">Supprimer caractères invisibles</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="remove-cite" checked> <label for="remove-cite">Supprimer [cite:...] et [cite_start]</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="remove-num-ref" checked> <label for="remove-num-ref">Supprimer références numériques [3][4][5]</label></div>
+  <div class="checkbox-item"><input type="checkbox" id="remove-superscript" checked> <label for="remove-superscript">Supprimer exposants ¹²³…</label></div>
+</div>
 
+<button id="clean">Nettoyer le texte</button>
+<button id="highlight">Surligner ce qui serait supprimé</button>
+<button id="copy">📋 Copier le texte nettoyé</button>
+
+<h3>Texte nettoyé :</h3>
+<textarea id="output" readonly></textarea>
 
 <script>
-    // ... (Le script JavaScript complet est ici, non répété pour la concision) ...
+const input = document.getElementById('input');
+const output = document.getElementById('output');
+const copyBtn = document.getElementById('copy');
+const pasteBtn = document.getElementById('paste');
 
-    const input = document.getElementById('input');
-  const cleanBtn = document.getElementById('cleanBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const copyBtn = document.getElementById('copyBtn');
-  const highlightBtn = document.getElementById('highlightBtn');
-  const themeToggle = document.getElementById('themeToggle');
-  const themeToggleCircle = document.getElementById('themeToggleCircle');
-  const html = document.documentElement;
+const checkboxes = {
+  chars: document.querySelectorAll('.char-option'),
+  emojis: document.getElementById('remove-emojis'),
+  tripleDash: document.getElementById('triple-dash'),
+  invisible: document.getElementById('remove-invisible'),
+  cite: document.getElementById('remove-cite'),
+  numRef: document.getElementById('remove-num-ref'),
+  superscript: document.getElementById('remove-superscript')
+};
 
-  const checkboxes = {
-    chars: Array.from(document.querySelectorAll('.checkbox-grid input[name="chars"]')),
-    spaces: Array.from(document.querySelectorAll('.checkbox-grid input[name="spaces"]')),
-    // Nettoyage
-    smartQuotes: document.getElementById('smartQuotes'),
-    tabs: document.getElementById('tabs'),
-    nbsp: document.getElementById('nbsp'),
-    leadingTrailingSpaces: document.getElementById('leadingTrailingSpaces'),
-    duplicateSpaces: document.getElementById('duplicateSpaces'),
-    lineBreaks: document.getElementById('lineBreaks'),
-    unicode: document.getElementById('unicode'),
-    hyphens: document.getElementById('hyphens'),
-    zeroWidth: document.getElementById('zeroWidth'),
-    emojis: document.getElementById('emojis'),
-    // Mise en évidence
-    hyphensHighlight: document.getElementById('hyphensHighlight'),
-    emojisHighlight: document.getElementById('emojisHighlight'),
-    invisibleHighlight: document.getElementById('invisibleHighlight'),
-    citeHighlight: document.getElementById('citeHighlight'),
-    numRefHighlight: document.getElementById('numRefHighlight'),
-    markupHighlight: document.getElementById('markupHighlight'),
-    longSpacesHighlight: document.getElementById('longSpacesHighlight'),
-    nonAsciiHighlight: document.getElementById('nonAsciiHighlight')
-  };
-  
-  // Fonction pour gérer le thème (nécessaire car ajout du bouton de thème)
-  function toggleTheme() {
-      const currentTheme = html.getAttribute('data-theme');
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      html.setAttribute('data-theme', newTheme);
-      
-      // Animation du cercle (déplacé vers la droite pour le dark mode)
-      themeToggleCircle.style.left = newTheme === 'dark' ? '34px' : '2px';
+function cleanText(text) {
+  if(checkboxes.tripleDash.checked){
+    text = text.replace(/-{3,}/g,'').replace(/—/g,'');
   }
+  const selectedChars = Array.from(checkboxes.chars).filter(cb=>cb.checked).map(cb=>cb.value).join('');
+  if(selectedChars.length>0){
+    const escaped = selectedChars.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
+    text = text.replace(new RegExp(`[${escaped}]`,'g'),'');
+  }
+  if(checkboxes.emojis.checked){
+    text = text.replace(/[\p{Extended_Pictographic}]/gu,'');
+  }
+  if(checkboxes.invisible.checked){
+    text = text.replace(/[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g,'');
+  }
+  if(checkboxes.cite.checked){
+    text = text.replace(/\[cite:[^\]]*\]/g,'').replace(/\[cite_start\]/g,'');
+  }
+  if(checkboxes.numRef.checked){
+    text = text.replace(/(\[\d+\])+/g,'');
+  }
+  if(checkboxes.superscript.checked){
+    text = text.replace(/[¹²³⁴⁵⁶⁷⁸⁹⁰]/g,'');
+  }
+  return text;
+}
 
-  // Événements pour le thème
-  themeToggle.addEventListener('click', toggleTheme);
+function highlightText(text){
+  let highlighted = text;
+  if(checkboxes.tripleDash.checked){
+    highlighted = highlighted.replace(/-{3,}/g,m=>`[${m}]`).replace(/—/g,m=>`[${m}]`);
+  }
+  const selectedChars = Array.from(checkboxes.chars).filter(cb=>cb.checked).map(cb=>cb.value).join('');
+  if(selectedChars.length>0){
+    const escaped = selectedChars.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
+    highlighted = highlighted.replace(new RegExp(`[${escaped}]`,'g'),m=>`[${m}]`);
+  }
+  if(checkboxes.emojis.checked){
+    highlighted = highlighted.replace(/[\p{Extended_Pictographic}]/gu,m=>`[${m}]`);
+  }
+  if(checkboxes.invisible.checked){
+    highlighted = highlighted.replace(/[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g,m=>`[${m}]`);
+  }
+  if(checkboxes.cite.checked){
+    highlighted = highlighted.replace(/\[cite:[^\]]*\]/g,m=>`[${m}]`);
+    highlighted = highlighted.replace(/\[cite_start\]/g,m=>`[${m}]`);
+  }
+  if(checkboxes.numRef.checked){
+    highlighted = highlighted.replace(/(\[\d+\])+/g,m=>`[${m}]`);
+  }
+  if(checkboxes.superscript.checked){
+    highlighted = highlighted.replace(/[¹²³⁴⁵⁶⁷⁸⁹⁰]/g,m=>`[${m}]`);
+  }
+  return highlighted;
+}
 
-  // Fonction de nettoyage
-  function cleanText(text) {
-    let cleaned = text;
-    
-    // Nettoyage des caractères et espaces sélectionnés
-    const selectedChars = Array.from(document.querySelectorAll('.checkbox-grid input[name="chars"]:checked')).map(cb => cb.value).join('');
-    if(selectedChars.length > 0) {
-      const escaped = selectedChars.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
-      cleaned = cleaned.replace(new RegExp(`[${escaped}]`,'g'), '');
-    }
-    
-    const selectedSpaces = Array.from(document.querySelectorAll('.checkbox-grid input[name="spaces"]:checked')).map(cb => cb.value).join('');
-    if(selectedSpaces.length > 0) {
-      const escaped = selectedSpaces.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
-      cleaned = cleaned.replace(new RegExp(`[${escaped}]`,'g'), ' ');
-    }
-    
-    if(checkboxes.leadingTrailingSpaces.checked){
-      cleaned = cleaned.replace(/^[ \t\u00A0]+|[ \t\u00A0]+$/gm, '');
-    }
-    if(checkboxes.duplicateSpaces.checked){
-      cleaned = cleaned.replace(/[ \t\u00A0]+/g, ' ');
-    }
-    if(checkboxes.lineBreaks.checked){
-      cleaned = cleaned.replace(/\n\s*\n/g, '\n\n');
-    }
-    if(checkboxes.unicode.checked){
-      // Supprime les caractères de contrôle et autres caractères exotiques (hors ASCII standard et alphanumérique/ponctuation commune)
-      cleaned = cleaned.replace(/[\u0000-\u001F\u007F-\u009F\u2000-\u200F\u2028-\u202F\u205F\u3000\uFEFF]/g, '');
-    }
-    if(checkboxes.emojis.checked){
-      // Simple regex pour les emojis, nécessite 'u' flag
-      cleaned = cleaned.replace(/[\p{Extended_Pictographic}]/gu, '');
-    }
+// Événements
+document.getElementById('clean').addEventListener('click',()=>{output.value = cleanText(input.value);});
+document.getElementById('highlight').addEventListener('click',()=>{output.value = highlightText(input.value);});
 
-    // Normalisation finale (trims, enlève les doubles espaces résiduels)
-    cleaned = cleaned.trim();
-    cleaned = cleaned.replace(/\s{2,}/g, ' ');
-    
-    return cleaned;
-  }
-  
-  // Fonction de mise en évidence
-  function highlightText(text) {
-    let highlighted = text;
-    
-    // HTML de surlignage simple (vous pouvez le styliser en CSS)
-    const highlightOpen = '<span style="background-color: var(--orange-light); color: var(--text-primary); padding: 1px 3px; border-radius: var(--border-radius-sm); font-weight: var(--font-weight-bold);">';
-    const highlightClose = '</span>';
+copyBtn.addEventListener('click', async ()=>{
+  await navigator.clipboard.writeText(output.value);
+});
 
-    // Remplacement générique pour les options de surlignage
-    const replacements = [];
-
-    if(checkboxes.hyphensHighlight.checked){
-      replacements.push({regex: /[-–—]/g, label: "Tiret"});
-    }
-    if(checkboxes.emojisHighlight.checked){
-      replacements.push({regex: /[\p{Extended_Pictographic}]/gu, label: "Emoji"});
-    }
-    if(checkboxes.invisibleHighlight.checked){
-      replacements.push({regex: /[\u200B-\u200F\uFEFF]/g, label: "Invisible"});
-    }
-    if(checkboxes.citeHighlight.checked){
-      replacements.push({regex: /\]*\]/g, label: "Citation"});
-    }
-    if(checkboxes.numRefHighlight.checked){
-      replacements.push({regex: /(\[\d+\])+/g, label: "NumRef"});
-    }
-    if(checkboxes.markupHighlight.checked){
-      replacements.push({regex: /<\/?\w+[^>]*\/?>/g, label: "Markup"}); // Basic HTML tags
-    }
-    if(checkboxes.longSpacesHighlight.checked){
-      replacements.push({regex: /[ \t\u00A0]{5,}/g, label: "Espaces longs"}); // 5+ spaces
-    }
-    if(checkboxes.nonAsciiHighlight.checked){
-        // Caractères non-ASCII étendus (hors accents latins usuels)
-        replacements.push({regex: /[^\u0000-\u007F\u00C0-\u017F\u2010-\u201F\n\r]/g, label: "Non-ASCII"}); 
-    }
-    
-    // Appliquer tous les surlignages séquentiellement
-    replacements.forEach(rep => {
-      highlighted = highlighted.replace(rep.regex, m => `${highlightOpen}${m}${highlightClose}`);
-    });
-
-    return highlighted;
-  }
-
-  // Événements
-  cleanBtn.addEventListener('click', () => {
-    input.value = cleanText(input.value);
-  });
-
-  resetBtn.addEventListener('click', () => {
-    input.value = '';
-    input.focus();
-  });
-  
-  copyBtn.addEventListener('click', () => {
-    input.select();
-    navigator.clipboard.writeText(input.value).then(() => {
-        alert('Texte copié dans le presse-papiers !');
-    }).catch(err => {
-        console.error('Erreur de copie:', err);
-    });
-  });
-
-  highlightBtn.addEventListener('click', () => {
-    // Si déjà surligné, on nettoie d'abord (supprime les balises span)
-    if (input.dataset.highlighted === 'true') {
-        input.value = input.value.replace(/<span[^>]*>|<\/span>/g, '');
-        delete input.dataset.highlighted;
-        highlightBtn.textContent = 'Mettre en évidence';
-        highlightBtn.classList.remove('btn-primary');
-        highlightBtn.classList.add('btn-outline');
-    } else {
-        const highlightedText = highlightText(input.value);
-        input.value = highlightedText;
-        input.dataset.highlighted = 'true';
-        highlightBtn.textContent = 'Effacer le surlignage';
-        highlightBtn.classList.remove('btn-outline');
-        highlightBtn.classList.add('btn-primary');
-    }
-  });
-
-  // Gestionnaire pour la réinitialisation du surlignage après une modification manuelle
-  input.addEventListener('input', () => {
-    if (input.dataset.highlighted === 'true') {
-        // Optionnel: Réinitialiser l'état du bouton si l'utilisateur modifie le texte surligné
-        delete input.dataset.highlighted;
-        highlightBtn.textContent = 'Mettre en évidence';
-        highlightBtn.classList.remove('btn-primary');
-        highlightBtn.classList.add('btn-outline');
-    }
-  });
+pasteBtn.addEventListener('click', async ()=>{
+  const text = await navigator.clipboard.readText();
+  input.value = text;
+});
 </script>
 
 </body>
