@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur CVSS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { text-align: center; color: #333; }
+        .tabs { display: flex; gap: 10px; margin: 20px 0; }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: white;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+        }
+        .tab.active { background: #333; color: white; border-color: #333; }
+        .content { display: none; background: white; padding: 20px; }
+        .content.active { display: block; }
+        .section { margin: 20px 0; padding: 15px; background: #fafafa; border-left: 3px solid #333; }
+        .section h3 { margin-top: 0; color: #333; }
+        .metric { margin: 10px 0; }
+        .metric label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .metric select { width: 100%; padding: 8px; font-size: 14px; }
+        .result {
+            margin: 30px 0;
+            padding: 20px;
+            background: #333;
+            color: white;
+            text-align: center;
+            border: 2px solid #666;
+        }
+        .score { font-size: 48px; font-weight: bold; margin: 10px 0; }
+        .severity { font-size: 24px; margin: 10px 0; }
+        .vector {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            font-family: monospace;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculateur CVSS cassé </h1>
+
+    <div style="max-width: 800px; margin: 20px auto; padding: 15px; background: white; border: 2px solid #ddd;">
+        <h3 style="margin-top: 0;">Importer un vecteur CVSS</h3>
+        <input type="text" id="vectorInput" placeholder="Ex: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H" style="width: calc(100% - 120px); padding: 10px; font-size: 14px; font-family: monospace;">
+        <button onclick="parseVector()" style="width: 100px; margin-left: 10px;">Importer</button>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('v2')">CVSS v2</div>
+        <div class="tab" onclick="switchTab('v3')">CVSS v3.1</div>
+        <div class="tab" onclick="switchTab('v4')">CVSS v4.0</div>
+    </div>
+
+    <!-- CVSS v2 -->
+    <div id="v2" class="content active">
+        <div class="section">
+            <h3>Métriques de Base</h3>
+            <div class="metric">
+                <label>Attack Vector (AV)</label>
+                <select id="v2_AV" onchange="calcV2()">
+                    <option value="L">Local (L)</option>
+                    <option value="A">Adjacent Network (A)</option>
+                    <option value="N" selected>Network (N)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Attack Complexity (AC)</label>
+                <select id="v2_AC" onchange="calcV2()">
+                    <option value="H">High (H)</option>
+                    <option value="M">Medium (M)</option>
+                    <option value="L" selected>Low (L)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Authentication (Au)</label>
+                <select id="v2_Au" onchange="calcV2()">
+                    <option value="M">Multiple (M)</option>
+                    <option value="S">Single (S)</option>
+                    <option value="N" selected>None (N)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Confidentiality (C)</label>
+                <select id="v2_C" onchange="calcV2()">
+                    <option value="N">None (N)</option>
+                    <option value="P">Partial (P)</option>
+                    <option value="C" selected>Complete (C)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Integrity (I)</label>
+                <select id="v2_I" onchange="calcV2()">
+                    <option value="N">None (N)</option>
+                    <option value="P">Partial (P)</option>
+                    <option value="C" selected>Complete (C)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Availability (A)</label>
+                <select id="v2_A" onchange="calcV2()">
+                    <option value="N">None (N)</option>
+                    <option value="P">Partial (P)</option>
+                    <option value="C" selected>Complete (C)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques Temporelles</h3>
+            <div class="metric">
+                <label>Exploitability (E)</label>
+                <select id="v2_E" onchange="calcV2()">
+                    <option value="ND" selected>Not Defined</option>
+                    <option value="U">Unproven</option>
+                    <option value="POC">Proof-of-Concept</option>
+                    <option value="F">Functional</option>
+                    <option value="H">High</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Remediation Level (RL)</label>
+                <select id="v2_RL" onchange="calcV2()">
+                    <option value="ND" selected>Not Defined</option>
+                    <option value="OF">Official Fix</option>
+                    <option value="TF">Temporary Fix</option>
+                    <option value="W">Workaround</option>
+                    <option value="U">Unavailable</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Report Confidence (RC)</label>
+                <select id="v2_RC" onchange="calcV2()">
+                    <option value="ND" selected>Not Defined</option>
+                    <option value="UC">Unconfirmed</option>
+                    <option value="UR">Uncorroborated</option>
+                    <option value="C">Confirmed</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="result">
+            <h2>Score CVSS v2</h2>
+            <div class="score" id="v2_score">10.0</div>
+            <div class="severity" id="v2_severity">HIGH</div>
+            <div class="vector" id="v2_vector">AV:N/AC:L/Au:N/C:C/I:C/A:C</div>
+            <button onclick="copyResult('v2')" style="margin-top: 15px;">Copier le résultat</button>
+        </div>
+    </div>
+
+    <!-- CVSS v3.1 -->
+    <div id="v3" class="content">
+        <div class="section">
+            <h3>Métriques de Base</h3>
+            <div class="metric">
+                <label>Attack Vector (AV)</label>
+                <select id="v3_AV" onchange="calcV3()">
+                    <option value="P">Physical</option>
+                    <option value="L">Local</option>
+                    <option value="A">Adjacent</option>
+                    <option value="N" selected>Network</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Attack Complexity (AC)</label>
+                <select id="v3_AC" onchange="calcV3()">
+                    <option value="H">High</option>
+                    <option value="L" selected>Low</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Privileges Required (PR)</label>
+                <select id="v3_PR" onchange="calcV3()">
+                    <option value="H">High</option>
+                    <option value="L">Low</option>
+                    <option value="N" selected>None</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>User Interaction (UI)</label>
+                <select id="v3_UI" onchange="calcV3()">
+                    <option value="R">Required</option>
+                    <option value="N" selected>None</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Scope (S)</label>
+                <select id="v3_S" onchange="calcV3()">
+                    <option value="U" selected>Unchanged</option>
+                    <option value="C">Changed</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Confidentiality (C)</label>
+                <select id="v3_C" onchange="calcV3()">
+                    <option value="N">None</option>
+                    <option value="L">Low</option>
+                    <option value="H" selected>High</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Integrity (I)</label>
+                <select id="v3_I" onchange="calcV3()">
+                    <option value="N">None</option>
+                    <option value="L">Low</option>
+                    <option value="H" selected>High</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Availability (A)</label>
+                <select id="v3_A" onchange="calcV3()">
+                    <option value="N">None</option>
+                    <option value="L">Low</option>
+                    <option value="H" selected>High</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques Temporelles</h3>
+            <div class="metric">
+                <label>Exploit Code Maturity (E)</label>
+                <select id="v3_E" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="U">Unproven</option>
+                    <option value="P">Proof-of-Concept</option>
+                    <option value="F">Functional</option>
+                    <option value="H">High</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Remediation Level (RL)</label>
+                <select id="v3_RL" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="O">Official Fix</option>
+                    <option value="T">Temporary Fix</option>
+                    <option value="W">Workaround</option>
+                    <option value="U">Unavailable</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Report Confidence (RC)</label>
+                <select id="v3_RC" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="U">Unknown</option>
+                    <option value="R">Reasonable</option>
+                    <option value="C">Confirmed</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques Environnementales</h3>
+            <div class="metric">
+                <label>Confidentiality Requirement (CR)</label>
+                <select id="v3_CR" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="L">Low</option>
+                    <option value="M">Medium</option>
+                    <option value="H">High</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Integrity Requirement (IR)</label>
+                <select id="v3_IR" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="L">Low</option>
+                    <option value="M">Medium</option>
+                    <option value="H">High</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Availability Requirement (AR)</label>
+                <select id="v3_AR" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="L">Low</option>
+                    <option value="M">Medium</option>
+                    <option value="H">High</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Attack Vector (MAV)</label>
+                <select id="v3_MAV" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="P">Physical</option>
+                    <option value="L">Local</option>
+                    <option value="A">Adjacent</option>
+                    <option value="N">Network</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Attack Complexity (MAC)</label>
+                <select id="v3_MAC" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="H">High</option>
+                    <option value="L">Low</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Privileges Required (MPR)</label>
+                <select id="v3_MPR" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="H">High</option>
+                    <option value="L">Low</option>
+                    <option value="N">None</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified User Interaction (MUI)</label>
+                <select id="v3_MUI" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="R">Required</option>
+                    <option value="N">None</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Scope (MS)</label>
+                <select id="v3_MS" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="U">Unchanged</option>
+                    <option value="C">Changed</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Confidentiality (MC)</label>
+                <select id="v3_MC" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="N">None</option>
+                    <option value="L">Low</option>
+                    <option value="H">High</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Integrity (MI)</label>
+                <select id="v3_MI" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="N">None</option>
+                    <option value="L">Low</option>
+                    <option value="H">High</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Availability (MA)</label>
+                <select id="v3_MA" onchange="calcV3()">
+                    <option value="X" selected>Not Defined</option>
+                    <option value="N">None</option>
+                    <option value="L">Low</option>
+                    <option value="H">High</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="result">
+            <h2>Score CVSS v3.1</h2>
+            <div class="score" id="v3_score">9.8</div>
+            <div class="severity" id="v3_severity">CRITICAL</div>
+            <div class="vector" id="v3_vector">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</div>
+            <button onclick="copyResult('v3')" style="margin-top: 15px;">Copier le résultat</button>
+        </div>
+    </div>
+
+    <!-- CVSS v4.0 -->
+    <div id="v4" class="content">
+        <div class="section">
+            <h3>Métriques de Base - Exploitabilité</h3>
+            <div class="metric">
+                <label>Attack Vector (AV)</label>
+                <select id="v4_AV" onchange="calcV4()">
+                    <option value="N" selected>Network (N)</option>
+                    <option value="A">Adjacent (A)</option>
+                    <option value="L">Local (L)</option>
+                    <option value="P">Physical (P)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Attack Complexity (AC)</label>
+                <select id="v4_AC" onchange="calcV4()">
+                    <option value="L" selected>Low (L)</option>
+                    <option value="H">High (H)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Attack Requirements (AT)</label>
+                <select id="v4_AT" onchange="calcV4()">
+                    <option value="N" selected>None (N)</option>
+                    <option value="P">Present (P)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Privileges Required (PR)</label>
+                <select id="v4_PR" onchange="calcV4()">
+                    <option value="N" selected>None (N)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="H">High (H)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>User Interaction (UI)</label>
+                <select id="v4_UI" onchange="calcV4()">
+                    <option value="N" selected>None (N)</option>
+                    <option value="P">Passive (P)</option>
+                    <option value="A">Active (A)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques de Base - Impact Système Vulnérable</h3>
+            <div class="metric">
+                <label>Confidentiality (VC)</label>
+                <select id="v4_VC" onchange="calcV4()">
+                    <option value="H" selected>High (H)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="N">None (N)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Integrity (VI)</label>
+                <select id="v4_VI" onchange="calcV4()">
+                    <option value="H" selected>High (H)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="N">None (N)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Availability (VA)</label>
+                <select id="v4_VA" onchange="calcV4()">
+                    <option value="H" selected>High (H)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="N">None (N)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques de Base - Impact Systèmes Suivants</h3>
+            <div class="metric">
+                <label>Confidentiality (SC)</label>
+                <select id="v4_SC" onchange="calcV4()">
+                    <option value="N" selected>None (N)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="H">High (H)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Integrity (SI)</label>
+                <select id="v4_SI" onchange="calcV4()">
+                    <option value="N" selected>None (N)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="H">High (H)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Availability (SA)</label>
+                <select id="v4_SA" onchange="calcV4()">
+                    <option value="N" selected>None (N)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="H">High (H)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques Supplémentaires</h3>
+            <div class="metric">
+                <label>Safety (S)</label>
+                <select id="v4_S" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="N">Negligible (N)</option>
+                    <option value="P">Present (P)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Automatable (AU)</label>
+                <select id="v4_AU" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="N">No (N)</option>
+                    <option value="Y">Yes (Y)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Recovery (R)</label>
+                <select id="v4_R" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="A">Automatic (A)</option>
+                    <option value="U">User (U)</option>
+                    <option value="I">Irrecoverable (I)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Value Density (V)</label>
+                <select id="v4_V" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="D">Diffuse (D)</option>
+                    <option value="C">Concentrated (C)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Vulnerability Response Effort (RE)</label>
+                <select id="v4_RE" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="M">Moderate (M)</option>
+                    <option value="H">High (H)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Provider Urgency (U)</label>
+                <select id="v4_U" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="Clear">Clear</option>
+                    <option value="Green">Green</option>
+                    <option value="Amber">Amber</option>
+                    <option value="Red">Red</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques Threat</h3>
+            <div class="metric">
+                <label>Exploit Maturity (E)</label>
+                <select id="v4_E" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="U">Unreported (U)</option>
+                    <option value="P">Proof-of-Concept (P)</option>
+                    <option value="A">Attacked (A)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques Environnementales - Exploitabilité</h3>
+            <div class="metric">
+                <label>Modified Attack Vector (MAV)</label>
+                <select id="v4_MAV" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="N">Network (N)</option>
+                    <option value="A">Adjacent (A)</option>
+                    <option value="L">Local (L)</option>
+                    <option value="P">Physical (P)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Attack Complexity (MAC)</label>
+                <select id="v4_MAC" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="H">High (H)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Attack Requirements (MAT)</label>
+                <select id="v4_MAT" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="N">None (N)</option>
+                    <option value="P">Present (P)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Privileges Required (MPR)</label>
+                <select id="v4_MPR" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="N">None (N)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="H">High (H)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified User Interaction (MUI)</label>
+                <select id="v4_MUI" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="N">None (N)</option>
+                    <option value="P">Passive (P)</option>
+                    <option value="A">Active (A)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques Environnementales - Impact Système Vulnérable</h3>
+            <div class="metric">
+                <label>Modified Confidentiality (MVC)</label>
+                <select id="v4_MVC" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="H">High (H)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="N">None (N)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Integrity (MVI)</label>
+                <select id="v4_MVI" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="H">High (H)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="N">None (N)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Availability (MVA)</label>
+                <select id="v4_MVA" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="H">High (H)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="N">None (N)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques Environnementales - Impact Systèmes Suivants</h3>
+            <div class="metric">
+                <label>Modified Confidentiality (MSC)</label>
+                <select id="v4_MSC" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="H">High (H)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="N">Negligible (N)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Integrity (MSI)</label>
+                <select id="v4_MSI" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="S">Safety (S)</option>
+                    <option value="H">High (H)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="N">Negligible (N)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Modified Availability (MSA)</label>
+                <select id="v4_MSA" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="S">Safety (S)</option>
+                    <option value="H">High (H)</option>
+                    <option value="L">Low (L)</option>
+                    <option value="N">Negligible (N)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Métriques Environnementales - Exigences de Sécurité</h3>
+            <div class="metric">
+                <label>Confidentiality Requirements (CR)</label>
+                <select id="v4_CR" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="H">High (H)</option>
+                    <option value="M">Medium (M)</option>
+                    <option value="L">Low (L)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Integrity Requirements (IR)</label>
+                <select id="v4_IR" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="H">High (H)</option>
+                    <option value="M">Medium (M)</option>
+                    <option value="L">Low (L)</option>
+                </select>
+            </div>
+            <div class="metric">
+                <label>Availability Requirements (AR)</label>
+                <select id="v4_AR" onchange="calcV4()">
+                    <option value="X" selected>Not Defined (X)</option>
+                    <option value="H">High (H)</option>
+                    <option value="M">Medium (M)</option>
+                    <option value="L">Low (L)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="result">
+            <h2>Score CVSS v4.0</h2>
+            <div class="score" id="v4_score">9.3</div>
+            <div class="severity" id="v4_severity">CRITICAL</div>
+            <div class="vector" id="v4_vector">CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N</div>
+            <button onclick="copyResult('v4')" style="margin-top: 15px;">Copier le résultat</button>
+        </div>
+    </div>
+
+    <script>
+        const v2Val = {
+            AV: {L:0.395, A:0.646, N:1.0},
+            AC: {H:0.35, M:0.61, L:0.71},
+            Au: {M:0.45, S:0.56, N:0.704},
+            C: {N:0, P:0.275, C:0.660},
+            I: {N:0, P:0.275, C:0.660},
+            A: {N:0, P:0.275, C:0.660},
+            E: {ND:1, U:0.85, POC:0.9, F:0.95, H:1.0},
+            RL: {ND:1, OF:0.87, TF:0.90, W:0.95, U:1.0},
+            RC: {ND:1, UC:0.90, UR:0.95, C:1.0},
+            CDP: {ND:0, N:0, L:0.1, LM:0.3, MH:0.4, H:0.5},
+            TD: {ND:1, N:0, L:0.25, M:0.75, H:1.0},
+            CR: {ND:1, L:0.5, M:1, H:1.51},
+            IR: {ND:1, L:0.5, M:1, H:1.51},
+            AR: {ND:1, L:0.5, M:1, H:1.51}
+        };
+
+        const v3Val = {
+            AV: {N:0.85, A:0.62, L:0.55, P:0.2},
+            AC: {L:0.77, H:0.44},
+            PR: {N:0.85, L:0.62, H:0.27, L_C:0.68, H_C:0.5},
+            UI: {N:0.85, R:0.62},
+            C: {N:0, L:0.22, H:0.56},
+            I: {N:0, L:0.22, H:0.56},
+            A: {N:0, L:0.22, H:0.56},
+            E: {X:1, U:0.91, P:0.94, F:0.97, H:1},
+            RL: {X:1, O:0.95, T:0.96, W:0.97, U:1},
+            RC: {X:1, U:0.92, R:0.96, C:1},
+            CR: {X:1, L:0.5, M:1, H:1.5},
+            IR: {X:1, L:0.5, M:1, H:1.5},
+            AR: {X:1, L:0.5, M:1, H:1.5}
+        };
+
+        function switchTab(v) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(v).classList.add('active');
+            if(v==='v2') calcV2();
+            if(v==='v3') calcV3();
+        }
+
+        function calcV2() {
+            const AV = document.getElementById('v2_AV').value;
+            const AC = document.getElementById('v2_AC').value;
+            const Au = document.getElementById('v2_Au').value;
+            const C = document.getElementById('v2_C').value;
+            const I = document.getElementById('v2_I').value;
+            const A = document.getElementById('v2_A').value;
+            const E = document.getElementById('v2_E').value;
+            const RL = document.getElementById('v2_RL').value;
+            const RC = document.getElementById('v2_RC').value;
+            const CDP = document.getElementById('v2_CDP').value;
+            const TD = document.getElementById('v2_TD').value;
+            const CR = document.getElementById('v2_CR').value;
+            const IR = document.getElementById('v2_IR').value;
+            const AR = document.getElementById('v2_AR').value;
+
+            const impact = 10.41 * (1 - (1-v2Val.C[C]) * (1-v2Val.I[I]) * (1-v2Val.A[A]));
+            const exploit = 20 * v2Val.AV[AV] * v2Val.AC[AC] * v2Val.Au[Au];
+            const fImpact = impact === 0 ? 0 : 1.176;
+            const base = ((0.6*impact) + (0.4*exploit) - 1.5) * fImpact;
+            const temp = base * v2Val.E[E] * v2Val.RL[RL] * v2Val.RC[RC];
+
+            const adjTemp = temp + ((10 - temp) * v2Val.CDP[CDP]);
+            const adjImpact = Math.min(10, 10.41 * (1 - (1-v2Val.C[C]*v2Val.CR[CR]) * (1-v2Val.I[I]*v2Val.IR[IR]) * (1-v2Val.A[A]*v2Val.AR[AR])));
+            const envScore = ((0.6*adjImpact) + (0.4*exploit) - 1.5) * fImpact * v2Val.E[E] * v2Val.RL[RL] * v2Val.RC[RC] * v2Val.TD[TD];
+
+            const score = Math.round((envScore > 0 ? envScore : temp) * 10) / 10;
+
+            let sev = 'NONE';
+            if(score >= 7.0) sev = 'HIGH';
+            else if(score >= 4.0) sev = 'MEDIUM';
+            else if(score > 0) sev = 'LOW';
+
+            document.getElementById('v2_score').textContent = score.toFixed(1);
+            document.getElementById('v2_severity').textContent = sev;
+            
+            let vec = `AV:${AV}/AC:${AC}/Au:${Au}/C:${C}/I:${I}/A:${A}`;
+            if(E!=='ND') vec += `/E:${E}`;
+            if(RL!=='ND') vec += `/RL:${RL}`;
+            if(RC!=='ND') vec += `/RC:${RC}`;
+            if(CDP!=='ND') vec += `/CDP:${CDP}`;
+            if(TD!=='ND') vec += `/TD:${TD}`;
+            if(CR!=='ND') vec += `/CR:${CR}`;
+            if(IR!=='ND') vec += `/IR:${IR}`;
+            if(AR!=='ND') vec += `/AR:${AR}`;
+            document.getElementById('v2_vector').textContent = vec;
+        }
+
+        function calcV3() {
+            const AV = document.getElementById('v3_AV').value;
+            const AC = document.getElementById('v3_AC').value;
+            const PR = document.getElementById('v3_PR').value;
+            const UI = document.getElementById('v3_UI').value;
+            const S = document.getElementById('v3_S').value;
+            const C = document.getElementById('v3_C').value;
+            const I = document.getElementById('v3_I').value;
+            const A = document.getElementById('v3_A').value;
+            const E = document.getElementById('v3_E').value;
+            const RL = document.getElementById('v3_RL').value;
+            const RC = document.getElementById('v3_RC').value;
+            const CR = document.getElementById('v3_CR').value;
+            const IR = document.getElementById('v3_IR').value;
+            const AR = document.getElementById('v3_AR').value;
+            const MAV = document.getElementById('v3_MAV').value;
+            const MAC = document.getElementById('v3_MAC').value;
+            const MPR = document.getElementById('v3_MPR').value;
+            const MUI = document.getElementById('v3_MUI').value;
+            const MS = document.getElementById('v3_MS').value;
+            const MC = document.getElementById('v3_MC').value;
+            const MI = document.getElementById('v3_MI').value;
+            const MA = document.getElementById('v3_MA').value;
+
+            const prVal = S === 'C' ? (PR === 'L' ? v3Val.PR.L_C : (PR === 'H' ? v3Val.PR.H_C : v3Val.PR.N)) : v3Val.PR[PR];
+            
+            const iss = 1 - ((1-v3Val.C[C]) * (1-v3Val.I[I]) * (1-v3Val.A[A]));
+            let impact;
+            if(S === 'U') {
+                impact = 6.42 * iss;
+            } else {
+                impact = 7.52 * (iss - 0.029) - 3.25 * Math.pow(iss - 0.02, 15);
+            }
+
+            const exploit = 8.22 * v3Val.AV[AV] * v3Val.AC[AC] * prVal * v3Val.UI[UI];
+            
+            let base;
+            if(impact <= 0) {
+                base = 0;
+            } else if(S === 'U') {
+                base = Math.min(impact + exploit, 10);
+            } else {
+                base = Math.min(1.08 * (impact + exploit), 10);
+            }
+            base = Math.ceil(base * 10) / 10;
+
+            const temp = Math.ceil(base * v3Val.E[E] * v3Val.RL[RL] * v3Val.RC[RC] * 10) / 10;
+
+            let env = temp;
+            const hasEnv = MAV!=='X' || MAC!=='X' || MPR!=='X' || MUI!=='X' || MS!=='X' || MC!=='X' || MI!=='X' || MA!=='X';
+            
+            if(hasEnv) {
+                const mAV = MAV==='X' ? v3Val.AV[AV] : v3Val.AV[MAV];
+                const mAC = MAC==='X' ? v3Val.AC[AC] : v3Val.AC[MAC];
+                const mPR = MPR==='X' ? prVal : (MS==='C' || (MS==='X' && S==='C') ? (MPR==='L' ? v3Val.PR.L_C : (MPR==='H' ? v3Val.PR.H_C : v3Val.PR.N)) : v3Val.PR[MPR]);
+                const mUI = MUI==='X' ? v3Val.UI[UI] : v3Val.UI[MUI];
+                const mS = MS==='X' ? S : MS;
+                const mC = MC==='X' ? v3Val.C[C] : v3Val.C[MC];
+                const mI = MI==='X' ? v3Val.I[I] : v3Val.I[MI];
+                const mA = MA==='X' ? v3Val.A[A] : v3Val.A[MA];
+
+                const miss = Math.min(1 - ((1-mC*v3Val.CR[CR]) * (1-mI*v3Val.IR[IR]) * (1-mA*v3Val.AR[AR])), 0.915);
+                
+                let mImpact;
+                if(mS === 'U') {
+                    mImpact = 6.42 * miss;
+                } else {
+                    mImpact = 7.52 * (miss - 0.029) - 3.25 * Math.pow(miss * 0.9731 - 0.02, 13);
+                }
+
+                const mExploit = 8.22 * mAV * mAC * mPR * mUI;
+                
+                if(mImpact <= 0) {
+                    env = 0;
+                } else if(mS === 'U') {
+                    env = Math.ceil(Math.ceil(Math.min(mImpact + mExploit, 10) * 10) / 10 * v3Val.E[E] * v3Val.RL[RL] * v3Val.RC[RC] * 10) / 10;
+                } else {
+                    env = Math.ceil(Math.ceil(Math.min(1.08 * (mImpact + mExploit), 10) * 10) / 10 * v3Val.E[E] * v3Val.RL[RL] * v3Val.RC[RC] * 10) / 10;
+                }
+            }
+
+            const score = env;
+
+            let sev = 'NONE';
+            if(score >= 9.0) sev = 'CRITICAL';
+            else if(score >= 7.0) sev = 'HIGH';
+            else if(score >= 4.0) sev = 'MEDIUM';
+            else if(score > 0) sev = 'LOW';
+
+            document.getElementById('v3_score').textContent = score.toFixed(1);
+            document.getElementById('v3_severity').textContent = sev;
+
+            let vec = `CVSS:3.1/AV:${AV}/AC:${AC}/PR:${PR}/UI:${UI}/S:${S}/C:${C}/I:${I}/A:${A}`;
+            if(E!=='X') vec += `/E:${E}`;
+            if(RL!=='X') vec += `/RL:${RL}`;
+            if(RC!=='X') vec += `/RC:${RC}`;
+            if(CR!=='X') vec += `/CR:${CR}`;
+            if(IR!=='X') vec += `/IR:${IR}`;
+            if(AR!=='X') vec += `/AR:${AR}`;
+            if(MAV!=='X') vec += `/MAV:${MAV}`;
+            if(MAC!=='X') vec += `/MAC:${MAC}`;
+            if(MPR!=='X') vec += `/MPR:${MPR}`;
+            if(MUI!=='X') vec += `/MUI:${MUI}`;
+            if(MS!=='X') vec += `/MS:${MS}`;
+            if(MC!=='X') vec += `/MC:${MC}`;
+            if(MI!=='X') vec += `/MI:${MI}`;
+            if(MA!=='X') vec += `/MA:${MA}`;
+            document.getElementById('v3_vector').textContent = vec;
+        }
+
+        calcV2();
+
+        function parseVector() {
+            const input = document.getElementById('vectorInput').value.trim();
+            if(!input) return alert('Veuillez entrer un vecteur CVSS');
+
+            // Detect version
+            let version = 'v2';
+            if(input.startsWith('CVSS:3.1/')) version = 'v3';
+            else if(input.startsWith('CVSS:4.0/')) version = 'v4';
+
+            // Parse metrics
+            const parts = input.replace(/^CVSS:(3\.1|4\.0)\//, '').split('/');
+            const metrics = {};
+            parts.forEach(p => {
+                const [key, val] = p.split(':');
+                if(key && val) metrics[key] = val;
+            });
+
+            // Switch to correct tab
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab')[version === 'v2' ? 0 : version === 'v3' ? 1 : 2].classList.add('active');
+            document.getElementById(version).classList.add('active');
+
+            // Set values
+            const prefix = version + '_';
+            Object.keys(metrics).forEach(key => {
+                const el = document.getElementById(prefix + key);
+                if(el) el.value = metrics[key];
+            });
+
+            // Recalculate
+            if(version === 'v2') calcV2();
+            else if(version === 'v3') calcV3();
+            else calcV4();
+
+            alert('Vecteur importé avec succès !');
+        }
+
+        function copyResult(version) {
+            const score = document.getElementById(version + '_score').textContent;
+            const severity = document.getElementById(version + '_severity').textContent;
+            const vector = document.getElementById(version + '_vector').textContent;
+            
+            const text = `Score CVSS ${version === 'v2' ? 'v2' : version === 'v3' ? 'v3.1' : 'v4.0'}\n${score}\n${severity}\n${vector}`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Résultat copié dans le presse-papier !');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Résultat copié dans le presse-papier !');
+            });
+        }
+
+        calcV2();
+    </script>
+</body>
+</html>
