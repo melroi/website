@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melchior HADROT</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <link rel="icon" href="assets/icons/icon_logo.svg">
+</head>
+
+<body>
+    <div class="main-container">
+        <!-- Bannière fixe -->
+        <div class="banner">
+            <img src="assets/image/icon/hamburger1000x1000.png" alt="Menu" width="40px" onclick="openNav()">
+            <h1>Portfolio</h1>
+        </div>
+
+        <!-- Menu latéral -->
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="#aPropos" class="linkNav" onclick="closeNav()">À propos de moi</a>
+            <hr>
+            <a href="#formation" class="linkNav" onclick="closeNav()">Formation</a>
+            <hr>
+            <a href="#expPro" class="linkNav" onclick="closeNav()">Expériences</a>
+            <hr>
+            <a href="#competences" class="linkNav" onclick="closeNav()">Compétences</a>
+            <hr>
+            <a href="#mesProjets" class="linkNav" onclick="closeNav()">Projets</a>
+            <hr>
+            <a href="#divers" class="linkNav" onclick="closeNav()">Divers</a>
+            <hr>
+            <a href="#cv" class="linkNav" onclick="closeNav()">C.V</a>
+            <hr>
+            <a href="#meContacter" class="linkNav" onclick="closeNav()">Contact</a>
+        </div>
+
+        <!-- À propos de moi -->
+        <div class="content">
+            <h1 id="aPropos">A propos de moi</h1>
+            <div class="about-container">
+                <div class="text-area">
+                    <h2>Je suis Melchior HADROT</h2>
+                    <p>
+                        J'ai 18 ans et je suis étudiant en première année de BUT Réseaux et Télécommunications à l'IUT
+                        Clermont Auvergne d'Aubière.
+                        Passionné par la technologie, j'aime explorer des domaines variés comme la programmation,
+                        l'impression et la modélisation 3D, ainsi que l'électronique.
+                        Je suis à la recherche un contrat d'alternance pour l'année de 2025-2026 sur un rythme de 1 mois/1 mois
+                    </p>
+                </div>
+                <div class = "tete">
+                    <img src="assets/image/icon/pfp.png" alt="Ma photo" width="400" height="550">
+                </div>
+            </div>
+        </div>
+
+        <div id="formation" class="content">
+            <h1><br><br>Mes formations</h1>
+            <div class="container">
+                <div class="text-area">
+                    <p>
+                        <strong>2024 - Présent</strong><br>
+                        IUT Clermont Auvergne site d'Aubière - Clermont-Ferrand (63)<br>
+                        En première année de BUT R&T (Bachelor Universitaire de Technologie en Réseaux et
+                        Télécommunications).
+                    </p>
+                </div>
+                <div class="image-area">
+                    <img src="assets/image/image_formation/logo_uca.png" alt="IUT Clermont Auvergne">
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="text-area">
+                    <p>
+                        <strong>2022/2024</strong><br>
+                        Lycée général et technologique Godefroy de Bouillon - Clermont-Ferrand (63)<br>
+                        Filière STI2D (Sciences et Technologie du l'Industrie et du Développement Durable).<br>
+                        En terminale j'ai choisi l'option SIN (Système d'Information et Numérique).<br>
+                        J'ai obtenu mon baccalauréat avec mention assez bien.
+                    </p>
+                </div>
+                <div class="image-area">
+                    <img src="assets/image/image_formation/logo_bouillon.png" alt="Lycée Godefroy de Bouillon">
+                </div>
+            </div>
+
+        <div id="expPro" class="content">
+            <h1>Experiences profesionnelles</h1>
+            <div class="container">
+                <div class="text-area">
+                    <p>
+                        <strong>20XX - 20XX</strong><br>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, nemo.<br>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum id officia incidunt? Similique ad
+                        culpa, earum corrupti labore natus cumque?
+                    </p>
+                </div>
+                <div class="image-area">
+                    <img src="https://via.placeholder.com/150" alt="n/a">
+                </div>
+            </div>
+        </div>
+
+        <div id="competences" class="content">
+            <h1>Compétences humaines</h1>
+            <div class="skills-container">
+                <div class="skill-box">
+                    <h3>Esprit d'équipe</h3>
+                    <img src="\assets\image\icon\team410x230.jpg" alt="Travail en équipe" class="skill-icon" width="115" height="60">
+                    <p>Je sais travailler efficacement en équipe et communiquer avec mes collègues</p>
+                </div>
+                <div class="skill-box">
+                    <h3>Débrouillard</h3>
+                    <img src="/assets/image/icon/gear5000x5000.png" alt="Communication" class="skill-icon" width="60" height="60">
+                    <p>Je m'adapte rapidement aux nouvelles situations et trouve des solutions créatives</p>
+                </div>
+                <div class="skill-box">
+                    <h3>Pédagogue</h3>
+                    <img src="/assets/image/icon/teacher.png" alt="Organisation" class="skill-icon" width="60" height="60">
+                    <p>J'aime partager mes connaissances et expliquer de manière claire et accessible</p>
+                </div>
+                <div class="skill-box">
+                    <h3>Patient</h3>
+                    <img src="/assets/image/icon/sun.png" alt="Optimisme" class="skill-icon"width="60" height="60">
+                    <p>Je reste calme face aux défis et persévère jusqu'à atteindre mes objectifs</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="techniques" class="content">
+            <h1>Compétences techniques</h1>
+            <div class="techniques-container">
+                <!-- partie col menu -->
+                <div class="menu-section">
+                    <div class="main-menu-item active" data-category="reseaux">Réseaux</div>
+                    <div class="main-menu-item" data-category="programmation">Programmation</div>
+                    <div class="main-menu-item" data-category="telecom">Télécommunications</div>
+                    <div class="main-menu-item" data-category="langues">Langues</div>
+                </div>
+                <div class="skills-section" id="skillsContent">
+                    <!-- partie JavaScript -->
+                </div>
+            </div>
+        
+            <script>
+                const skillsData = {
+                    reseaux: [
+                        { title: "Configurer un réseau informatique", content: "Configuration et maintenance des réseaux locaux, VLANs, routage.", level: 80 },
+                        { title: "Installer des machines virtuelles", content: "Virtualisation avec VMware, VirtualBox, configuration réseaux et déploiement.", level: 85 },
+                        { title: "Administration Réseau", content: "Gestion des utilisateurs Windows & Linux", level: 75 }
+                    ],
+                    programmation: [
+                        { title: "Utilisation de commande et script Linux", content: "Utilisation de commande Linux et de script BASH", level: 70 },
+                        { title: "Programmation Python", content: "Fondamentaux de Python", level: 85 },
+                        { title: "Développement Web", content: "HTML, CSS.", level: 75 },
+                    ],
+                    telecom: [
+                        { title: "Utilisation de GBF (Générateur de fonction)", content: "Créations de plusieurs signaux de caracteristiques differentes.", level: 85 },
+                        { title: "Utilisation de l'oscilloscope", content: "Observation du signaux divers.", level: 75 }
+                    ],
+                    langues: [
+                        { title: "Anglais ", content: "Niveau B1", level: 70 },
+                    ]
+                };
+        
+                // Fonction pour mettre à jour le contenu des compétences en fonction de la catégorie sélectionnée
+                function updateSkillsContent(category) {
+                    // Récupère la section qui contiendra les compétences
+                    const skillsSection = document.getElementById('skillsContent');
+                    // Récupère les compétences de la catégorie sélectionnée
+                    const skills = skillsData[category];
+                    
+                    // Initialise la chaîne HTML
+                    let html = '';
+                    // Pour chaque compétence de la catégorie
+                    skills.forEach(skill => {
+                        // Ajoute le HTML pour afficher la compétence avec sa barre de progression
+                        html += `
+                            <div class="skill-item">
+                                <h3>${skill.title}</h3>
+                                <p>${skill.content}</p>
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: ${skill.level}%"></div>
+                                    </div>
+                                    <span class="progress-text">${skill.level}%</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    // Insère le HTML généré dans la section
+                    skillsSection.innerHTML = html;
+                
+                    // Ajoute les écouteurs d'événements pour chaque compétence
+                    document.querySelectorAll('.skill-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            // Récupère le contenu détaillé de la compétence
+                            const content = item.querySelector('.skill-content');
+                            // Affiche/cache le contenu au clic
+                            if (content.style.display === 'block') {
+                                content.style.display = 'none';
+                            } else {
+                                // Cache tous les autres contenus détaillés
+                                document.querySelectorAll('.skill-content').forEach(c => c.style.display = 'none');
+                                // Affiche le contenu de la compétence cliquée
+                                content.style.display = 'block';
+                            }
+                        });
+                    });
+                }
+                
+                // Gestion du menu principal des catégories
+                document.querySelectorAll('.main-menu-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        // Retire la classe active de tous les éléments du menu
+                        document.querySelectorAll('.main-menu-item').forEach(i => i.classList.remove('active'));
+                        // Ajoute la classe active à l'élément cliqué
+                        item.classList.add('active');
+                        // Met à jour le contenu avec la catégorie sélectionnée
+                        updateSkillsContent(item.dataset.category);
+                    });
+                });
+                
+                // Initialise l'affichage avec la catégorie "réseaux" par défaut
+                    updateSkillsContent('reseaux');
+                </script>
+
+        <!-- Section Divers et CV -->
+            <div>
+                    <!-- Section Divers -->
+                    <div id="divers" class="content">
+                        <h1>Divers</h1>
+                        <div class="divers-container">
+                            <div class="divers-box">
+                                <div>
+                                    <h3>Lecture</h3>
+                                    <p>Passionné par les œuvres de science-fiction et les mangas.</p>
+                                </div>
+                                <img src="/assets/image/icon/1984.jpg" alt="Placeholder Image" class="divers-icon" width="90" height="160" />
+                                <img src="/assets/image/icon/berserk.jpg" alt="Placeholder Image" class="divers-icon" width="110" height="160" />
+                            </div>
+                            <div class="divers-box">
+                                <div>
+                                    <h3>Cuisine</h3>
+                                    <p>Préparation régulière de plats et pâtisseries pour ma famille.</p>
+                                </div>
+                                <img src="/assets/image/icon/cuisine.png" alt="Placeholder Image" class="divers-icon" width="250" height="160" />
+                            </div>
+                            <div class="divers-box">
+                                <div>
+                                    <h3>Impression 3D</h3>
+                                    <p>Modélisation et impression 3D</p>
+                                </div>
+                                <img src="/assets/image/icon/imprimante3d.png" alt="Placeholder Image" class="divers-icon" width="110" height="160" />
+                            </div>
+                                                                                 
+                        </div>
+                    </div>
+                <!-- Section Projets -->
+                <div id="cv" class="content">
+                    <h1>Projets</h1>
+                    <div class="cv-section">
+                        <div class="cv-content">
+                            <h2>SAE15</h2>
+                            <p>SAE15 : Traitement de données</p>
+                            <button class="projet-button" onclick="window.open('assets/pdf/SAE15.pdf', '_blank')">
+                                Accéder au projet
+                            </button>
+                        </div>
+                        <img src="/assets/image/icon/icon_sae15.png" alt="icone sae 15" class="projet-icon" />
+                    </div>
+                    <div class="cv-section">
+                        <div class="cv-content">
+                            <h2>R2.04 : Initiation à la téléphonie d'entreprise</h2>
+                            <p>TP de configuration d'un réseau telephonique</p>
+                            <button class="projet-button" onclick="window.open('assets/pdf/TP_Telephonie.pdf', '_blank')">
+                                Accéder au projet
+                            </button>
+                        </div>
+                        <img src="/assets/image/icon/icon_telephonie.png" alt="icone tele" class="projet-icon" width="110" height="160" />
+                    </div>
+                    <div class="cv-section">
+                        <div class="cv-content">
+                            <h2>R2.03 :Bases des services réseaux </h2>
+                            <p>TP Le service FTP</p>
+                            <button class="projet-button" onclick="window.open('assets/pdf/TP_FTP.pdf', '_blank')">
+                                Accéder au projet
+                            </button>
+                        </div>
+                        <img src="/assets/image/icon/ftp.jpg" alt="icone tele" class="projet-icon" width="110" height="160" />
+                    </div>
+                </div>
+
+                    <!-- Section CV -->
+                    <div id="cv" class="content">
+                        <h1>CV</h1>
+                        <div class="cv-section">
+                            <div class="cv-content">
+                                <h2>Mon CV</h2>
+                                <button class="cv-button" onclick="window.open('assets/pdf/CV.pdf', '_blank')">
+                                    Télécharger mon CV
+                                </button>
+                            </div>
+                            <img src="/assets/image/icon/icon_CV_01_2025.jpg" alt="Aperçu du CV" class="cv-preview" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Section Contact -->
+    <div id="meContacter" class="contact-section">
+        <h1>Contact</h1>
+        <p>Vous pouvez me contacter via les informations ci-dessous :</p>
+        <div class="contact-info">
+            <p><strong>Email :</strong> <a href="mailto:melchior.hadrot@etu.uca.fr">melchior.hadrot@etu.uca.fr</a></p>
+            <p><strong>Adresse :</strong> Clermont-Ferrand, France</p>
+        </div>
+    </div>
+</body>
+
+</html>

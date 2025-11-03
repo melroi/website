@@ -1,0 +1,473 @@
+
+/* Définition du jeu de caractères et import de la police */
+@charset "UTF-8"; /* Définit le jeu de caractères comme UTF-8 */
+
+/* Reset CSS - Réinitialise les marges et paddings par défaut */
+* {
+  box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur et la hauteur totales des éléments */
+  margin: 0; /* Réinitialise les marges à zéro */
+  padding: 0; /* Réinitialise les paddings à zéro */
+}
+
+/* Configuration de base pour html et body */
+html, body {
+  overflow-x: hidden; /* Cache le défilement horizontal */
+  width: 100%; /* Définit la largeur à 100% */
+}
+
+body {
+  font-family: Arial, sans-serif; /* Définit la police de base */
+  background-color: #F5F5F5; /* Définit la couleur de fond */
+  padding-top: 60px; /* Ajoute un padding en haut */
+  line-height: 1.6; /* Définit l'interligne */
+  min-height: 100vh; /* Définit la hauteur minimale à 100% de la hauteur de la fenêtre */
+  display: flex; /* Utilise le modèle de boîte flexible */
+  flex-direction: column; /* Aligne les éléments en colonne */
+}
+
+.main-container {
+  flex: 1; /* Permet au conteneur principal de prendre tout l'espace disponible */
+}
+
+/* Bannière */
+.banner {
+  position: fixed; /* Positionne la bannière de manière fixe */
+  top: 0; /* Aligne la bannière en haut */
+  left: 0; /* Aligne la bannière à gauche */
+  width: 100%; /* Définit la largeur à 100% */
+  background-color: whitesmoke; /* Définit la couleur de fond */
+  height: 60px; /* Définit la hauteur */
+  display: flex; /* Utilise le modèle de boîte flexible */
+  align-items: center; /* Aligne les éléments au centre verticalement */
+  padding: 0 20px; /* Ajoute un padding à gauche et à droite */
+  z-index: 1000; /* Définit l'ordre d'empilement */
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2); /* Ajoute une ombre */
+}
+
+.banner img {
+  cursor: pointer; /* Change le curseur en pointeur */
+  margin-right: 15px; /* Ajoute une marge à droite */
+  width: 40px; /* Définit la largeur */
+  height: 40px; /* Définit la hauteur */
+}
+
+/* Menu latéral */
+.sidenav {
+  height: 100%; /* Définit la hauteur à 100% */
+  width: 0; /* Définit la largeur à 0 */
+  position: fixed; /* Positionne le menu de manière fixe */
+  z-index: 1001; /* Définit l'ordre d'empilement */
+  top: 0; /* Aligne le menu en haut */
+  left: 0; /* Aligne le menu à gauche */
+  background-color: #111; /* Définit la couleur de fond */
+  overflow-x: hidden; /* Cache le défilement horizontal */
+  transition: 0.5s; /* Ajoute une transition */
+  padding-top: 60px; /* Ajoute un padding en haut */
+}
+
+.sidenav a {
+  padding: 16px 32px; /* Ajoute un padding */
+  text-decoration: none; /* Supprime la décoration du texte */
+  font-size: 18px; /* Définit la taille de la police */
+  color: white; /* Définit la couleur du texte */
+  display: block; /* Affiche les éléments en bloc */
+  transition: 0.3s; /* Ajoute une transition */
+}
+
+.sidenav a:hover {
+  color: #f1f1f1; /* Change la couleur du texte au survol */
+  transform: translateX(10px); /* Déplace le texte vers la droite au survol */
+}
+
+.sidenav .closebtn {
+  position: absolute; /* Positionne le bouton de manière absolue */
+  top: 0; /* Aligne le bouton en haut */
+  right: 25px; /* Aligne le bouton à droite */
+  font-size: 36px; /* Définit la taille de la police */
+  color: white; /* Définit la couleur du texte */
+  padding: 8px; /* Ajoute un padding */
+  transition: 0.3s; /* Ajoute une transition */
+}
+
+.sidenav .closebtn:hover {
+  color: #f1f1f1; /* Change la couleur du texte au survol */
+  transform: rotate(90deg); /* Fait tourner le bouton au survol */
+}
+
+/* Style spécifique pour la section À propos */
+#aPropos {
+  margin-bottom: 30px; /* Ajoute une marge en bas */
+}
+
+.content {
+  position: relative; /* Positionne le contenu de manière relative */
+  padding: 20px; /* Ajoute un padding */
+  margin-top: 80px; /* Ajoute une marge en haut */
+  max-width: 1200px; /* Définit la largeur maximale */
+  margin-left: auto; /* Centre le contenu horizontalement */
+  margin-right: auto; /* Centre le contenu horizontalement */
+}
+
+/* Style spécifique pour l'image dans la section À propos */
+.content .image-area {
+  float: right; /* Aligne l'image à droite */
+  margin-left: 20px; /* Ajoute une marge à gauche */
+  margin-bottom: 20px; /* Ajoute une marge en bas */
+}
+
+.content .image-area img {
+  max-width: 150px; /* Définit la largeur maximale */
+  height: auto; /* Ajuste la hauteur automatiquement */
+  border-radius: 10px; /* Ajoute un bord arrondi */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ajoute une ombre */
+}
+
+/* Pour éviter les problèmes de float */
+.content::after {
+  content: ""; /* Ajoute du contenu vide */
+  display: table; /* Utilise le modèle de boîte de table */
+  clear: both; /* Efface les flottements */
+}
+
+/* Conteneurs */
+.container {
+  background-color: #ffffff; /* Définit la couleur de fond */
+  border: 2px solid #ccc; /* Ajoute une bordure */
+  border-radius: 15px; /* Ajoute un bord arrondi */
+  padding: 20px; /* Ajoute un padding */
+  margin: 20px 0; /* Ajoute une marge en haut et en bas */
+  display: flex; /* Utilise le modèle de boîte flexible */
+  align-items: center; /* Aligne les éléments au centre verticalement */
+  gap: 20px; /* Ajoute un espace entre les éléments */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
+}
+
+.text-area {
+  flex: 1; /* Permet à la zone de texte de prendre tout l'espace disponible */
+}
+
+.image-area {
+  flex-shrink: 0; /* Empêche la zone d'image de se rétrécir */
+}
+
+.image-area img {
+  width: 150px; /* Définit la largeur */
+  height: 150px; /* Définit la hauteur */
+  border-radius: 10px; /* Ajoute un bord arrondi */
+  object-fit: cover; /* Maintient les proportions */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ajoute une ombre */
+}
+
+/* Compétences */
+.skills-container {
+  display: grid; /* Utilise le modèle de boîte de grille */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Définit les colonnes de la grille */
+  gap: 20px; /* Ajoute un espace entre les éléments */
+  padding: 20px; /* Ajoute un padding */
+  background-color: #ffffff; /* Définit la couleur de fond */
+  border-radius: 15px; /* Ajoute un bord arrondi */
+  border: 2px solid #ccc; /* Ajoute une bordure */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
+}
+
+.skill-box {
+  background-color: #ffffff; /* Définit la couleur de fond */
+  border: 1px solid #ccc; /* Ajoute une bordure */
+  border-radius: 8px; /* Ajoute un bord arrondi */
+  padding: 15px; /* Ajoute un padding */
+  text-align: center; /* Centre le texte */
+  transition: transform 0.3s ease; /* Ajoute une transition */
+}
+
+.skill-box:hover {
+  transform: translateY(-5px); /* Déplace la boîte vers le haut au survol */
+}
+
+/* Section Divers */
+.divers-container {
+  display: grid; /* Utilise le modèle de boîte de grille */
+  grid-template-columns: repeat(2, 1fr); /* Définit les colonnes de la grille */
+  grid-template-rows: repeat(3, auto); /* Définit les lignes de la grille */
+  gap: 20px; /* Ajoute un espace entre les éléments */
+  max-width: 1200px; /* Définit la largeur maximale */
+  margin: 0 auto; /* Centre le conteneur horizontalement */
+  padding: 20px; /* Ajoute un padding */
+}
+
+.divers-box {
+  background-color: #ffffff; /* Définit la couleur de fond */
+  border: 1px solid #ccc; /* Ajoute une bordure */
+  border-radius: 8px; /* Ajoute un bord arrondi */
+  padding: 15px; /* Ajoute un padding */
+  text-align: center; /* Centre le texte */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
+}
+
+/* Section Contact (Footer) */
+.contact-section {
+  width: 100%; /* Définit la largeur à 100% */
+  background-color: #F5F5F5; /* Définit la couleur de fond */
+  padding: 20px; /* Ajoute un padding */
+  text-align: center; /* Centre le texte */
+  border-top: 3px solid black; /* Ajoute une bordure en haut */
+  margin-top: 50px; /* Ajoute une marge en haut */
+  position: relative; /* Positionne la section de manière relative */
+  bottom: 0; /* Aligne la section en bas */
+}
+
+/* Style pour les liens de contact */
+.contact-info a {
+  color: black; /* Définit la couleur du texte */
+  text-decoration: none; /* Supprime la décoration du texte */
+  font-weight: bold; /* Met le texte en gras */
+  transition: color 0.3s; /* Ajoute une transition */
+}
+
+.contact-info a:hover {
+  color: #0066cc; /* Change la couleur du texte au survol */
+}
+
+/* Section CV */
+.cv-section {
+  padding-bottom: 40px; /* Ajoute un padding en bas */
+  background-color: #ffffff; /* Définit la couleur de fond */
+  border: 2px solid #ccc; /* Ajoute une bordure */
+  border-radius: 15px; /* Ajoute un bord arrondi */
+  padding: 20px; /* Ajoute un padding */
+  margin: 20px 0; /* Ajoute une marge en haut et en bas */
+  display: flex; /* Utilise le modèle de boîte flexible */
+  align-items: center; /* Aligne les éléments au centre verticalement */
+  gap: 20px; /* Ajoute un espace entre les éléments */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
+}
+
+.cv-preview {
+  width: 150px; /* Définit la largeur */
+  height: 200px; /* Définit la hauteur */
+  object-fit: cover; /* Maintient les proportions */
+  border-radius: 10px; /* Ajoute un bord arrondi */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ajoute une ombre */
+}
+
+/* Style du bouton CV */
+.cv-button {
+  display: inline-block; /* Affiche le bouton en ligne */
+  padding: 12px 24px; /* Ajoute un padding */
+  background-color: #1a73e8; /* Définit la couleur de fond */
+  color: white; /* Définit la couleur du texte */
+  text-decoration: none; /* Supprime la décoration du texte */
+  border-radius: 5px; /* Ajoute un bord arrondi */
+  font-weight: bold; /* Met le texte en gras */
+  border: none; /* Supprime la bordure */
+  cursor: pointer; /* Change le curseur en pointeur */
+  transition: all 0.3s ease; /* Ajoute une transition */
+  font-size: 16px; /* Définit la taille de la police */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ajoute une ombre */
+}
+
+.cv-button:hover {
+  background-color: #1557b0; /* Change la couleur de fond au survol */
+  transform: translateY(-2px); /* Déplace le bouton vers le haut au survol */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ajoute une ombre au survol */
+}
+
+.cv-button:active {
+  transform: translateY(0); /* Réinitialise la position du bouton lorsqu'il est actif */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ajoute une ombre lorsqu'il est actif */
+}
+
+.cv-content {
+  flex: 1; /* Permet au contenu du CV de prendre tout l'espace disponible */
+  display: flex; /* Utilise le modèle de boîte flexible */
+  flex-direction: column; /* Aligne les éléments en colonne */
+  gap: 15px; /* Ajoute un espace entre les éléments */
+}
+
+.about-container {
+  display: flex; /* Utilise le modèle de boîte flexible */
+  align-items: flex-start; /* Aligne les éléments en haut */
+  padding-top: 0; /* Supprime le padding en haut */
+  gap: 30px; /* Ajoute un espace entre le texte et l'image */
+}
+
+.text-area {
+  flex: 1; /* Permet à la zone de texte de prendre tout l'espace disponible */
+  display: flex; /* Utilise le modèle de boîte flexible */
+  flex-direction: column; /* Aligne les éléments en colonne */
+  justify-content: flex-start; /* Aligne le contenu en haut */
+  padding-top: 20px; /* Ajuste la position verticale du texte */
+}
+
+.image-area {
+  margin-left: 20px; /* Ajoute une marge à gauche */
+}
+
+.progress-container {
+  margin-top: 15px; /* Ajoute une marge en haut */
+}
+
+.progress-bar {
+  background-color: #eee; /* Définit la couleur de fond */
+  height: 20px; /* Définit la hauteur */
+  border-radius: 10px; /* Ajoute un bord arrondi */
+  overflow: hidden; /* Cache le débordement */
+  position: relative; /* Positionne la barre de progression de manière relative */
+}
+
+.progress {
+  background-color: #1a73e8; /* Définit la couleur de fond */
+  height: 100%; /* Définit la hauteur */
+  border-radius: 10px; /* Ajoute un bord arrondi */
+  transition: width 0.5s ease; /* Ajoute une transition */
+}
+
+.progress-text {
+  display: inline-block; /* Affiche le texte en ligne */
+  margin-left: 10px; /* Ajoute une marge à gauche */
+  font-weight: bold; /* Met le texte en gras */
+}
+
+* {
+  box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur et la hauteur totales des éléments */
+  margin: 0; /* Réinitialise les marges à zéro */
+  padding: 0; /* Réinitialise les paddings à zéro */
+}
+
+body {
+  font-family: Arial, sans-serif; /* Définit la police de base */
+  background-color: #F5F5F5; /* Définit la couleur de fond */
+  padding: 20px; /* Ajoute un padding */
+}
+
+
+
+.techniques-container {
+  background-color: #ffffff; /* Définit la couleur de fond */
+  border: 2px solid #ccc; /* Ajoute une bordure */
+  border-radius: 15px; /* Ajoute un bord arrondi */
+  padding: 20px; /* Ajoute un padding */
+  margin: 20px auto; /* Centre le conteneur horizontalement */
+  display: flex; /* Utilise le modèle de boîte flexible */
+  gap: 20px; /* Ajoute un espace entre les éléments */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
+  max-width: 1160px; /* Réduit la largeur maximale */
+}
+
+
+
+.menu-section {
+  width: 250px; /* Définit la largeur */
+}
+
+.main-menu-item {
+  background-color: #fff; /* Définit la couleur de fond */
+  margin-bottom: 10px; /* Ajoute une marge en bas */
+  padding: 12px; /* Ajoute un padding */
+  border: 1px solid #ccc; /* Ajoute une bordure */
+  border-radius: 8px; /* Ajoute un bord arrondi */
+  cursor: pointer; /* Change le curseur en pointeur */
+  transition: all 0.3s ease; /* Ajoute une transition */
+}
+
+.main-menu-item:hover {
+  transform: translateY(-2px); /* Déplace l'élément vers le haut au survol */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une ombre au survol */
+}
+
+.main-menu-item.active {
+  background-color: #1a73e8; /* Change la couleur de fond lorsque l'élément est actif */
+  color: white; /* Change la couleur du texte lorsque l'élément est actif */
+  border-color: #1a73e8; /* Change la couleur de la bordure lorsque l'élément est actif */
+}
+
+.skills-section {
+  flex-grow: 1; /* Permet à la section de prendre tout l'espace disponible */
+  max-height: 500px; /* Définit la hauteur maximale */
+  overflow-y: auto; /* Ajoute une barre de défilement verticale */
+}
+
+.skill-item {
+  background-color: #fff; /* Définit la couleur de fond */
+  margin-bottom: 10px; /* Ajoute une marge en bas */
+  padding: 15px; /* Ajoute un padding */
+  border: 1px solid #ccc; /* Ajoute une bordure */
+  border-radius: 8px; /* Ajoute un bord arrondi */
+  cursor: pointer; /* Change le curseur en pointeur */
+  transition: all 0.3s ease; /* Ajoute une transition */
+}
+
+.skill-item:hover {
+  transform: translateY(-2px); /* Déplace l'élément vers le haut au survol */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une ombre au survol */
+}
+
+.skill-content {
+  display: none; /* Cache le contenu par défaut */
+  padding: 15px; /* Ajoute un padding */
+  background-color: #f9f9f9; /* Définit la couleur de fond */
+  margin-top: 10px; /* Ajoute une marge en haut */
+  border-radius: 8px; /* Ajoute un bord arrondi */
+  border: 1px solid #eee; /* Ajoute une bordure */
+}
+
+.progress-bar {
+  background-color: #eee; /* Définit la couleur de fond */
+  height: 20px; /* Définit la hauteur */
+  border-radius: 10px; /* Ajoute un bord arrondi */
+  margin-top: 20px; /* Ajoute une marge en haut */
+  overflow: hidden; /* Cache le débordement */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); /* Ajoute une ombre interne */
+}
+
+.progress {
+  background-color: #1a73e8; /* Définit la couleur de fond */
+  height: 100%; /* Définit la hauteur */
+  border-radius: 10px; /* Ajoute un bord arrondi */
+  width: 90%; /* Définit la largeur */
+  transition: width 0.5s ease; /* Ajoute une transition */
+}
+
+/* Style du bouton CV */
+.projet-button {
+  display: inline-block; /* Affiche le bouton en ligne */
+  padding: 12px 24px; /* Ajoute un padding */
+  background-color: #1a73e8; /* Définit la couleur de fond */
+  color: white; /* Définit la couleur du texte */
+  text-decoration: none; /* Supprime la décoration du texte */
+  border-radius: 5px; /* Ajoute un bord arrondi */
+  font-weight: bold; /* Met le texte en gras */
+  border: none; /* Supprime la bordure */
+  cursor: pointer; /* Change le curseur en pointeur */
+  transition: all 0.3s ease; /* Ajoute une transition */
+  font-size: 16px; /* Définit la taille de la police */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ajoute une ombre */
+}
+
+.projet-button:hover {
+  background-color: #1557b0; /* Change la couleur de fond au survol */
+  transform: translateY(-2px); /* Déplace le bouton vers le haut au survol */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ajoute une ombre au survol */
+}
+
+.projet-button:active {
+  transform: translateY(0); /* Réinitialise la position du bouton lorsqu'il est actif */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ajoute une ombre lorsqu'il est actif */
+}
+
+.projet-icon {
+  width: 200px; /* Définit la largeur */
+  height: 200px; /* Définit la hauteur */
+  border-radius: 10px; /* Ajoute un bord arrondi */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ajoute une ombre */
+}
+
+.tete img {
+    width: 300px; /* Réduit la largeur */
+    height: 400px; /* Réduit la hauteur proportionnelle */
+    border: 2px solid #ddd; /* Ajoute une bordure */
+    border-radius: 5px; /* Ajoute un bord arrondi */
+    margin-left: 40px; /* Ajoute une marge à gauche */
+    margin-top: -50px; /* Remonte l'image */
+    object-fit: cover; /* Maintient les proportions */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
+}
