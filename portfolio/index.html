@@ -7,7 +7,8 @@
     <title>Melchior HADROT</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
-    <link rel="icon" href="assets/image/icon/pfp.png">
+    <script src="carousel.js" defer></script>
+    <link rel="icon" href="assets/image/icon/favicon.png">
 </head>
 
 <body>
@@ -45,11 +46,11 @@
                 <div class="text-area">
                     <h2>Je suis Melchior HADROT</h2>
                     <p>
-                        J'ai 18 ans et je suis étudiant en première année de BUT Réseaux et Télécommunications à l'IUT
+                        J'ai 19 ans et je suis étudiant en première année de BUT Réseaux et Télécommunications à l'IUT
                         Clermont Auvergne d'Aubière.
                         Passionné par la technologie, j'aime explorer des domaines variés comme la programmation,
                         l'impression et la modélisation 3D, ainsi que l'électronique.
-                        Je suis à la recherche un contrat d'alternance pour l'année de 2025-2026 sur un rythme de 1 mois/1 mois
+                        Je suis à la recherche du stage obligatoire de 2ème année, qui se déroulera du 7 avril au 12 juin 2025 inclus.
                     </p>
                 </div>
                 <div class = "tete">
@@ -262,37 +263,23 @@
                         </div>
                     </div>
                 <!-- Section Projets -->
-                <div id="cv" class="content">
+                <div id="mesProjets" class="content">
                     <h1>Projets</h1>
-                    <div class="cv-section">
-                        <div class="cv-content">
-                            <h2>SAE15</h2>
-                            <p>SAE15 : Traitement de données</p>
-                            <button class="projet-button" onclick="window.open('assets/pdf/SAE15.pdf', '_blank')">
-                                Accéder au projet
-                            </button>
-                        </div>
-                        <img src="assets/image/icon/icon_sae15.png" alt="icone sae 15" class="projet-icon" />
+                    <!-- Onglets de catégories -->
+                    <div class="projects-tabs">
+                        <button class="proj-tab active" data-tab="iut">Projets IUT</button>
+                        <button class="proj-tab" data-tab="perso">Projets Personnels</button>
                     </div>
-                    <div class="cv-section">
-                        <div class="cv-content">
-                            <h2>R2.04 : Initiation à la téléphonie d'entreprise</h2>
-                            <p>TP de configuration d'un réseau telephonique</p>
-                            <button class="projet-button" onclick="window.open('assets/pdf/TP_Telephonie.pdf', '_blank')">
-                                Accéder au projet
-                            </button>
+                    
+                    <!-- Section du carrousel -->
+                    <div class="projects-carousel">
+                        <button class="carousel-button prev">&lt;</button>
+                        <div class="carousel-container">
+                            <div class="carousel-wrapper">
+                                <!-- Les projets seront injectés ici par JavaScript -->
+                            </div>
                         </div>
-                        <img src="assets/image/icon/icon_telephonie.png" alt="icone tele" class="projet-icon" width="110" height="160" />
-                    </div>
-                    <div class="cv-section">
-                        <div class="cv-content">
-                            <h2>R2.03 :Bases des services réseaux </h2>
-                            <p>TP Le service FTP</p>
-                            <button class="projet-button" onclick="window.open('assets/pdf/TP_FTP.pdf', '_blank')">
-                                Accéder au projet
-                            </button>
-                        </div>
-                        <img src="assets/image/icon/ftp.jpg" alt="icone tele" class="projet-icon" width="110" height="160" />
+                        <button class="carousel-button next">&gt;</button>
                     </div>
                 </div>
 

@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV de Melchior Hadrot - Étudiant BUT R&T</title>
+    <style>
+        /* CSS DÉBUT */
+        :root {
+            --main-color: #002D62; /* Bleu foncé pour la colonne de gauche */
+            --secondary-color: #f4f4f9; /* Gris clair pour l'arrière-plan */
+            --text-color: #333;
+            --light-text: #fff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .cv-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: var(--light-text);
+        }
+
+        /* Colonne de gauche (informations personnelles) */
+        .sidebar {
+            width: 30%;
+            background-color: var(--main-color);
+            color: var(--light-text);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .main-content {
+            width: 70%;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        /* Style des titres */
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 0;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: var(--main-color);
+            border-bottom: 2px solid var(--main-color);
+            padding-bottom: 5px;
+            margin-top: 25px;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: var(--main-color);
+        }
+
+        /* Éléments de la barre latérale */
+        .profile-pic-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--light-text);
+        }
+
+        .qr-code {
+            display: block;
+            width: 100px;
+            height: 100px;
+            margin: 20px auto 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .sidebar-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar-section li {
+            margin-bottom: 8px;
+        }
+
+        /* Contenu principal */
+        .section-item p {
+            margin-top: 0;
+        }
+
+        .skills-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .skills-list li {
+            background-color: #e0e0e0;
+            color: var(--text-color);
+            padding: 5px 10px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        .stage-search {
+            background-color: #ffcc00; /* Jaune/Orange pour le call-to-action */
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .cv-container {
+                flex-direction: column;
+                margin: 0;
+                box-shadow: none;
+            }
+            .sidebar, .main-content {
+                width: 100%;
+                padding: 20px;
+            }
+        }
+        /* CSS FIN */
+    </style>
+</head>
+<body>
+    <div class="cv-container">
+        <div class="sidebar">
+            <div class="profile-pic-container">
+                <img src="data:image/jpeg;base64, [BASE64_DE__L'IMAGE_DE_PROFIL]" alt="Photo de Melchior Hadrot" class="profile-pic">
+                <img src="data:image/gif;base64, [BASE64_DU_QR_CODE]" alt="QR Code vers Portfolio" class="qr-code">
+            </div>
+
+            <div class="sidebar-section">
+                <h2>COORDONNÉES</h2>
+                <ul>
+                    <li><i class="icon-mail"></i> melchior.hadrot@etu.uca.fr</li>
+                    <li><i class="icon-phone"></i> +33 6 75 61 97 05</li>
+                    <li><i class="icon-location"></i> 9 rue du granit, 63122 Ceyrat</li>
+                    <li><i class="icon-age"></i> 19 ans</li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h2>PORTFOLIO</h2>
+                <p><a href="http://melroi.fr/portfolio" style="color: #fff;">melroi.fr/portfolio</a></p>
+            </div>
+
+            <div class="sidebar-section">
+                <h2>ACCOMPLISSEMENTS</h2>
+                <ul>
+                    <li>• Anglais - Niveau B2</li>
+                    <li>• PSC1: Prévention et Secours Civiques</li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h2>DIVERS</h2>
+                <ul>
+                    <li>• Lecture: Passionné par les œuvres de science-fiction et les mangas.</li>
+                    <li>• Électronique: Conception et réalisation de projets électroniques personnels.</li>
+                    <li>• Impression 3D: Modélisation et impression 3D pour des projets créatifs et techniques.</li>
+                    <li>• Cuisine: Préparation régulière de plats et pâtisseries pour ma famille.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <header>
+                <h1>MELCHIOR HADROT</h1>
+                <p class="subtitle">ÉTUDIANT EN 2ÈME ANNÉE BUT RÉSEAUX & TÉLÉCOMMUNICATIONS</p>
+                <div class="stage-search">
+                    RECHERCHE D'UN STAGE (7 AVRIL - 12 JUIN INCLUS)
+                </div>
+            </header>
+
+            <section class="profile-section">
+                <h2>PROFIL PERSONNEL</h2>
+                <p>Âgé de 19 ans et étudiant en première année de BUT Réseaux et Télécommunications à l'IUT Clermont Auvergne d'Aubière.</p>
+                <p>Passionné par la technologie, j'aime explorer des domaines variés comme la programmation, l'impression et la modélisation 3D, ainsi que l'électronique.</p>
+            </section>
+
+            <section class="training-section">
+                <h2>FORMATION</h2>
+                <div class="section-item">
+                    <h3>IUT Clermont Auvergne site d'Aubière (2024 - Présent)</h3>
+                    <p>Clermont-Ferrand (63)</p>
+                    <p>En 2ème année de BUT R&T (Bachelor Universitaire de Technologie en Réseaux et Télécommunications).</p>
+                </div>
+                <div class="section-item">
+                    <h3>Lycée général et technologique Godefroy de Bouillon (2022 - 2024)</h3>
+                    <p>Clermont-Ferrand (63)</p>
+                    <ul>
+                        <li>Diplômé avec mention assez bien au baccalauréat.</li>
+                        <li>Filière STI2D (Sciences et Technologie de l'Industrie et du Développement Durable), Option SIN (Système d'Information et Numérique).</li>
+                        <li>Référent numérique.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="skills-section">
+                <h2>COMPÉTENCES</h2>
+                
+                <h3>Programmation & Réseaux</h3>
+                <ul class="skills-list">
+                    <li>Programmation Web (HTML, CSS)</li>
+                    <li>Programmation Python</li>
+                    <li>Programmation C</li>
+                    <li>Commande et script Bash Linux</li>
+                    <li>Maîtrise du logiciel Cisco Packet Tracer</li>
+                    <li>Configuration de réseau informatique</li>
+                    <li>Installation de machines virtuelles</li>
+                    <li>Installation et configuration d'un point d'accès Wi-Fi</li>
+                </ul>
+                
+                <h3>Logiciels</h3>
+                <ul class="skills-list">
+                    <li>Suite Office (Word, Excel, PowerPoint)</li>
+                    <li>Matlab</li>
+                    <li>SolidWorks / Fusion 360</li>
+                    <li>Cura (impression 3D)</li>
+                </ul>
+            </section>
+
+            <section class="human-skills-section">
+                <h2>COMPÉTENCES HUMAINES</h2>
+                <ul class="skills-list">
+                    <li>Esprit d'équipe</li>
+                    <li>Débrouillardise</li>
+                    <li>Pédagogie</li>
+                    <li>Organisation</li>
+                    <li>Adaptabilité</li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+</body>
+</html>
