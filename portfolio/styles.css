@@ -636,3 +636,135 @@ body {
   .carousel-arrow.left { left: 0; }
   .carousel-arrow.right { right: 0; }
 }
+
+/* ==================== Responsive rules ==================== */
+/* Make images fluid by default */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Tweak layout for medium screens (tablets and small laptops) */
+@media (max-width: 900px) {
+  .about-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .tete img {
+    width: 60%;
+    max-width: 300px;
+    height: auto;
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  .container,
+  .cv-section,
+  .project-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .projects-carousel {
+    padding: 20px;
+  }
+
+  .carousel-container {
+    margin: 0 10px;
+  }
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 600px) {
+  body {
+    padding-top: 64px; /* allow space for the fixed banner */
+  }
+
+  .banner {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .banner h1 {
+    font-size: 1rem;
+    margin-left: 8px;
+  }
+
+  .banner img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .content {
+    margin-top: 72px;
+    padding: 12px;
+  }
+
+  /* Stack containers vertically */
+  .container,
+  .techniques-container,
+  .divers-container,
+  .cv-section,
+  .project-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .menu-section {
+    width: auto;
+  }
+
+  /* Make grid sections single column */
+  .divers-container {
+    grid-template-columns: 1fr;
+  }
+
+  .skills-container {
+    grid-template-columns: 1fr;
+  }
+
+  /* Project card image should scale */
+  .project-image img,
+  .cv-preview,
+  .projet-icon {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Smaller carousel padding and buttons */
+  .projects-carousel {
+    padding: 12px;
+  }
+
+  .carousel-button {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  /* Ensure the profile image doesn't overflow */
+  .tete img {
+    width: 100%;
+    max-width: 240px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* Side navigation adjusts for smaller banner */
+  .sidenav {
+    padding-top: 56px;
+  }
+}
+
+/* Small utility: hide big headings on very small screens if needed */
+@media (max-width: 360px) {
+  .banner h1 {
+    font-size: 0.9rem;
+  }
+}
+
+/* End responsive rules */
