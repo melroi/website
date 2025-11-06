@@ -33,7 +33,7 @@ foreach ($f in $files) {
 
     if ($text -match "(?i)<head\b[^>]*>") {
     # Prépare la chaîne à insérer (utilise des quotes simples dans l'attribut pour simplifier)
-    $insert = "`r`n    <meta name='robots' content='noindex, nofollow'>"
+    $insert = "`r`n  <meta name="robots" content="noindex, nofollow">"
         $replacement = '$1' + $insert
         try {
             $newText = [regex]::Replace($text, '(?i)(<head\b[^>]*>)', $replacement)
