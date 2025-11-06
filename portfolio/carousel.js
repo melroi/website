@@ -124,6 +124,40 @@ class ProjectCarousel {
                     </div>
                 </div>
             `;
+
+            // Ajustements pour que l'image s'adapte à sa taille et éviter les sauts de layout
+            const imgEl = this.wrapper.querySelector('.projet-icon');
+            const adjustImageLayout = () => {
+                if (!imgEl) return;
+                // Rendre l'image responsive
+                imgEl.style.maxWidth = '100%';
+                imgEl.style.height = 'auto';
+                imgEl.style.display = 'block';
+                // S'assurer que le conteneur d'image s'adapte
+                const imgParent = imgEl.closest('.project-image');
+                if (imgParent) imgParent.style.height = 'auto';
+                // Définir une min-height sur le wrapper pour réduire le saut lors de la transition
+                const displayedHeight = imgEl.clientHeight || imgEl.naturalHeight || 0;
+                if (displayedHeight > 0) {
+                    this.wrapper.style.minHeight = displayedHeight + 'px';
+                } else {
+                    this.wrapper.style.minHeight = 'auto';
+                }
+            };
+
+            if (imgEl) {
+                if (imgEl.complete) {
+                    // image déjà en cache
+                    adjustImageLayout();
+                } else {
+                    imgEl.addEventListener('load', adjustImageLayout);
+                    imgEl.addEventListener('error', () => {
+                        // en cas d'erreur d'image, enlever le minHeight pour ne pas bloquer l'affichage
+                        this.wrapper.style.minHeight = 'auto';
+                    });
+                }
+            }
+
             this.wrapper.style.opacity = '1';
         }, 300);
     }
