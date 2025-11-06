@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta name='robots' content='noindex, nofollow'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compte rendu projet</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<header>
+  <img src="logo.png" class="zoom">
+  <div class="seco">
+    <a href="logout.php" class="bindex">Se déconnecter</a>
+  </div>
+  <div class="haut">
+    <h1>Compte-rendu projet</h1>
+    <p>QUENET Noa - LAFILOLIE Lilian - HADROT Melchior - SALIÈGE Tom - ASSSAILLY Allan</p>
+  </div>
+</header>
+
+<body>
+<nav>
+    <section class="navigation">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="navigation">
+            <nav id="navmenu">
+              <ul>
+                <li class="active"><a href="dashboard.php">ACCUEIL</a></li>
+                <li><a href="client.html">CLIENT</a></li>
+                <li><a href="#">RAPPORT ▼</a>
+                  <ul>
+                    <li><a href="infra.html">INFRASTRUCTURE</a></li>
+                    <li><a href="switch.html">SWITCH</a></li>
+                    <li><a href="routeur.html">ROUTEUR</a></li>
+                    <li><a href="#">SERVEUR LINUX ▶</a>
+                      <ul>
+                        <li><a href="dhcp.html">DHCP</a></li>
+                        <li><a href="apache.html">APACHE</a></li>
+                        <li><a href="ssh.html">SSH</a></li>
+                        <li><a href="rsync.html">RSYNC</a></li>
+                        <li><a href="swap.html">MEMOIRE SWAP</a></li>
+                        <li><a href="ftp.html">FTP</a></li>
+                        <li><a href="mail.html">MAIL</a></li>
+                        <li><a href="fail.html">FAIL2BAN</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">SERVEUR WINDOWS ▶</a>
+                      <ul>
+                        <li><a href="dns.html">DNS</a></li>
+                        <li><a href="ad.html">USERS / GROUPS</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="wifi.html">AP WIFI</a></li>
+                    <li><a href="#">TELEPHONIE ▶</a>
+                      <ul>
+                        <li><a href="call.html">CALL SERVER</a></li>
+                        <li><a href="tel.html">TELEPHONES</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="pf.html">PARE-FEU</a></li>                    
+                  </ul>
+                </li>
+                <li><a href="#">ATTAQUES / MESURES ▼</a>
+                  <ul>
+                    <li><a href="dhcpss.html">DHCP</a></li>
+                    <li><a href="public.html">VLAN PUBLIC</a></li>
+                    <li><a href="parefeu.html">PARE-FEU</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">LOGS ▼</a>
+                  <ul>
+                    <li><a href="config.html">CONFIGURATION</a></li>
+                    <li><a href="">RAPPORT DE LOGS ▶</a>
+		       <ul>
+			  <li><a href="rl.php">LOG DHCP</a></li>
+			  <li><a href="rapportlog.php">DETECTION</a></li>
+		       </ul>
+		    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</nav>
+
+<main>
+  <section class="content">
+    <h2>Configuration du Call server</h2>
+  </section>
+  <br>
+  <section class="content">
+    <h3>Installation du Call server</h3>
+    <br>
+    <p>Tout d’abord, on choisit quelle Ibx utiliser pour notre configuration téléphonique. Ici, on choisit d’utiliser FreePBX car il propose une interface intuitive, il possède une compatibilité avec de nombreux téléphones SIP et plusieurs autres fonctionnalités utilisées par la suite.</p>
+    <p>Ensuite, on installe l'ISO de FreePBX qu’on place dans une machine virtuelle créée à partir de VMware.</p>
+    <br>
+    <p>Pour l’installation, on attribue à notre VM 40 Go de stockage, 2 Go de mémoire vive et on précise qu’on utilise Debian 12_64bits.</p>
+    <p>Après avoir démarré la VM, une page de configuration s’ouvre :</p>
+    <img src="call.png">
+    <br>
+    <p>Elle nous permet de changer le mot de passe.</p>
+    <p>Login : sangoma</p>
+    <p>MDP : patate</p>
+    <p>Une fois l’installation terminée, on va sur notre navigateur et on entre l’adresse IP (192.168.247.129).</p>
+    <br>
+    <p>Ensuite, on arrive sur une page qui nous permet de configurer notre utilisateur Administrateur. Pour cela, on remplit plusieurs champs :</p>
+    <ul>
+      <li>Login : root</li>
+      <li>PSW : patate</li>
+      <li>mail : rh@patate.local</li>
+    </ul>
+    <br>
+    <p>Puis on clique sur "skip" jusqu’au pare-feu où l’on doit cocher "yes" sur les deux pages pour pouvoir autoriser l’IP du PC. Cependant, on doit quand même ajouter une ligne de commande sur notre VM pour que notre PC ne soit pas bloqué par le Call Server. Cette commande est :</p>
+    <p>fwconsole firewall trust 192.168.247.1</p>
+    <br>
+    <p>Cependant, si on redémarre notre machine, il peut y avoir un bug au niveau du démarrage de la VM.</p>
+    <p>Pour résoudre ce problème, on peut utiliser cette solution :</p>
+    <ul>
+      <li>lsmod | grep vmmon (Vérifie si le module est déjà chargé)</li>
+      <li>modprobe vmmon (Tente de charger le module)</li>
+      <li>lsmod | grep vmmon (Vérifie si le chargement a réussi)</li>
+    </ul>
+    <br>
+    <p>Si les modules sont chargés :</p>
+    <ul>
+      <li>systemctl restart VMware</li>
+    </ul>
+    <br>
+    <p>Cependant, il faut taper ces commandes après chaque redémarrage. On va donc créer un petit script pour qu'il soit fait au démarrage du PC.</p>
+    <p>Le script sera créé dans le dossier : <code>/etc/systemd/system/vmware-startup.service</code></p>
+    <br>
+    <p>Nous créons notre script en trois parties :</p>
+    <br>
+    <p>[Unit]</p>
+    <pre>
+Description=Initialisation de VMware modules
+After=network.target
+    </pre>
+    <p>La première partie indique quand s’effectue le lancement. Ici, la première ligne est simplement une ligne de description de notre programme. Mais la ligne <code>After=network.target</code> permet de signaler que le programme se lance quand le réseau est prêt.</p>
+   <br>
+    <p>[Service]</p>
+    <pre>
+Type=oneshot
+ExecStart=/sbin/modprobe vmmon
+ExecStartPost=/bin/systemctl restart vmware
+    </pre>
+    <p>Cette partie définit les commandes à entrer. Tout d’abord, le <code>Type=oneshot</code> permet d’exécuter le programme qu’une seule fois par démarrage. Ensuite, on exécute les deux commandes : <code>ExecStart=/sbin/modprobe vmmon</code> et <code>ExecStartPost=/bin/systemctl restart vmware</code>, qui nous permettent de charger le module <code>vmmon</code> puis de redémarrer le service <code>vmware</code>. Les commandes <code>ExecStart</code> et <code>ExecStartPost</code> permettent d’exécuter les commandes au redémarrage du PC ou juste après.</p>
+   <br>
+    <p>[Install]</p>
+    <pre>
+WantedBy=multi-user.target
+    </pre>
+    <p>Cette ligne est obligatoire et signifie que le script se lance au démarrage standard de la VM.</p>
+
+  </section>
+  <br>
+  <section class="content">
+    <h3>Configuration des utilisateurs</h3>
+    <br>
+    <p>Tout d’abord, on doit changer l’adresse IP de notre machine par l’adresse : 172.25.254.201</p>
+    <br>
+    <p>Puis, pour configurer les utilisateurs, on va dans le menu "extension" qui se trouve dans "connectivité".</p>
+    <br>
+    <p>Ensuite, on clique sur "Add Extension", puis on choisit SIP. On renseigne ensuite un numéro de téléphone interne ; exemple : le premier téléphone a pour numéro 1351. Ensuite, on entre le nom qui s’affichera sur le téléphone lors d’un appel. Enfin, on pourrait renseigner un numéro externe pour que les clients puissent appeler depuis un téléphone personnel. Cependant, aucun numéro ne nous a été attribué.</p>
+    <br>
+    <img src="call2.png">
+  </section>
+  <br>
+  <section class="content">
+    <h3>Configuration d’appel</h3>
+    <br>
+    <p>Après avoir configuré nos téléphones, on rencontre plusieurs problèmes qu’on doit résoudre.</p>
+    <ul>
+      <li>Tout d’abord, on doit autoriser au pare-feu l’adresse de chaque téléphone (le chemin de la commande fwconsole est : /usr/sbin/fwconsole) avec les commandes :</li>
+      <p>sudo /usr/sbin/fwconsole firewall trust 172.25.254.55 </p>
+      <p>sudo /usr/sbin/fwconsole firewall trust 172.25.254.16 </p>
+      <br>
+      <p>Ensuite, on redémarre le service avec :</p>
+      <p>sudo /usr/sbin/fwconsole restart</p>
+      <li>Ensuite, il y a un second problème avec la gestion des ports. Pour résoudre ce problème, on commence par ajouter une règle pour autoriser les échanges sur le port 5060 et les ports 10000 à 20000. Pour cela, on entre les commandes :</li>
+      <p>sudo iptables -A INPUT -p udp --dport 5060 -j ACCEPT</p>
+      <p>sudo iptables -A INPUT -p udp --dport 10000:20000 -j ACCEPT </p>
+      <br>
+      <p>On veut sauvegarder nos règles pour qu’elles restent appliquées au démarrage :</p>
+      <p>sudo iptables-save > /etc/iptables/rules.v4</p>
+      <p>Cette commande ne fonctionne pas car on n’a pas les droits.</p>
+      <p>On modifie donc les droits avec les commandes :</p>
+      <p>sudo chmod 755 /etc/iptables</p>
+      <p>sudo chmod 644 /etc/iptables/rules.v4</p>
+      <br>
+      <p>Puis on enregistre dans un fichier intermédiaire que l’on copie ensuite :</p>
+      <p>sudo iptables-save > /tmp/rules.v4</p>
+      <p>sudo mv /tmp/rules.v4 /etc/iptables/rules.v4</p>
+      <br>
+      <p>Si jamais il y a un bug avec les utilisateurs, on va dans "Reports -> Asterisk Info -> Peers". Cette commande permet de voir si un téléphone est actif.</p>
+      <img src="call5.png">
+    </ul>
+  </section>
+  <br>
+  <section class="content">
+    <h3>Configuration de la messagerie</h3>
+    <br>
+    <p>Pour configurer notre messagerie, on va dans Connectivité -> Extension.</p>
+    <br>
+    <p>Puis on va dans l’onglet "Voicemail" et on met "Enable : Yes".</p>
+    <br>
+    <p>Ensuite, on ajoute un mot de passe (123654).</p>
+    <br>
+    <img src="call6.png">
+    <br>
+    <p>Pour écouter la messagerie, on va dans : Application -> Misc Destination.</p>
+    <p>Ensuite, on ajoute un numéro : *97 (Il est important de ne pas oublier le * lors de la composition du numéro pour écouter la messagerie !)</p>
+    <img src="call7.png">
+    <p>Enfin, on clique sur "Submit", puis "Apply Config".</p>
+  </section>
+  <br>
+  <section class="content">
+    <h3>Mise en place d’un trunk SIP</h3>
+    <br>
+    <p>On commence par "Trunk". Pour cela, on va dans : Connectivity -> Trunks -> Add Trunk</p>
+    <br>
+    <p>On nomme notre lien Trunk (ligne Trunk Name) : Vers_operateur.</p>
+    <img src="call8.png">
+    <br>
+    <p>Puis à la case Outbound Caller ID, on entre notre numéro : 0473171000 (premier numéro de la plage donnée).</p>
+    <img src="call9.png">
+    <br>
+    <p>On va ensuite dans l’onglet PJ SIP Settings.</p>
+    <p>On précise qu’aucune authentification n’est nécessaire.</p>
+    <img src="call10.png">
+    <br>
+    <p>On met le code langue en français.</p>
+    <p>Puis on configure le serveur SIP en 10.172.5.10.</p>
+    <p>Enfin, on met le port du serveur SIP à 5060.</p>
+    <img src="call11.png">
+    <br>
+    <p>On clique sur "Submit" pour sauvegarder notre configuration.</p>
+    <p>On continue avec : Connectivity -> Inbound Routes -> Add Inbound Route</p>
+    <p>On entre le DID Number : 0473171001 (numéro donné à un des clients).</p>
+    <img src="call12.png">
+    <br>
+    <p>Puis on sélectionne "Set Destination : Extension" et on choisit un de nos utilisateurs.</p>
+    <img src="call13.png">
+    <br>
+    <p>On va ensuite dans le menu "Advanced" et on sélectionne "France".</p>
+    <img src="call14.png">
+    <br>
+    <p>On clique sur "Submit" pour enregistrer la configuration.</p>
+    <p>Puis : Connectivity -> Outbound Routes -> Add Outbound Route.</p>
+    <p>On commence par nommer la route (sans accent), ici "VersOperateur".</p>
+    <img src="call15.png">
+    <br>
+    <p>Dans "Trunk Sequence for Matched Routes", on sélectionne le Trunk créé.</p>
+    <img src="call16.png">
+    <br>
+    <p>On va ensuite dans l’onglet "Dial Patterns".</p>
+    <p>Dans "Match Pattern", on tape "XXXXXXXXXX" pour indiquer qu’il faut dix chiffres pour un appel vers l’extérieur.</p>
+    <img src="call17.png">
+    <br>
+    <p>On clique sur "Submit" pour enregistrer la configuration.</p>
+    <p>Dans le menu "Connectivité -> Extension", on change le "Outbound CID" pour l’affichage du numéro de téléphone.</p>
+    <img src="call18.png">
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2025 - Réseaux & CO. Tous droits réservés.</p>
+</footer>
+
+</body>
+</html>
+
