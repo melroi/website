@@ -2,6 +2,12 @@
 const projectData = {
     iut: [
         { 
+            title: 'SAE32', 
+            desc: 'SAE32: Développer des applications communicantes', 
+            img: 'assets/image/icon/icon_sae32.png', 
+            link: 'assets/pdf/SAE32.pdf' 
+        },
+        { 
             title: 'SAE15', 
             desc: 'SAE15 : Traitement des données environnementales et économiques', 
             img: 'assets/image/icon/icon_sae15.png', 
@@ -18,33 +24,21 @@ const projectData = {
             desc: 'Installation et configuration d\'un serveur FTP sous Linux', 
             img: 'assets/image/icon/ftp.jpg', 
             link: 'assets/pdf/TP_FTP.pdf' 
+        },
+        { 
+            title: 'R2.03 : Services réseaux', 
+            desc: 'Installation et configuration d\'un serveur FTP sous Linux', 
+            img: 'assets/image/icon/ftp.jpg', 
+            link: 'assets/pdf/TP_FTP.pdf' 
         }
     ],
     perso: [
         { 
-            title: 'Impression 3D', 
-            desc: 'Conception et réalisation de projets personnels en impression 3D', 
+            title: 'Création d\'un serveur personnel', 
+            desc: 'Mise en place d\'un serveur personnel à domicile pour hébergement et stockage de fichiers.', 
             img: 'assets/image/icon/impression_3d.jpg', 
             link: '#' 
         },
-        { 
-            title: 'Cuisine & Pâtisserie', 
-            desc: 'Passion pour la cuisine et création de recettes originales', 
-            img: 'assets/image/icon/cuisine.png', 
-            link: '#' 
-        },
-        { 
-            title: 'Site Web Personnel', 
-            desc: 'Développement de mon portfolio en HTML/CSS/JS', 
-            img: 'assets/image/icon/hamburger1000x1000.png', 
-            link: '#' 
-        },
-        {
-            title: 'Lecture',
-            desc: 'Passionné de littérature, notamment 1984 et Berserk',
-            img: 'assets/image/icon/1984.jpg',
-            link: '#'
-        }
     ]
 };
 
