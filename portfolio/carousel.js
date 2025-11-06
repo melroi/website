@@ -14,6 +14,12 @@ const projectData = {
             link: 'assets/pdf/SAE15.pdf' 
         },
         { 
+            title: 'SAE24', 
+            desc: 'SAE15 : Traitement des données environnementales et économiques', 
+            img: 'assets/image/icon/icon_sae15.png', 
+            link: 'assets/pdf/SAE15.pdf' 
+        },
+        { 
             title: "R2.04 : Téléphonie d'entreprise", 
             desc: "Configuration complète d'un réseau téléphonique IP d'entreprise", 
             img: 'assets/image/icon/icon_telephonie.png', 
@@ -25,12 +31,6 @@ const projectData = {
             img: 'assets/image/icon/ftp.jpg', 
             link: 'assets/pdf/TP_FTP.pdf' 
         },
-        { 
-            title: 'R2.03 : Services réseaux', 
-            desc: 'Installation et configuration d\'un serveur FTP sous Linux', 
-            img: 'assets/image/icon/ftp.jpg', 
-            link: 'assets/pdf/TP_FTP.pdf' 
-        }
     ],
     perso: [
         { 
