@@ -15,7 +15,7 @@
   </div>
   <div class="haut">
     <h1>Compte-rendu projet</h1>
-    <p>QUENET Noa - LAFILOLIE Lilian - HADROT Melchior - SALIÈGE Tom - ASSSAILLY Allan</p>
+    <p>Liste masquée pour la publication en ligne.</p>
   </div>
 </header>
 
@@ -118,11 +118,9 @@
       <p>Commande d’installation : <code>apt install cron</code></p>
       <p>On configure <code>crontab</code> pour sauvegarder les dossiers tous les soirs à 17h20 :</p>
       
-      <p>Utilisateur <strong>rh</strong> :</p>
-      <p><code>20 17 * * * /usr/bin/rsync -avz /home/rh patate@192.168.0.100:/sauvegarde/ >> /var/log/rsync-backup.log 2>&1</code></p>
-      
-      <p>Utilisateur <strong>patate</strong> :</p>
-      <p><code>20 17 * * * /usr/bin/rsync -avz /home/patate patate@192.168.0.100:/sauvegarde/ >> /var/log/rsync-backup.log 2>&1</code></p>
+      <p>Exemples d'utilisateurs (noms masqués) :</p>
+      <p><code>20 17 * * * /usr/bin/rsync -avz /home/user1 user@192.168.0.100:/sauvegarde/ >> /var/log/rsync-backup.log 2>&1</code></p>
+      <p><code>20 17 * * * /usr/bin/rsync -avz /home/user2 user@192.168.0.100:/sauvegarde/ >> /var/log/rsync-backup.log 2>&1</code></p>
       
       <p>Détails :</p>
       <ul>
