@@ -1,11 +1,64 @@
-
 <!DOCTYPE html><html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Needy Girl Overdose – Countdown</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      background: linear-gradient(135deg, #ff0099, #6600ff, #ffcc00);
+      background-size: 600% 600%;
+      animation: gradientShift 10s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      color: white;
+      text-shadow: 2px 2px 5px black;
+    }@keyframes gradientShift {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+.hud {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  padding: 24px;
+}
+
+.hud-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+  background: rgba(0,0,0,.25);
+  padding: 10px 18px;
+  border-radius: 8px;
+}
+
+#timer { font-size: 2rem; font-weight: bold; }
+
+.bouncer {
+  position: absolute;
+  width: 140px;
+  height: auto;
+  will-change: transform;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,.5));
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+  </style>
 </head>
 <body>
   <div class="hud">
@@ -14,6 +67,52 @@
       <div id="timer">Chargement…</div>
       <div class="hint">Appuie sur <strong>Entrée</strong> ou <strong>tape l'écran</strong></div>
     </div>
-  </div>  
-<img id="dvd" class="bouncer" src="image1.jpg" />  <script src="script.js"></script></body>
+  </div>  <img id="dvd" class="bouncer" src="image1.jpg" />  <script>
+    // TIMER – sortie confirmée avril 2026
+    const targetDate = new Date("2026-04-01T00:00:00+02:00").getTime();
+    const timer = document.getElementById("timer");
+
+    function updateTimer() {
+      const now = Date.now();
+      const diff = targetDate - now;
+      if (diff <= 0) {
+        timer.textContent = "C'est sorti !!!";
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      timer.textContent = `${d}j ${h}h ${m}m ${s}s`;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    // DVD BOUNCER
+    const dvd = document.getElementById("dvd");
+    let x = 100, y = 100;
+    let dx = 3, dy = 3;
+    let angle = 0;
+
+    function animate() {
+      const screenWidth = innerWidth;
+      const screenHeight = innerHeight;
+      const w = dvd.offsetWidth;
+      const h = dvd.offsetHeight;
+
+      x += dx;
+      y += dy;
+
+      if (x <= 0 || x + w >= screenWidth) dx *= -1;
+      if (y <= 0 || y + h >= screenHeight) dy *= -1;
+
+      angle += 5;
+      dvd.style.transform = `translate(${x}px, ${y}px) rotateY(${angle}deg)`;
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script></body>
 </html>
