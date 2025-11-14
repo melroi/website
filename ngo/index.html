@@ -1,63 +1,72 @@
-<!DOCTYPE html><html lang="fr">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow">
+
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Needy Girl Overdose – Countdown</title>
+  <link rel="preload" href="image1.jpg" as="image" />
+
   <style>
+    :root { --hud-gap: 16px; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
       margin: 0;
-      padding: 0;
       overflow: hidden;
-      height: 100vh;
-      width: 100vw;
-      background: linear-gradient(135deg, #ff0099, #6600ff, #ffcc00);
+      font-family: "Comic Sans MS", cursive, system-ui, sans-serif;
+      color: #fff;
+      text-shadow: 2px 2px 5px rgba(0,0,0,.75);
+      background: linear-gradient(135deg, #ff00ff, #00ffff, #ffff00);
       background-size: 600% 600%;
       animation: gradientShift 10s ease infinite;
+      height: 100dvh;
+      width: 100vw;
+      position: relative;
+      touch-action: manipulation;
+      -webkit-user-select: none; user-select: none;
+    }
+
+    @keyframes gradientShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .hud {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      padding: 24px;
+    }
+    .hud-inner {
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
-      font-family: "Comic Sans MS", cursive, sans-serif;
-      color: white;
-      text-shadow: 2px 2px 5px black;
-    }@keyframes gradientShift {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
-}
+      gap: var(--hud-gap);
+      text-align: center;
+      z-index: 2;
+      background: rgba(0,0,0,.15);
+      padding: 8px 14px;
+      border-radius: 8px;
+    }
+    h1 { font-size: clamp(1.4rem, 3vw, 3rem); margin: 0; }
+    #timer { font-size: clamp(1.2rem, 6vw, 2.6rem); font-weight: 800; }
 
-.hud {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-  padding: 24px;
-}
-
-.hud-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  text-align: center;
-  background: rgba(0,0,0,.25);
-  padding: 10px 18px;
-  border-radius: 8px;
-}
-
-#timer { font-size: 2rem; font-weight: bold; }
-
-.bouncer {
-  position: absolute;
-  width: 140px;
-  height: auto;
-  will-change: transform;
-  filter: drop-shadow(0 8px 18px rgba(0,0,0,.5));
-  transform-style: preserve-3d;
-  pointer-events: none;
-}
-
+    .bouncer {
+      position: absolute;
+      left: 0; top: 0;
+      width: clamp(64px, 18vw, 140px);
+      height: auto;
+      will-change: transform;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,.5));
+      transform-style: preserve-3d;
+      z-index: 1;
+      -webkit-user-drag: none; user-drag: none;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -65,31 +74,30 @@
     <div class="hud-inner" id="hudBox">
       <h1>Needy Girl Overdose dans :</h1>
       <div id="timer">Chargement…</div>
-      <div class="hint">Appuie sur <strong>Entrée</strong> ou <strong>tape l'écran</strong></div>
+      <div style="opacity:.85; font-size:.9rem; pointer-events:none;">
+        Appuie sur <strong>Entrée</strong> ou <strong>tape l'écran</strong>
+      </div>
     </div>
-  </div>  <img id="dvd" class="bouncer" src="image1.jpg" />  <script>
-    // TIMER – sortie confirmée avril 2026
-    const targetDate = new Date("2026-04-01T00:00:00+02:00").getTime();
-    const timer = document.getElementById("timer");
+  </div>
 
+  <script>
+    // ===== Timer =====
+    const TARGET_DATE = new Date("2026-01-02T16:00:00+01:00").getTime();
+    const $timer = document.getElementById("timer");
     function updateTimer() {
       const now = Date.now();
-      const diff = targetDate - now;
-      if (diff <= 0) {
-        timer.textContent = "C'est sorti !!!";
-        return;
-      }
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      timer.textContent = `${d}j ${h}h ${m}m ${s}s`;
+      const diff = TARGET_DATE - now;
+      if (diff <= 0) { $timer.textContent = "C'est sorti !!!"; return; }
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
+      $timer.textContent = `${d}j ${h}h ${m}m ${s}s`;
     }
+    setInterval(updateTimer, 1000); updateTimer();
 
-    setInterval(updateTimer, 1000);
-    updateTimer();
-
-const SPRITES = ["image1.jpg"];
+    // ===== Bouncers =====
+    const SPRITES = ["image1.jpg"];
 
     function viewportSize() {
       return { w: window.innerWidth, h: window.innerHeight };
