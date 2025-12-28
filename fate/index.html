@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow">
-
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fate/Strange Fake – Countdown</title>
   <link rel="preload" href="image1.jpg" as="image" />
@@ -81,20 +80,22 @@
   </div>
 
   <script>
-    // ===== Timer =====
-    const TARGET_DATE = new Date("2026-01-02T16:00:00+01:00").getTime();
+    // ===== Timer corrigé pour le 3 Janvier 2026 =====
+    const TARGET_DATE = new Date("2026-01-03T00:00:00+01:00").getTime();
     const $timer = document.getElementById("timer");
+
     function updateTimer() {
       const now = Date.now();
       const diff = TARGET_DATE - now;
-      if (diff <= 0) { $timer.textContent = "C'est sorti !!!"; return; }
+      if (diff <= 0) { $timer.textContent = "C'est bon je crois !!!"; return; }
       const d = Math.floor(diff / (1000 * 60 * 60 * 24));
       const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const s = Math.floor((diff % (1000 * 60)) / 1000);
       $timer.textContent = `${d}j ${h}h ${m}m ${s}s`;
     }
-    setInterval(updateTimer, 1000); updateTimer();
+    setInterval(updateTimer, 1000); 
+    updateTimer();
 
     // ===== Bouncers =====
     const SPRITES = ["image1.jpg"];
@@ -152,9 +153,10 @@
       if (b.y + b.h > H) b.y = H - b.h;
     }
 
+    // Initialisation avec deux bouncers utilisant l'image disponible
     const bouncers = [
       createBouncer(SPRITES[0]),
-      createBouncer(SPRITES[1])
+      createBouncer(SPRITES[0])
     ];
 
     document.addEventListener('keydown', (e) => {
