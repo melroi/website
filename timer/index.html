@@ -2,190 +2,182 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chrono Muscu Ultra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chrono Muscu Ultimate</title>
     <style>
-        :root { --primary: #e74c3c; --secondary: #2c3e50; --bg: #121212; --text: #ffffff; --green: #27ae60; }
-        body { font-family: 'Arial', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 15px; margin: 0; }
-        
-        #timer-display { font-size: 5rem; font-weight: bold; margin: 10px 0; color: var(--primary); text-shadow: 0 0 20px rgba(231, 76, 60, 0.3); }
-        #status-label { font-size: 1.5rem; color: var(--green); height: 30px; margin-bottom: 10px; }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 8px; width: 100%; max-width: 500px; margin-bottom: 15px; }
-        
-        button { padding: 18px 5px; font-size: 1rem; border: none; border-radius: 10px; background: var(--secondary); color: white; cursor: pointer; font-weight: bold; }
-        button:active { transform: scale(0.92); }
-        
-        .main-controls { grid-template-columns: 1fr 1fr 1fr; }
-        .btn-start { background: var(--green); }
-        .btn-stop { background: var(--primary); }
-        .btn-replay { background: #f39c12; }
-        
-        .section { width: 100%; max-width: 500px; border-top: 1px solid #333; padding-top: 15px; margin-top: 10px; }
-        h3 { margin: 0 0 10px 0; font-size: 1rem; color: #888; text-transform: uppercase; }
-
-        .flex-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        select, input { flex: 1; padding: 12px; border-radius: 8px; border: none; background: #333; color: white; }
-
-        .plank-mode { background: #1e272e; padding: 15px; border-radius: 12px; border: 2px solid #34495e; }
+        :root {
+            --bg: #121212; --card: #1e1e1e; --text: #ffffff;
+            --primary: #e74c3c; --secondary: #3498db; --green: #27ae60;
+        }
+        .light-mode {
+            --bg: #f0f0f0; --card: #ffffff; --text: #121212;
+            --primary: #c0392b; --secondary: #2980b9; --green: #219150;
+        }
+        body {
+            font-family: sans-serif; background: var(--bg); color: var(--text);
+            margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center;
+        }
+        .header { width: 100%; max-width: 600px; display: flex; justify-content: space-between; margin-bottom: 10px; }
+        #timer-display { font-size: clamp(4rem, 15vw, 6rem); font-weight: 800; margin: 5px 0; color: var(--primary); }
+        .container { width: 100%; max-width: 600px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        button { 
+            padding: 15px 5px; border: none; border-radius: 12px; 
+            background: var(--card); color: var(--text); cursor: pointer; font-weight: bold;
+        }
+        .btn-main { background: var(--green); color: white; }
+        .btn-stop { background: var(--primary); color: white; }
+        .section { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 15px; }
+        h3 { margin-top: 0; font-size: 0.8rem; text-transform: uppercase; opacity: 0.6; }
+        .todo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .todo-row input[type="checkbox"] { width: 22px; height: 22px; }
+        .todo-row input[type="text"] { flex: 1; padding: 8px; border-radius: 5px; border: none; background: rgba(128,128,128,0.1); color: var(--text); }
+        select, .control-btn { background: #333; color: white; padding: 10px; border-radius: 8px; border: none; width: 100%; }
+        .active-opt { border: 2px solid var(--green) !important; background: #2c3e50; }
+        #confirm-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center;
+        }
     </style>
 </head>
 <body>
 
-    <div id="status-label">PRÊT</div>
+    <div class="header">
+        <button onclick="toggleTheme()">☀️/🌙</button>
+        <button style="background:var(--primary); color:white" onclick="showResetConfirm()">RESET</button>
+    </div>
+
     <div id="timer-display">00:00</div>
 
-    <div class="grid main-controls">
-        <button class="btn-start" onclick="startTimer()">START</button>
-        <button class="btn-stop" onclick="stopTimer()">STOP</button>
-        <button class="btn-replay" onclick="replayTimer()">RE-LANCER</button>
-    </div>
+    <div class="container">
+        <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+            <button class="btn-main" onclick="startTimer()">START</button>
+            <button class="btn-stop" onclick="stopTimer()">STOP</button>
+            <button style="background: #f39c12; color:white" onclick="replayTimer()">REPLAY</button>
+        </div>
 
-    <div class="section">
-        <h3>Minutes & Heures</h3>
-        <div class="grid">
-            <button onclick="setTime(1)">1m</button>
-            <button onclick="setTime(2)">2m</button>
-            <button onclick="setTime(3)">3m</button>
-            <button onclick="setTime(5)">5m</button>
-            <button onclick="setTime(10)">10m</button>
-            <button onclick="setTime(30)">30m</button>
-            <button onclick="setTime(60)">1h</button>
-            <button style="background:#444" onclick="addSeconds(30)">+30s</button>
+        <div class="section">
+            <h3>Paramètres Alertes</h3>
+            <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                <button id="btn-sound" onclick="toggleSound()">SON: ON</button>
+                <button id="btn-vibrate" onclick="toggleVibrate()">VIBREUR: ON</button>
+            </div>
+            <select id="soundSelect" onchange="changeSound()">
+                <option value="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">Son : Bip Court</option>
+                <option value="https://actions.google.com/sounds/v1/alarms/alarm_clock_short_sig_9.ogg">Son : Alarme</option>
+                <option value="https://actions.google.com/sounds/v1/alarms/dinner_bell.ogg">Son : Cloche</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <div class="grid">
+                <button onclick="setTime(1)">1m</button>
+                <button onclick="setTime(2)">2m</button>
+                <button onclick="setTime(3)">3m</button>
+                <button onclick="addSeconds(30)">+30s</button>
+                <button onclick="addSeconds(10)">+10s</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Exercices</h3>
+            <div id="todo-list"></div>
+            <button onclick="addTodoRow()" style="width:100%; margin-top:10px; background:var(--secondary); color:white">+ Ajouter</button>
         </div>
     </div>
 
-    <div class="section plank-mode">
-        <h3>Mode Planche (Intervalle)</h3>
-        <div class="flex-row">
-            <input type="number" id="pWork" placeholder="Travail(s)" value="45">
-            <input type="number" id="pRest" placeholder="Repos(s)" value="15">
-            <input type="number" id="pReps" placeholder="Séries" value="3">
-        </div>
-        <button onclick="startPlank()" style="width:100%; background: #8e44ad;">LANCER SÉRIE PLANCHE</button>
-    </div>
-
-    <div class="section">
-        <h3>Métronome Custom</h3>
-        <div class="flex-row">
-            <input type="number" id="metroVal" placeholder="Secondes (ex: 2.5)" step="0.5">
-            <button onclick="toggleMetronome(document.getElementById('metroVal').value)" style="background:var(--green)">ON</button>
-            <button onclick="toggleMetronome(0)" style="background:var(--primary)">OFF</button>
+    <div id="confirm-overlay">
+        <div style="background:var(--card); padding:20px; border-radius:15px; text-align:center;">
+            <p>Tout effacer ?</p>
+            <button onclick="resetEverything()" style="background:var(--primary); color:white; margin-right:10px; padding:10px 20px;">OUI</button>
+            <button onclick="hideResetConfirm()" style="background:var(--secondary); color:white; padding:10px 20px;">NON</button>
         </div>
     </div>
 
-    <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
-    <audio id="longBeep" src="https://actions.google.com/sounds/v1/alarms/alarm_clock_short_sig_9.ogg"></audio>
+    <audio id="audioPlayer"></audio>
 
     <script>
-        let countdown;
-        let timeLeft = 0;
-        let lastTimeSet = 0;
-        let metroInterval;
-        let isPlank = false;
+        let countdown, timeLeft = 0, lastTimeSet = 0;
+        let soundEnabled = true, vibrateEnabled = true;
+        const player = document.getElementById('audioPlayer');
 
-        const display = document.getElementById('timer-display');
-        const status = document.getElementById('status-label');
-        const beep = document.getElementById('beep');
-        const longBeep = document.getElementById('longBeep');
+        // --- GESTION SON ET VIBREUR ---
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('btn-sound').innerText = `SON: ${soundEnabled ? 'ON' : 'OFF'}`;
+            if(soundEnabled) { player.src = document.getElementById('soundSelect').value; player.play(); }
+        }
 
+        function toggleVibrate() {
+            vibrateEnabled = !vibrateEnabled;
+            document.getElementById('btn-vibrate').innerText = `VIBREUR: ${vibrateEnabled ? 'ON' : 'OFF'}`;
+            if(vibrateEnabled && "vibrate" in navigator) { navigator.vibrate(200); }
+        }
+
+        function changeSound() {
+            player.src = document.getElementById('soundSelect').value;
+            if(soundEnabled) player.play();
+        }
+
+        // --- TIMER ---
         function updateDisplay() {
             let m = Math.floor(timeLeft / 60);
             let s = timeLeft % 60;
-            display.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            document.getElementById('timer-display').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         }
 
-        function setTime(m) {
-            stopTimer();
-            timeLeft = m * 60;
-            lastTimeSet = timeLeft;
-            status.innerText = "TEMPS PRÊT";
-            updateDisplay();
-        }
-
-        function addSeconds(s) {
-            timeLeft += s;
-            lastTimeSet = timeLeft;
-            updateDisplay();
-        }
-
-        function replayTimer() {
-            stopTimer();
-            timeLeft = lastTimeSet;
-            updateDisplay();
-            startTimer();
-        }
+        function setTime(m) { stopTimer(); timeLeft = m * 60; lastTimeSet = timeLeft; updateDisplay(); }
+        function addSeconds(s) { timeLeft += s; lastTimeSet = timeLeft; updateDisplay(); }
+        function replayTimer() { stopTimer(); timeLeft = lastTimeSet; startTimer(); }
 
         function startTimer() {
             clearInterval(countdown);
             if(timeLeft <= 0) return;
-            status.innerText = "TRAVAIL !";
             countdown = setInterval(() => {
                 timeLeft--;
                 updateDisplay();
                 if(timeLeft <= 0) {
                     clearInterval(countdown);
-                    longBeep.play();
-                    status.innerText = "TERMINÉ !";
+                    if(soundEnabled) { player.src = document.getElementById('soundSelect').value; player.play(); }
+                    if(vibrateEnabled && "vibrate" in navigator) { navigator.vibrate([500, 200, 500]); }
                 }
             }, 1000);
         }
 
-        function stopTimer() {
-            clearInterval(countdown);
-            isPlank = false;
-            status.innerText = "PAUSE / STOP";
+        function stopTimer() { clearInterval(countdown); }
+
+        // --- THEME & TODOS ---
+        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        
+        function addTodoRow(text = "", checked = false) {
+            const div = document.createElement('div');
+            div.className = 'todo-row';
+            div.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''} onchange="saveTodos()">
+                             <input type="text" value="${text}" placeholder="Exercice..." oninput="saveTodos()">
+                             <button onclick="this.parentElement.remove(); saveTodos()" style="background:none; color:red;">✕</button>`;
+            document.getElementById('todo-list').appendChild(div);
+            saveTodos();
         }
 
-        function toggleMetronome(seconds) {
-            clearInterval(metroInterval);
-            if (seconds <= 0 || !seconds) return;
-            status.innerText = `MÉTRONOME : ${seconds}s`;
-            metroInterval = setInterval(() => {
-                beep.play();
-            }, seconds * 1000);
+        function saveTodos() {
+            const data = Array.from(document.querySelectorAll('.todo-row')).map(r => ({
+                text: r.querySelector('input[type="text"]').value,
+                checked: r.querySelector('input[type="checkbox"]').checked
+            }));
+            localStorage.setItem('muscu_data', JSON.stringify(data));
         }
 
-        async function startPlank() {
-            stopTimer();
-            const work = parseInt(document.getElementById('pWork').value);
-            const rest = parseInt(document.getElementById('pRest').value);
-            const sets = parseInt(document.getElementById('pReps').value);
-            
-            for(let i = 1; i <= sets; i++) {
-                // Phase Travail
-                status.innerText = `SÉRIE ${i} : ACTION !`;
-                status.style.color = "var(--green)";
-                timeLeft = work;
-                await runPlankSegment();
-                
-                if(i < sets) {
-                    // Phase Repos
-                    longBeep.play();
-                    status.innerText = `REPOS...`;
-                    status.style.color = "var(--primary)";
-                    timeLeft = rest;
-                    await runPlankSegment();
-                    longBeep.play();
-                }
-            }
-            status.innerText = "SESSION PLANCHE FINIE !";
-            status.style.color = "white";
+        function loadTodos() {
+            const data = JSON.parse(localStorage.getItem('muscu_data') || '[]');
+            if(data.length === 0) addTodoRow("Exemple : Pompes");
+            else data.forEach(d => addTodoRow(d.text, d.checked));
         }
 
-        function runPlankSegment() {
-            return new Promise(resolve => {
-                updateDisplay();
-                countdown = setInterval(() => {
-                    timeLeft--;
-                    updateDisplay();
-                    if(timeLeft <= 0) {
-                        clearInterval(countdown);
-                        resolve();
-                    }
-                }, 1000);
-            });
-        }
+        function showResetConfirm() { document.getElementById('confirm-overlay').style.display = 'flex'; }
+        function hideResetConfirm() { document.getElementById('confirm-overlay').style.display = 'none'; }
+        function resetEverything() { localStorage.clear(); location.reload(); }
+
+        window.onload = loadTodos;
     </script>
 </body>
 </html>
