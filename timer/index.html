@@ -3,181 +3,476 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chrono Muscu Ultimate</title>
+    <title>Chrono Muscu</title>
     <style>
         :root {
-            --bg: #121212; --card: #1e1e1e; --text: #ffffff;
-            --primary: #e74c3c; --secondary: #3498db; --green: #27ae60;
+            --bg-color: #0f172a;
+            --card-color: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
         }
-        .light-mode {
-            --bg: #f0f0f0; --card: #ffffff; --text: #121212;
-            --primary: #c0392b; --secondary: #2980b9; --green: #219150;
-        }
+
         body {
-            font-family: sans-serif; background: var(--bg); color: var(--text);
-            margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
         }
-        .header { width: 100%; max-width: 600px; display: flex; justify-content: space-between; margin-bottom: 10px; }
-        #timer-display { font-size: clamp(4rem, 15vw, 6rem); font-weight: 800; margin: 5px 0; color: var(--primary); }
-        .container { width: 100%; max-width: 600px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; margin-bottom: 15px; }
-        button { 
-            padding: 15px 5px; border: none; border-radius: 12px; 
-            background: var(--card); color: var(--text); cursor: pointer; font-weight: bold;
+
+        /* Container Principal */
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            box-sizing: border-box;
+            flex: 1; /* Pousse le footer vers le bas */
         }
-        .btn-main { background: var(--green); color: white; }
-        .btn-stop { background: var(--primary); color: white; }
-        .section { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 15px; }
-        h3 { margin-top: 0; font-size: 0.8rem; text-transform: uppercase; opacity: 0.6; }
-        .todo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .todo-row input[type="checkbox"] { width: 22px; height: 22px; }
-        .todo-row input[type="text"] { flex: 1; padding: 8px; border-radius: 5px; border: none; background: rgba(128,128,128,0.1); color: var(--text); }
-        select, .control-btn { background: #333; color: white; padding: 10px; border-radius: 8px; border: none; width: 100%; }
-        .active-opt { border: 2px solid var(--green) !important; background: #2c3e50; }
-        #confirm-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center;
+
+        /* Affichage du Temps */
+        .timer-wrapper {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--card-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
+
+        #timer-display {
+            font-size: clamp(4rem, 18vw, 6.5rem);
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+            letter-spacing: -2px;
+            color: var(--text-main);
+        }
+
+        #status-label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--success);
+            font-weight: 600;
+            margin-bottom: 5px;
+            min-height: 1.2em;
+        }
+
+        /* Gros Boutons de Contrôle */
+        .control-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .btn-ctrl {
+            padding: 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.1s, filter 0.2s;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .btn-ctrl:active { transform: scale(0.96); }
+        .start { background-color: var(--success); }
+        .stop { background-color: var(--danger); }
+        .replay { background-color: var(--warning); }
+
+        /* Sections */
+        .section-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 25px 0 10px 0;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 5px;
+        }
+
+        /* Grille des Presets */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+            gap: 10px;
+        }
+
+        .btn-preset {
+            background-color: var(--card-color);
+            color: var(--text-main);
+            border: 1px solid #334155;
+            padding: 15px 5px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-preset:hover { background-color: #334155; }
+        .btn-preset:active { background-color: var(--accent); border-color: var(--accent); }
+
+        /* Zone Custom & Sauvegarde */
+        .custom-zone {
+            display: flex;
+            gap: 8px;
+            background: var(--card-color);
+            padding: 15px;
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 5px;
+            flex: 1;
+        }
+
+        input[type="number"], input[type="text"] {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn-action {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Liste des Timers Perso */
+        #saved-timers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .saved-timer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .saved-timer-row span { font-weight: 500; }
+        .delete-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            font-size: 1.2rem;
+            padding: 5px;
+            cursor: pointer;
+        }
+        .delete-btn:hover { color: var(--danger); }
+
+        /* Paramètres (Son/Vibreur) */
+        .settings-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .setting-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--card-color);
+            border: 1px solid #334155;
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .setting-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        /* Helpers */
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <button onclick="toggleTheme()">☀️/🌙</button>
-        <button style="background:var(--primary); color:white" onclick="showResetConfirm()">RESET</button>
-    </div>
-
-    <div id="timer-display">00:00</div>
-
-    <div class="container">
-        <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
-            <button class="btn-main" onclick="startTimer()">START</button>
-            <button class="btn-stop" onclick="stopTimer()">STOP</button>
-            <button style="background: #f39c12; color:white" onclick="replayTimer()">REPLAY</button>
+    <div class="app-container">
+        
+        <div class="timer-wrapper">
+            <div id="status-label">PRÊT</div>
+            <div id="timer-display">00:00</div>
         </div>
 
-        <div class="section">
-            <h3>Paramètres Alertes</h3>
-            <div class="grid" style="grid-template-columns: 1fr 1fr;">
-                <button id="btn-sound" onclick="toggleSound()">SON: ON</button>
-                <button id="btn-vibrate" onclick="toggleVibrate()">VIBREUR: ON</button>
+        <div class="control-grid">
+            <button class="btn-ctrl start" onclick="startTimer()">Start</button>
+            <button class="btn-ctrl stop" onclick="stopTimer()">Stop</button>
+            <button class="btn-ctrl replay" onclick="replayTimer()">Replay</button>
+        </div>
+
+        <div class="settings-bar">
+            <button id="btn-sound" class="setting-btn active" onclick="toggleSound()">🔊 Son : ON</button>
+            <button id="btn-vibrate" class="setting-btn active" onclick="toggleVibrate()">📳 Vibreur : ON</button>
+        </div>
+
+        <div class="section-title">Minutes</div>
+        <div class="preset-grid">
+            <button class="btn-preset" onclick="setTime(1)">1 m</button>
+            <button class="btn-preset" onclick="setTime(2)">2 m</button>
+            <button class="btn-preset" onclick="setTime(3)">3 m</button>
+            <button class="btn-preset" onclick="setTime(5)">5 m</button>
+            <button class="btn-preset" onclick="setTime(10)">10 m</button>
+            <button class="btn-preset" onclick="setTime(15)">15 m</button>
+            <button class="btn-preset" onclick="setTime(20)">20 m</button>
+            <button class="btn-preset" onclick="setTime(25)">25 m</button>
+            <button class="btn-preset" onclick="setTime(30)">30 m</button>
+            <button class="btn-preset" onclick="setTime(45)">45 m</button>
+            <button class="btn-preset" onclick="setTime(60)">1 h</button>
+        </div>
+
+        <div class="section-title">Ajout Secondes</div>
+        <div class="preset-grid" style="grid-template-columns: repeat(5, 1fr);">
+            <button class="btn-preset" onclick="addSeconds(10)">+10</button>
+            <button class="btn-preset" onclick="addSeconds(20)">+20</button>
+            <button class="btn-preset" onclick="addSeconds(30)">+30</button>
+            <button class="btn-preset" onclick="addSeconds(40)">+40</button>
+            <button class="btn-preset" onclick="addSeconds(50)">+50</button>
+        </div>
+
+        <div class="section-title">Créer & Sauvegarder</div>
+        <div class="custom-zone">
+            <div class="input-group" style="flex: 2;">
+                <input type="text" id="saveName" placeholder="Nom (ex: Squat)">
             </div>
-            <select id="soundSelect" onchange="changeSound()">
-                <option value="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">Son : Bip Court</option>
-                <option value="https://actions.google.com/sounds/v1/alarms/alarm_clock_short_sig_9.ogg">Son : Alarme</option>
-                <option value="https://actions.google.com/sounds/v1/alarms/dinner_bell.ogg">Son : Cloche</option>
-            </select>
-        </div>
-
-        <div class="section">
-            <div class="grid">
-                <button onclick="setTime(1)">1m</button>
-                <button onclick="setTime(2)">2m</button>
-                <button onclick="setTime(3)">3m</button>
-                <button onclick="addSeconds(30)">+30s</button>
-                <button onclick="addSeconds(10)">+10s</button>
+            <div class="input-group">
+                <input type="number" id="customMin" placeholder="Min" min="0">
+                <input type="number" id="customSec" placeholder="Sec" min="0">
             </div>
+            <button class="btn-action" onclick="saveCustomTimer()">💾</button>
+            <button class="btn-action" style="background:#475569" onclick="playCustomInput()">▶</button>
         </div>
 
-        <div class="section">
-            <h3>Exercices</h3>
-            <div id="todo-list"></div>
-            <button onclick="addTodoRow()" style="width:100%; margin-top:10px; background:var(--secondary); color:white">+ Ajouter</button>
+        <div class="section-title">Mes Chronos</div>
+        <div id="saved-timers-list">
+            <div style="color:#64748b; font-style:italic; font-size:0.9rem;">Aucun chrono sauvegardé.</div>
         </div>
+
     </div>
 
-    <div id="confirm-overlay">
-        <div style="background:var(--card); padding:20px; border-radius:15px; text-align:center;">
-            <p>Tout effacer ?</p>
-            <button onclick="resetEverything()" style="background:var(--primary); color:white; margin-right:10px; padding:10px 20px;">OUI</button>
-            <button onclick="hideResetConfirm()" style="background:var(--secondary); color:white; padding:10px 20px;">NON</button>
-        </div>
+    <div class="footer">
+        by melroi
     </div>
 
-    <audio id="audioPlayer"></audio>
+    <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+    <audio id="alarm" src="https://actions.google.com/sounds/v1/alarms/alarm_clock_short_sig_9.ogg"></audio>
 
     <script>
-        let countdown, timeLeft = 0, lastTimeSet = 0;
-        let soundEnabled = true, vibrateEnabled = true;
-        const player = document.getElementById('audioPlayer');
+        let countdown;
+        let timeLeft = 0;
+        let lastTimeSet = 0;
+        let soundOn = true;
+        let vibrateOn = true;
 
-        // --- GESTION SON ET VIBREUR ---
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            document.getElementById('btn-sound').innerText = `SON: ${soundEnabled ? 'ON' : 'OFF'}`;
-            if(soundEnabled) { player.src = document.getElementById('soundSelect').value; player.play(); }
-        }
+        const display = document.getElementById('timer-display');
+        const status = document.getElementById('status-label');
+        const alarm = document.getElementById('alarm');
 
-        function toggleVibrate() {
-            vibrateEnabled = !vibrateEnabled;
-            document.getElementById('btn-vibrate').innerText = `VIBREUR: ${vibrateEnabled ? 'ON' : 'OFF'}`;
-            if(vibrateEnabled && "vibrate" in navigator) { navigator.vibrate(200); }
-        }
-
-        function changeSound() {
-            player.src = document.getElementById('soundSelect').value;
-            if(soundEnabled) player.play();
-        }
-
-        // --- TIMER ---
+        // --- CORE TIMER ---
         function updateDisplay() {
             let m = Math.floor(timeLeft / 60);
             let s = timeLeft % 60;
-            document.getElementById('timer-display').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            let h = Math.floor(m / 60);
+            m = m % 60;
+            
+            if (h > 0) {
+                display.innerText = `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            } else {
+                display.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
         }
 
-        function setTime(m) { stopTimer(); timeLeft = m * 60; lastTimeSet = timeLeft; updateDisplay(); }
-        function addSeconds(s) { timeLeft += s; lastTimeSet = timeLeft; updateDisplay(); }
-        function replayTimer() { stopTimer(); timeLeft = lastTimeSet; startTimer(); }
+        function setTime(minutes) {
+            stopTimer();
+            timeLeft = minutes * 60;
+            lastTimeSet = timeLeft;
+            status.innerText = "PRÊT";
+            status.style.color = "var(--text-muted)";
+            updateDisplay();
+        }
+
+        function addSeconds(seconds) {
+            timeLeft += seconds;
+            lastTimeSet = timeLeft; // On met à jour le "Replay" avec le nouveau total
+            updateDisplay();
+        }
+
+        function playCustomInput() {
+            const m = parseInt(document.getElementById('customMin').value) || 0;
+            const s = parseInt(document.getElementById('customSec').value) || 0;
+            if (m === 0 && s === 0) return;
+            setTime(m);
+            addSeconds(s); // Hack pour ajuster les secondes
+            startTimer();
+        }
+
+        function replayTimer() {
+            if (lastTimeSet > 0) {
+                stopTimer();
+                timeLeft = lastTimeSet;
+                updateDisplay();
+                startTimer();
+            }
+        }
 
         function startTimer() {
             clearInterval(countdown);
-            if(timeLeft <= 0) return;
+            if (timeLeft <= 0) return;
+
+            status.innerText = "TRAVAIL";
+            status.style.color = "var(--success)";
+            
             countdown = setInterval(() => {
                 timeLeft--;
                 updateDisplay();
-                if(timeLeft <= 0) {
+
+                if (timeLeft <= 0) {
                     clearInterval(countdown);
-                    if(soundEnabled) { player.src = document.getElementById('soundSelect').value; player.play(); }
-                    if(vibrateEnabled && "vibrate" in navigator) { navigator.vibrate([500, 200, 500]); }
+                    timerFinished();
                 }
             }, 1000);
         }
 
-        function stopTimer() { clearInterval(countdown); }
-
-        // --- THEME & TODOS ---
-        function toggleTheme() { document.body.classList.toggle('light-mode'); }
-        
-        function addTodoRow(text = "", checked = false) {
-            const div = document.createElement('div');
-            div.className = 'todo-row';
-            div.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''} onchange="saveTodos()">
-                             <input type="text" value="${text}" placeholder="Exercice..." oninput="saveTodos()">
-                             <button onclick="this.parentElement.remove(); saveTodos()" style="background:none; color:red;">✕</button>`;
-            document.getElementById('todo-list').appendChild(div);
-            saveTodos();
+        function stopTimer() {
+            clearInterval(countdown);
+            status.innerText = "PAUSE";
+            status.style.color = "var(--warning)";
         }
 
-        function saveTodos() {
-            const data = Array.from(document.querySelectorAll('.todo-row')).map(r => ({
-                text: r.querySelector('input[type="text"]').value,
-                checked: r.querySelector('input[type="checkbox"]').checked
-            }));
-            localStorage.setItem('muscu_data', JSON.stringify(data));
+        function timerFinished() {
+            status.innerText = "TERMINÉ";
+            status.style.color = "var(--danger)";
+            
+            if (soundOn) alarm.play();
+            if (vibrateOn && navigator.vibrate) navigator.vibrate([500, 200, 500]);
         }
 
-        function loadTodos() {
-            const data = JSON.parse(localStorage.getItem('muscu_data') || '[]');
-            if(data.length === 0) addTodoRow("Exemple : Pompes");
-            else data.forEach(d => addTodoRow(d.text, d.checked));
+        // --- SETTINGS ---
+        function toggleSound() {
+            soundOn = !soundOn;
+            const btn = document.getElementById('btn-sound');
+            btn.innerText = `🔊 Son : ${soundOn ? 'ON' : 'OFF'}`;
+            btn.classList.toggle('active');
         }
 
-        function showResetConfirm() { document.getElementById('confirm-overlay').style.display = 'flex'; }
-        function hideResetConfirm() { document.getElementById('confirm-overlay').style.display = 'none'; }
-        function resetEverything() { localStorage.clear(); location.reload(); }
+        function toggleVibrate() {
+            vibrateOn = !vibrateOn;
+            const btn = document.getElementById('btn-vibrate');
+            btn.innerText = `📳 Vibreur : ${vibrateOn ? 'ON' : 'OFF'}`;
+            btn.classList.toggle('active');
+            if(vibrateOn && navigator.vibrate) navigator.vibrate(100);
+        }
 
-        window.onload = loadTodos;
+        // --- SAUVEGARDE (PERSISTANCE) ---
+        function saveCustomTimer() {
+            const name = document.getElementById('saveName').value;
+            const m = parseInt(document.getElementById('customMin').value) || 0;
+            const s = parseInt(document.getElementById('customSec').value) || 0;
+            const totalSec = (m * 60) + s;
+
+            if (!name || totalSec === 0) {
+                alert("Veuillez entrer un nom et un temps.");
+                return;
+            }
+
+            const saved = JSON.parse(localStorage.getItem('melroi_timers') || '[]');
+            saved.push({ name: name, time: totalSec });
+            localStorage.setItem('melroi_timers', JSON.stringify(saved));
+            
+            // Reset champs
+            document.getElementById('saveName').value = '';
+            renderSavedTimers();
+        }
+
+        function deleteSavedTimer(index) {
+            const saved = JSON.parse(localStorage.getItem('melroi_timers') || '[]');
+            saved.splice(index, 1);
+            localStorage.setItem('melroi_timers', JSON.stringify(saved));
+            renderSavedTimers();
+        }
+
+        function loadSavedTimer(seconds) {
+            stopTimer();
+            timeLeft = seconds;
+            lastTimeSet = seconds;
+            updateDisplay();
+            startTimer();
+        }
+
+        function renderSavedTimers() {
+            const list = document.getElementById('saved-timers-list');
+            const saved = JSON.parse(localStorage.getItem('melroi_timers') || '[]');
+            
+            list.innerHTML = '';
+
+            if (saved.length === 0) {
+                list.innerHTML = '<div style="color:#64748b; font-style:italic; font-size:0.9rem;">Aucun chrono sauvegardé.</div>';
+                return;
+            }
+
+            saved.forEach((item, index) => {
+                const m = Math.floor(item.time / 60);
+                const s = item.time % 60;
+                const timeStr = `${m}m ${s > 0 ? s+'s' : ''}`;
+
+                const div = document.createElement('div');
+                div.className = 'saved-timer-row';
+                div.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px; cursor:pointer; flex:1;" onclick="loadSavedTimer(${item.time})">
+                        <span style="color:var(--accent)">▶</span>
+                        <span style="color:white">${item.name}</span>
+                        <span style="color:var(--text-muted); font-size:0.9rem">(${timeStr})</span>
+                    </div>
+                    <button class="delete-btn" onclick="deleteSavedTimer(${index})">&times;</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        // Init
+        window.onload = function() {
+            renderSavedTimers();
+        };
+
     </script>
 </body>
 </html>
