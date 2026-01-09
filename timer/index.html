@@ -3,226 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chrono Muscu</title>
+    <title>Chrono Muscu Precision</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-color: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --danger: #ef4444;
-            --success: #22c55e;
-            --warning: #f59e0b;
+            --bg-color: #0f172a; --card-color: #1e293b;
+            --text-main: #f8fafc; --text-muted: #94a3b8;
+            --accent: #3b82f6; --danger: #ef4444; --success: #22c55e; --warning: #f59e0b;
+            --purple: #8b5cf6;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            align-items: center;
+            font-family: 'Courier New', Courier, monospace; /* Police monospace pour éviter que les chiffres bougent */
+            background-color: var(--bg-color); color: var(--text-main);
+            margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; align-items: center;
         }
 
-        /* Container Principal */
-        .app-container {
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-            box-sizing: border-box;
-            flex: 1; /* Pousse le footer vers le bas */
-        }
+        .app-container { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; flex: 1; font-family: -apple-system, sans-serif; }
 
-        /* Affichage du Temps */
+        /* --- ZONE CHRONO DESIGN --- */
         .timer-wrapper {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
+            position: relative;
+            margin-bottom: 25px;
+            padding: 30px 20px;
             background: var(--card-color);
-            border-radius: 20px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            border-radius: 4px; /* Bords moins arrondis pour style "technique" */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            overflow: hidden; /* Pour couper la barre */
+        }
+
+        /* Barre du haut (Progressive) */
+        .progress-bar {
+            position: absolute;
+            top: 0; left: 0;
+            height: 6px;
+            width: 100%;
+            background-color: var(--accent);
+            transform-origin: left;
+            transition: width 0.1s linear; /* Animation fluide */
+        }
+
+        /* Ligne du bas (Statique) */
+        .bottom-line {
+            position: absolute;
+            bottom: 0; left: 0;
+            height: 4px;
+            width: 100%;
+            background-color: #334155;
         }
 
         #timer-display {
-            font-size: clamp(4rem, 18vw, 6.5rem);
+            font-size: clamp(3.5rem, 16vw, 6rem);
             font-weight: 700;
-            font-variant-numeric: tabular-nums;
             line-height: 1;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            z-index: 2;
+            position: relative;
             letter-spacing: -2px;
-            color: var(--text-main);
+        }
+
+        /* Les centièmes en plus petit */
+        .centiseconds {
+            font-size: 0.5em;
+            color: var(--text-muted);
+            vertical-align: top;
+            margin-left: 5px;
         }
 
         #status-label {
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--success);
-            font-weight: 600;
-            margin-bottom: 5px;
-            min-height: 1.2em;
+            text-align: center; font-size: 1.2rem; font-weight: bold; color: var(--success); 
+            text-transform: uppercase; margin-bottom: 10px; min-height: 1.5em;
         }
 
-        /* Gros Boutons de Contrôle */
-        .control-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 30px;
-        }
+        /* --- BUTTONS & GRID --- */
+        .control-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .btn-ctrl { padding: 20px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 800; cursor: pointer; color: white; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-ctrl:active { transform: scale(0.98); }
+        .start { background-color: var(--success); } .stop { background-color: var(--danger); } .replay { background-color: var(--warning); color: #000; }
 
-        .btn-ctrl {
-            padding: 20px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.1s, filter 0.2s;
-            color: white;
-            text-transform: uppercase;
-        }
+        .section-title { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 10px 0; border-bottom: 1px solid #334155; }
+        
+        .preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; }
+        .btn-preset { background: var(--card-color); color: white; border: 1px solid #334155; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-preset:active { background: var(--accent); border-color: var(--accent); }
 
-        .btn-ctrl:active { transform: scale(0.96); }
-        .start { background-color: var(--success); }
-        .stop { background-color: var(--danger); }
-        .replay { background-color: var(--warning); }
+        /* Custom Input */
+        .custom-zone { display: flex; gap: 5px; background: var(--card-color); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        input { background: #0f172a; border: 1px solid #334155; color: white; padding: 10px; border-radius: 4px; width: 100%; text-align: center; font-size: 1rem; }
+        .btn-action { background: var(--accent); color: white; border: none; padding: 0 15px; border-radius: 4px; cursor: pointer; }
 
-        /* Sections */
-        .section-title {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 25px 0 10px 0;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 5px;
-        }
+        /* Liste Timer */
+        .saved-timer-row { display: flex; justify-content: space-between; align-items: center; background: var(--card-color); padding: 10px; margin-bottom: 5px; border-radius: 6px; border-left: 3px solid var(--accent); }
+        .delete-btn { background: none; border: none; color: #64748b; font-size: 1.2rem; cursor: pointer; }
 
-        /* Grille des Presets */
-        .preset-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
-            gap: 10px;
-        }
-
-        .btn-preset {
-            background-color: var(--card-color);
-            color: var(--text-main);
-            border: 1px solid #334155;
-            padding: 15px 5px;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-preset:hover { background-color: #334155; }
-        .btn-preset:active { background-color: var(--accent); border-color: var(--accent); }
-
-        /* Zone Custom & Sauvegarde */
-        .custom-zone {
-            display: flex;
-            gap: 8px;
-            background: var(--card-color);
-            padding: 15px;
-            border-radius: 12px;
-            flex-wrap: wrap;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 5px;
-            flex: 1;
-        }
-
-        input[type="number"], input[type="text"] {
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1rem;
-            width: 100%;
-        }
-
-        .btn-action {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 0 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* Liste des Timers Perso */
-        #saved-timers-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .saved-timer-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card-color);
-            padding: 12px 15px;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent);
-        }
-
-        .saved-timer-row span { font-weight: 500; }
-        .delete-btn {
-            background: transparent;
-            color: var(--text-muted);
-            border: none;
-            font-size: 1.2rem;
-            padding: 5px;
-            cursor: pointer;
-        }
-        .delete-btn:hover { color: var(--danger); }
-
-        /* Paramètres (Son/Vibreur) */
-        .settings-bar {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .setting-btn {
-            flex: 1;
-            padding: 12px;
-            background: var(--card-color);
-            border: 1px solid #334155;
-            color: var(--text-muted);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .setting-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        /* Footer */
-        .footer {
-            margin-top: auto;
-            width: 100%;
-            text-align: center;
-            padding: 20px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            opacity: 0.6;
-        }
-
-        /* Helpers */
-        .hidden { display: none; }
+        .settings-bar { display: flex; gap: 10px; margin-top: 10px; }
+        .setting-btn { flex: 1; padding: 10px; background: var(--card-color); border: 1px solid #334155; color: var(--text-muted); border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .setting-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        
+        .footer { margin-top: auto; padding: 20px; color: var(--text-muted); font-size: 0.7rem; text-align: center; opacity: 0.5; }
     </style>
 </head>
 <body>
@@ -230,8 +108,12 @@
     <div class="app-container">
         
         <div class="timer-wrapper">
+            <div id="progress-bar" class="progress-bar"></div>
+            
             <div id="status-label">PRÊT</div>
-            <div id="timer-display">00:00</div>
+            <div id="timer-display">00:00<span class="centiseconds">.00</span></div>
+            
+            <div class="bottom-line"></div>
         </div>
 
         <div class="control-grid">
@@ -245,234 +127,273 @@
             <button id="btn-vibrate" class="setting-btn active" onclick="toggleVibrate()">📳 Vibreur : ON</button>
         </div>
 
-        <div class="section-title">Minutes</div>
+        <h3 class="section-title">Mode Cycle (Planche)</h3>
+        <div class="custom-zone" style="border: 1px solid var(--purple);">
+            <input type="number" id="pWork" value="45" placeholder="Work">
+            <input type="number" id="pRest" value="15" placeholder="Rest">
+            <input type="number" id="pReps" value="3" placeholder="Sets">
+            <button class="btn-action" style="background:var(--purple);" onclick="startPlankMode()">GO</button>
+        </div>
+
+        <h3 class="section-title">Temps Rapide</h3>
         <div class="preset-grid">
-            <button class="btn-preset" onclick="setTime(1)">1 m</button>
-            <button class="btn-preset" onclick="setTime(2)">2 m</button>
-            <button class="btn-preset" onclick="setTime(3)">3 m</button>
-            <button class="btn-preset" onclick="setTime(5)">5 m</button>
-            <button class="btn-preset" onclick="setTime(10)">10 m</button>
-            <button class="btn-preset" onclick="setTime(15)">15 m</button>
-            <button class="btn-preset" onclick="setTime(20)">20 m</button>
-            <button class="btn-preset" onclick="setTime(25)">25 m</button>
-            <button class="btn-preset" onclick="setTime(30)">30 m</button>
-            <button class="btn-preset" onclick="setTime(45)">45 m</button>
-            <button class="btn-preset" onclick="setTime(60)">1 h</button>
+            <button class="btn-preset" onclick="setTimer(1)">1m</button>
+            <button class="btn-preset" onclick="setTimer(2)">2m</button>
+            <button class="btn-preset" onclick="setTimer(3)">3m</button>
+            <button class="btn-preset" onclick="setTimer(5)">5m</button>
+            <button class="btn-preset" onclick="setTimer(10)">10m</button>
+            <button class="btn-preset" onclick="addTime(10)">+10s</button>
+            <button class="btn-preset" onclick="addTime(30)">+30s</button>
+            <button class="btn-preset" onclick="addTime(60)">+1m</button>
         </div>
 
-        <div class="section-title">Ajout Secondes</div>
-        <div class="preset-grid" style="grid-template-columns: repeat(5, 1fr);">
-            <button class="btn-preset" onclick="addSeconds(10)">+10</button>
-            <button class="btn-preset" onclick="addSeconds(20)">+20</button>
-            <button class="btn-preset" onclick="addSeconds(30)">+30</button>
-            <button class="btn-preset" onclick="addSeconds(40)">+40</button>
-            <button class="btn-preset" onclick="addSeconds(50)">+50</button>
-        </div>
-
-        <div class="section-title">Créer & Sauvegarder</div>
+        <h3 class="section-title">Créer & Sauvegarder</h3>
         <div class="custom-zone">
-            <div class="input-group" style="flex: 2;">
-                <input type="text" id="saveName" placeholder="Nom (ex: Squat)">
-            </div>
-            <div class="input-group">
-                <input type="number" id="customMin" placeholder="Min" min="0">
-                <input type="number" id="customSec" placeholder="Sec" min="0">
-            </div>
+            <input type="text" id="saveName" placeholder="Nom (ex: Squat)" style="flex:2; text-align:left;">
+            <input type="number" id="customMin" placeholder="Min">
+            <input type="number" id="customSec" placeholder="Sec">
             <button class="btn-action" onclick="saveCustomTimer()">💾</button>
-            <button class="btn-action" style="background:#475569" onclick="playCustomInput()">▶</button>
         </div>
-
-        <div class="section-title">Mes Chronos</div>
-        <div id="saved-timers-list">
-            <div style="color:#64748b; font-style:italic; font-size:0.9rem;">Aucun chrono sauvegardé.</div>
-        </div>
+        <div id="saved-timers-list"></div>
 
     </div>
 
-    <div class="footer">
-        by melroi
-    </div>
+    <div class="footer">by melroi</div>
 
     <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
     <audio id="alarm" src="https://actions.google.com/sounds/v1/alarms/alarm_clock_short_sig_9.ogg"></audio>
 
     <script>
-        let countdown;
-        let timeLeft = 0;
-        let lastTimeSet = 0;
+        let interval;
+        let endTime;
+        let totalDurationMs = 0;
+        let isRunning = false;
+        let lastDurationSet = 0; // Pour le replay
+
         let soundOn = true;
         let vibrateOn = true;
 
+        // Éléments DOM
         const display = document.getElementById('timer-display');
+        const progressBar = document.getElementById('progress-bar');
         const status = document.getElementById('status-label');
+        const beep = document.getElementById('beep');
         const alarm = document.getElementById('alarm');
 
-        // --- CORE TIMER ---
-        function updateDisplay() {
-            let m = Math.floor(timeLeft / 60);
-            let s = timeLeft % 60;
-            let h = Math.floor(m / 60);
-            m = m % 60;
+        // --- MOTEUR PRECISION ---
+        
+        function updateDisplay(msRemaining, totalMs) {
+            // Calculs Maths
+            if (msRemaining < 0) msRemaining = 0;
             
-            if (h > 0) {
-                display.innerText = `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-            } else {
-                display.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            let seconds = Math.floor(msRemaining / 1000);
+            let centiseconds = Math.floor((msRemaining % 1000) / 10); // 2 chiffres
+            
+            let m = Math.floor(seconds / 60);
+            let s = seconds % 60;
+            
+            // Affichage Texte
+            const strMin = m > 0 ? `${m}:` : '';
+            const strSec = s.toString().padStart(2, '0');
+            const strCS = centiseconds.toString().padStart(2, '0');
+            
+            display.innerHTML = `${strMin}${strSec}<span class="centiseconds">.${strCS}</span>`;
+
+            // Barre de progression (width %)
+            if(totalMs > 0) {
+                const percentage = (msRemaining / totalMs) * 100;
+                progressBar.style.width = `${percentage}%`;
+                
+                // Changement couleur fin de chrono
+                if(percentage < 15) progressBar.style.backgroundColor = "var(--danger)";
+                else progressBar.style.backgroundColor = "var(--accent)";
             }
         }
 
-        function setTime(minutes) {
+        function setTimer(minutes) {
             stopTimer();
-            timeLeft = minutes * 60;
-            lastTimeSet = timeLeft;
+            let ms = minutes * 60 * 1000;
+            lastDurationSet = ms;
+            totalDurationMs = ms;
+            updateDisplay(ms, ms);
             status.innerText = "PRÊT";
             status.style.color = "var(--text-muted)";
-            updateDisplay();
         }
 
-        function addSeconds(seconds) {
-            timeLeft += seconds;
-            lastTimeSet = timeLeft; // On met à jour le "Replay" avec le nouveau total
-            updateDisplay();
-        }
-
-        function playCustomInput() {
-            const m = parseInt(document.getElementById('customMin').value) || 0;
-            const s = parseInt(document.getElementById('customSec').value) || 0;
-            if (m === 0 && s === 0) return;
-            setTime(m);
-            addSeconds(s); // Hack pour ajuster les secondes
-            startTimer();
-        }
-
-        function replayTimer() {
-            if (lastTimeSet > 0) {
-                stopTimer();
-                timeLeft = lastTimeSet;
-                updateDisplay();
-                startTimer();
+        function addTime(seconds) {
+            let addMs = seconds * 1000;
+            if(!isRunning) {
+                // Si on est à l'arrêt, on augmente la durée totale
+                lastDurationSet += addMs;
+                totalDurationMs = lastDurationSet;
+                updateDisplay(totalDurationMs, totalDurationMs);
+            } else {
+                // Si ça tourne, on repousse la fin
+                endTime += addMs;
+                totalDurationMs += addMs; // On agrandit l'échelle pour la barre
             }
         }
 
-        function startTimer() {
-            clearInterval(countdown);
-            if (timeLeft <= 0) return;
-
+        function startTimer(durationMs = null) {
+            clearInterval(interval);
+            isRunning = true;
             status.innerText = "TRAVAIL";
             status.style.color = "var(--success)";
-            
-            countdown = setInterval(() => {
-                timeLeft--;
-                updateDisplay();
 
-                if (timeLeft <= 0) {
-                    clearInterval(countdown);
+            // Si on passe une durée spécifique (ex: mode planche), on l'utilise
+            // Sinon on prend la dernière durée définie
+            let duration = durationMs || lastDurationSet;
+            if(durationMs) { totalDurationMs = durationMs; } // Reset total pour barre
+            
+            // Calcul précis basé sur l'heure système (évite le lag)
+            const now = Date.now();
+            endTime = now + duration;
+
+            interval = setInterval(() => {
+                const current = Date.now();
+                const remaining = endTime - current;
+
+                if (remaining <= 0) {
+                    clearInterval(interval);
+                    updateDisplay(0, totalDurationMs);
                     timerFinished();
+                } else {
+                    updateDisplay(remaining, totalDurationMs);
                 }
-            }, 1000);
+            }, 30); // Mise à jour 33 fois par seconde (~30FPS) pour fluidité
         }
 
         function stopTimer() {
-            clearInterval(countdown);
+            clearInterval(interval);
+            isRunning = false;
             status.innerText = "PAUSE";
             status.style.color = "var(--warning)";
+        }
+
+        function replayTimer() {
+            stopTimer();
+            if(lastDurationSet > 0) {
+                totalDurationMs = lastDurationSet; // Reset total
+                startTimer(lastDurationSet);
+            }
         }
 
         function timerFinished() {
             status.innerText = "TERMINÉ";
             status.style.color = "var(--danger)";
-            
+            progressBar.style.width = "0%";
             if (soundOn) alarm.play();
-            if (vibrateOn && navigator.vibrate) navigator.vibrate([500, 200, 500]);
+            if (vibrateOn && navigator.vibrate) navigator.vibrate([500, 300, 500]);
         }
 
-        // --- SETTINGS ---
-        function toggleSound() {
-            soundOn = !soundOn;
-            const btn = document.getElementById('btn-sound');
-            btn.innerText = `🔊 Son : ${soundOn ? 'ON' : 'OFF'}`;
-            btn.classList.toggle('active');
+        // --- MODE PLANCHE (Promesses Asynchrones) ---
+        async function startPlankMode() {
+            stopTimer();
+            
+            const workSec = parseInt(document.getElementById('pWork').value) || 30;
+            const restSec = parseInt(document.getElementById('pRest').value) || 10;
+            const reps = parseInt(document.getElementById('pReps').value) || 3;
+
+            savePlankSettings(); // Persistance
+
+            for (let i = 1; i <= reps; i++) {
+                if (status.innerText.includes("PAUSE")) break; // Stop forcé
+
+                // TRAVAIL
+                status.innerText = `SÉRIE ${i}/${reps} : GO !`;
+                if(soundOn) beep.play();
+                await runSegment(workSec * 1000);
+
+                if (status.innerText.includes("PAUSE")) break;
+
+                // REPOS
+                if (i < reps) {
+                    status.innerText = "REPOS...";
+                    status.style.color = "var(--warning)";
+                    if(soundOn) beep.play();
+                    await runSegment(restSec * 1000);
+                }
+            }
+            if (!status.innerText.includes("PAUSE")) timerFinished();
         }
 
-        function toggleVibrate() {
-            vibrateOn = !vibrateOn;
-            const btn = document.getElementById('btn-vibrate');
-            btn.innerText = `📳 Vibreur : ${vibrateOn ? 'ON' : 'OFF'}`;
-            btn.classList.toggle('active');
-            if(vibrateOn && navigator.vibrate) navigator.vibrate(100);
+        function runSegment(ms) {
+            return new Promise(resolve => {
+                startTimer(ms); // Lance le timer visuel
+                
+                // On surveille la fin via un check régulier
+                const check = setInterval(() => {
+                    if (!isRunning) { // Si l'utilisateur a cliqué sur STOP
+                        clearInterval(check);
+                        resolve(); 
+                    }
+                    // Si le timer visuel a fini (il update isRunning=true tant que pas fini)
+                    // Mais startTimer coupe l'interval à la fin.
+                    // On peut comparer Date.now() > endTime
+                    if (Date.now() >= endTime) {
+                        clearInterval(check);
+                        setTimeout(resolve, 500); // Petit délai fin
+                    }
+                }, 100);
+            });
         }
 
-        // --- SAUVEGARDE (PERSISTANCE) ---
+        // --- PERSISTANCE ---
         function saveCustomTimer() {
             const name = document.getElementById('saveName').value;
-            const m = parseInt(document.getElementById('customMin').value) || 0;
-            const s = parseInt(document.getElementById('customSec').value) || 0;
-            const totalSec = (m * 60) + s;
-
-            if (!name || totalSec === 0) {
-                alert("Veuillez entrer un nom et un temps.");
-                return;
-            }
-
-            const saved = JSON.parse(localStorage.getItem('melroi_timers') || '[]');
-            saved.push({ name: name, time: totalSec });
-            localStorage.setItem('melroi_timers', JSON.stringify(saved));
+            const m = parseInt(document.getElementById('customMin').value)||0;
+            const s = parseInt(document.getElementById('customSec').value)||0;
+            if(!name || (m===0 && s===0)) return;
             
-            // Reset champs
-            document.getElementById('saveName').value = '';
-            renderSavedTimers();
-        }
-
-        function deleteSavedTimer(index) {
             const saved = JSON.parse(localStorage.getItem('melroi_timers') || '[]');
-            saved.splice(index, 1);
+            saved.push({ name, ms: (m*60+s)*1000 });
             localStorage.setItem('melroi_timers', JSON.stringify(saved));
             renderSavedTimers();
-        }
-
-        function loadSavedTimer(seconds) {
-            stopTimer();
-            timeLeft = seconds;
-            lastTimeSet = seconds;
-            updateDisplay();
-            startTimer();
         }
 
         function renderSavedTimers() {
             const list = document.getElementById('saved-timers-list');
             const saved = JSON.parse(localStorage.getItem('melroi_timers') || '[]');
-            
             list.innerHTML = '';
-
-            if (saved.length === 0) {
-                list.innerHTML = '<div style="color:#64748b; font-style:italic; font-size:0.9rem;">Aucun chrono sauvegardé.</div>';
-                return;
-            }
-
-            saved.forEach((item, index) => {
-                const m = Math.floor(item.time / 60);
-                const s = item.time % 60;
-                const timeStr = `${m}m ${s > 0 ? s+'s' : ''}`;
-
-                const div = document.createElement('div');
-                div.className = 'saved-timer-row';
-                div.innerHTML = `
-                    <div style="display:flex; align-items:center; gap:10px; cursor:pointer; flex:1;" onclick="loadSavedTimer(${item.time})">
-                        <span style="color:var(--accent)">▶</span>
-                        <span style="color:white">${item.name}</span>
-                        <span style="color:var(--text-muted); font-size:0.9rem">(${timeStr})</span>
+            saved.forEach((item, idx) => {
+                const sec = item.ms / 1000;
+                list.innerHTML += `
+                <div class="saved-timer-row">
+                    <div onclick="lastDurationSet=${item.ms}; totalDurationMs=${item.ms}; startTimer(${item.ms})" style="flex:1; cursor:pointer">
+                        ▶ <strong>${item.name}</strong> (${Math.floor(sec/60)}m${sec%60})
                     </div>
-                    <button class="delete-btn" onclick="deleteSavedTimer(${index})">&times;</button>
-                `;
-                list.appendChild(div);
+                    <button class="delete-btn" onclick="deleteTimer(${idx})">✕</button>
+                </div>`;
             });
         }
 
-        // Init
-        window.onload = function() {
+        function deleteTimer(i) {
+            const saved = JSON.parse(localStorage.getItem('melroi_timers'));
+            saved.splice(i, 1);
+            localStorage.setItem('melroi_timers', JSON.stringify(saved));
             renderSavedTimers();
-        };
+        }
 
+        function savePlankSettings() {
+            localStorage.setItem('melroi_plank', JSON.stringify({
+                work: document.getElementById('pWork').value,
+                rest: document.getElementById('pRest').value,
+                reps: document.getElementById('pReps').value
+            }));
+        }
+
+        function toggleSound() { soundOn = !soundOn; document.getElementById('btn-sound').innerText = `🔊 Son : ${soundOn?'ON':'OFF'}`; document.getElementById('btn-sound').classList.toggle('active'); }
+        function toggleVibrate() { vibrateOn = !vibrateOn; document.getElementById('btn-vibrate').innerText = `📳 Vibreur : ${vibrateOn?'ON':'OFF'}`; document.getElementById('btn-vibrate').classList.toggle('active'); }
+
+        window.onload = () => {
+            renderSavedTimers();
+            const pData = JSON.parse(localStorage.getItem('melroi_plank'));
+            if(pData) {
+                document.getElementById('pWork').value = pData.work;
+                document.getElementById('pRest').value = pData.rest;
+                document.getElementById('pReps').value = pData.reps;
+            }
+        };
     </script>
 </body>
 </html>
