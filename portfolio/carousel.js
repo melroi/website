@@ -9,14 +9,14 @@ const projectData = {
         },
         { 
             title: 'SAE15', 
-            desc: 'SAE15 : Traitement des données environnementales et économiques', 
+            desc: 'SAE15 : Traitement des données s', 
             img: 'assets/image/icon/icon_sae15.png', 
             link: 'assets/pdf/SAE15.pdf' 
         },
         { 
             title: 'SAE24', 
-            desc: 'SAE15 : Traitement des données environnementales et économiques', 
-            img: 'assets/image/icon/icon_sae15.png', 
+            desc: 'SAE24 : Proget intégratif creation d\'un reseau d\'entreprise', 
+            img: 'assets/image/icon/icon_sae24.png', 
             link: 'assets/pdf/SAE15.pdf' 
         },
         { 
@@ -35,6 +35,12 @@ const projectData = {
     perso: [
         { 
             title: 'Création d\'un serveur personnel', 
+            desc: 'Mise en place d\'un serveur personnel à domicile pour hébergement et stockage de fichiers.', 
+            img: 'assets/image/icon/impression_3d.jpg', 
+            link: '#' 
+        },
+                { 
+            title: 'Création d\'une horloge connectée', 
             desc: 'Mise en place d\'un serveur personnel à domicile pour hébergement et stockage de fichiers.', 
             img: 'assets/image/icon/impression_3d.jpg', 
             link: '#' 
