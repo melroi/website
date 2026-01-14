@@ -9,12 +9,6 @@ const projectData = {
                 link: 'assets/pdf/SAE15.pdf' 
             },
             { 
-                title: 'SAE24', 
-                desc: 'SAE24 : Proget intégratif creation d\'un reseau d\'entreprise', 
-                img: 'assets/image/icon/icon_sae24.png', 
-                link: 'assets/pdf/SAE15.pdf' 
-            },
-            { 
                 title: "R2.04 : Téléphonie d'entreprise", 
                 desc: "Configuration complète d'un réseau téléphonique IP d'entreprise", 
                 img: 'assets/image/icon/icon_telephonie.png', 
@@ -29,17 +23,23 @@ const projectData = {
         ],
         perso: [
 
-
         ]
     },
     2025: {
         iut: [
+        { 
+                title: 'SAE24', 
+                desc: 'SAE24 : Proget intégratif creation d\'un reseau d\'entreprise', 
+                img: 'assets/image/icon/icon_sae24.png', 
+                link: 'assets/pdf/SAE15.pdf' 
+            },
             { 
                 title: 'SAE32', 
                 desc: 'SAE32: Développer des applications communicantes', 
                 img: 'assets/image/icon/icon_sae32.png', 
-                link: 'assets/pdf/sae32.pdf' 
-            },        
+                link: 'assets/pdf/SAE32.pdf' 
+            },
+        
         ],
         perso: [
             { 
@@ -51,7 +51,13 @@ const projectData = {
     },
     2026: {
         iut: [],
-        perso: []
+        perso: [            
+            { 
+                title: 'Création d\'une horloge connectée', 
+                desc: 'Mise en place d\'un serveur personnel à domicile pour hébergement et stockage de fichiers.', 
+                img: 'assets/image/icon/impression_3d.jpg', 
+                link: '#' 
+            },]
     }
 };
 
@@ -111,13 +117,12 @@ class ProjectCarousel {
         setTimeout(() => {
             if (!projects || projects.length === 0) {
                 // Placeholder
-                // Ne pas afficher le bouton pour la catégorie 'perso' — demandé par l'utilisateur
                 this.wrapper.innerHTML = `
                     <div class="project-content">
                         <div class="project-info">
                             <h2>Projet ${this.currentCategory === 'iut' ? 'IUT' : 'Perso'} ${this.year}</h2>
                             <p>À venir</p>
-                            ${this.currentCategory === 'iut' ? '<button class="projet-button" disabled>À venir</button>' : ''}
+                            <button class="projet-button" disabled>À venir</button>
                         </div>
                         <div class="project-image">
                             <img src="/portfolio/assets/image/icon/placeholder.png" alt="Placeholder ${this.currentCategory} ${this.year}" class="projet-icon" />
@@ -126,14 +131,14 @@ class ProjectCarousel {
                 `;
             } else {
                 const project = projects[this.currentIndex];
-                // Ne pas afficher le bouton "Accéder au projet" pour la catégorie 'perso'
-                const accessButton = (this.currentCategory === 'iut' && project.link && project.link !== '#') ? `<button class="projet-button" onclick="window.open('${project.link}', '_blank')">Accéder au projet</button>` : '';
                 this.wrapper.innerHTML = `
                     <div class="project-content">
                         <div class="project-info">
                             <h2>${project.title}</h2>
                             <p>${project.desc}</p>
-                            ${accessButton}
+                            <button class="projet-button" onclick="window.open('${project.link}', '_blank')">
+                                Accéder au projet
+                            </button>
                         </div>
                         <div class="project-image">
                             <img src="${project.img}" alt="${project.title}" class="projet-icon" />
