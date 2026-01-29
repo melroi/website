@@ -29,7 +29,7 @@ const projectData = {
         iut: [
         { 
                 title: 'SAE24', 
-                desc: 'SAE24 : Proget intégratif creation d\'un reseau d\'entreprise', 
+                desc: 'SAE24 : Projet intégratif création d\'un reseau d\'entreprise', 
                 img: 'assets/image/icon/icon_sae24.png', 
                 link: 'assets/pdf/SAE15.pdf' 
             },
