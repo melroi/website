@@ -53,10 +53,9 @@ const projectData = {
         iut: [],
         perso: [            
             { 
-                title: 'Création d\'une horloge connectée', 
+                title: 'Création d\'un Home Lab', 
                 desc: 'Mise en place d\'un serveur personnel à domicile pour hébergement et stockage de fichiers.', 
-                img: 'assets/image/icon/impression_3d.jpg', 
-                link: '#' 
+                link: 'assets/pdf/homelab.pdf', 
             },]
     }
 };
