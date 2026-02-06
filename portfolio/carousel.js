@@ -4,7 +4,7 @@ const projectData = {
         iut: [
             { 
                 title: 'SAE15', 
-                desc: 'SAE15 : Traitement des données s', 
+                desc: 'SAE15 : Traitement des donnéess', 
                 img: 'assets/image/icon/icon_sae15.png', 
                 link: 'assets/pdf/SAE15.pdf' 
             },
@@ -47,7 +47,7 @@ const projectData = {
                 desc: 'Mise en place d\'un serveur personnel à domicile pour hébergement et stockage de fichiers.', 
                 link: 'assets/pdf/homelab.pdf', 
             },]
-    }
+    },
     2026: {
         iut: [],
         perso: []
