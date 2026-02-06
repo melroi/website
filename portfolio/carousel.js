@@ -83,6 +83,12 @@ class ProjectCarousel {
                     carousel.currentIndex = 0;
                     carousel.render();
                 });
+                // Masque/affiche les blocs d'années en fonction de s'il y a des projets
+                document.querySelectorAll('.projects-year-block').forEach(block => {
+                    const year = block.getAttribute('data-year');
+                    const hasProjects = projectData[year] && projectData[year][category] && projectData[year][category].length > 0;
+                    block.style.display = hasProjects ? 'block' : 'none';
+                });
             });
         });
         // Gestion des boutons de navigation
@@ -181,5 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (wrapper && prevButton && nextButton && year) {
             window.allCarousels.push(new ProjectCarousel(wrapper, prevButton, nextButton, year));
         }
+        // Masque les années sans projets pour la catégorie initiale (iut)
+        const hasProjects = projectData[year] && projectData[year]['iut'] && projectData[year]['iut'].length > 0;
+        block.style.display = hasProjects ? 'block' : 'none';
     });
 });
