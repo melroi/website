@@ -41,22 +41,16 @@ const projectData = {
             },
         
         ],
-        perso: [
-            { 
-                title: 'Création d\'un serveur personnel', 
-                desc: 'Mise en place d\'un serveur personnel à domicile pour hébergement et stockage de fichiers.', 
-                img: 'assets/image/icon/impression_3d.jpg', 
-                link: '#' 
-            },]
-    },
-    2026: {
-        iut: [],
         perso: [            
             { 
                 title: 'Création d\'un Home Lab', 
                 desc: 'Mise en place d\'un serveur personnel à domicile pour hébergement et stockage de fichiers.', 
                 link: 'assets/pdf/homelab.pdf', 
             },]
+    }
+    2026: {
+        iut: [],
+        perso: []
     }
 };
 
