@@ -20,9 +20,6 @@ const projectData = {
                 img: 'assets/image/icon/ftp.jpg', 
                 link: 'assets/pdf/TP_FTP.pdf' 
             },
-        ],
-        perso: [
-
         ]
     },
     2025: {
@@ -45,6 +42,7 @@ const projectData = {
             { 
                 title: 'Création d\'un Home Lab', 
                 desc: 'Mise en place d\'un serveur personnel à domicile pour hébergement et stockage de fichiers.', 
+                img: '',
                 link: 'assets/pdf/homelab.pdf', 
             },]
     },
@@ -130,6 +128,11 @@ class ProjectCarousel {
                 `;
             } else {
                 const project = projects[this.currentIndex];
+                const imageHtml = project.img ? `
+                        <div class="project-image">
+                            <img src="${project.img}" alt="${project.title}" class="projet-icon" />
+                        </div>
+                    ` : '';
                 this.wrapper.innerHTML = `
                     <div class="project-content">
                         <div class="project-info">
@@ -139,9 +142,7 @@ class ProjectCarousel {
                                 Accéder au projet
                             </button>
                         </div>
-                        <div class="project-image">
-                            <img src="${project.img}" alt="${project.title}" class="projet-icon" />
-                        </div>
+                        ${imageHtml}
                     </div>
                 `;
             }
