@@ -481,15 +481,17 @@ body {
     justify-content: center;
 }
 
+
+/* Style commun pour tous les boutons d'onglet de projets (IUT et Personnels) */
 .proj-tab {
-    padding: 10px 20px;
-    background: #fff;
-    border: 2px solid #1a73e8;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: all 0.3s ease;
+  padding: 10px 20px;
+  background: #fff;
+  border: 2px solid #1a73e8;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
 .proj-tab:hover {
@@ -497,8 +499,17 @@ body {
 }
 
 .proj-tab.active {
-    background: #1a73e8;
-    color: #fff;
+  background: #1a73e8;
+  color: #fff;
+  border: 2px solid #1a73e8;
+  /* Garde la même taille, padding, police que .proj-tab */
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: none;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
 /* Styles pour le carrousel de projets */
