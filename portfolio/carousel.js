@@ -27,8 +27,8 @@ const projectData = {
         { 
                 title: 'SAE24', 
                 desc: 'SAE24 : Projet intégratif création d\'un reseau d\'entreprise', 
-                img: 'assets/image/icon/icon_sae24.png', 
-                link: 'assets/pdf/SAE15.pdf' 
+                img: 'assets/image/icon/infra.jpg', 
+                link: 'projet-integratif/' 
             },
             { 
                 title: 'SAE32', 
@@ -150,7 +150,7 @@ class ProjectCarousel {
             const imgEl = this.wrapper.querySelector('.projet-icon');
             const adjustImageLayout = () => {
                 if (!imgEl) return;
-                imgEl.style.maxWidth = '100%';
+                imgEl.style.maxWidth = '120%';
                 imgEl.style.height = 'auto';
                 imgEl.style.display = 'block';
                 const imgParent = imgEl.closest('.project-image');
