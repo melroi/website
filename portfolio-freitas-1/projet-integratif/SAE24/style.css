@@ -1,0 +1,195 @@
+/* Réinitialisation de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* En-tête */
+header {
+  background-color:#1f8A70;
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+
+/* Navigation */
+/* Style de base */
+nav {
+  background-color: #333;
+  position: sticky;
+  top: 0px;
+}
+
+.menu {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  position: relative;
+}
+
+.menu a {
+  display: block;
+  padding: 15px 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.menu a:hover {
+  background-color: #555;
+}
+
+/* Sous-menu */
+.submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #444;
+  min-width: 180px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+}
+
+.submenu li a {
+  padding: 12px 16px;
+  color: white;
+}
+
+.submenu li a:hover {
+  background-color: #666;
+}
+
+/* Afficher le sous-menu au survol */
+.dropdown:hover .submenu {
+  display: block;
+}
+
+
+/* Contenu principal + sidebar */
+main {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.content {
+  flex: 2;
+  margin-right: 20px;
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+}
+
+.sidebar {
+  flex: 1;
+  background-color: #eaeaea;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Pied de page */
+footer {
+  background-color: #1f8A70;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+img {
+  display: block;              /* Nécessaire pour que margin: auto fonctionne */
+  margin: 20px auto;           /* Centrage horizontal avec marges verticales */
+  max-width: 250px;
+  height: auto;
+  border-radius: 8px;
+}
+
+
+
+h1, h2 {
+  text-align: center;
+}
+
+header img {
+  padding-top: 0%;
+  margin: 0;
+  display: flex;
+  float: left;
+  max-width: 150px;
+  border-radius: 8px;
+  /* Pour s'assurer que l'image ne dépasse pas la hauteur du texte */
+  vertical-align: middle;    /* assure alignement vertical */
+}
+
+.haut{
+  padding-right: 10%;
+}
+
+li {
+  margin-left: 8%;
+}
+
+.indent{
+  margin-left: 8%;
+}
+
+.contact {
+  text-align: center;
+}
+
+
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.connecter {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.connecter:hover {
+    background-color: #45a049;
+}
+
+.bindex{
+  display: flex;
+  float: right;
+  padding-top: 5%;
+  padding: 8px 16px;
+  background-color: white;
+  color: #27866F;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px #00000066;
+  transition: background-color 0.3s ease;
+
+}
+
+
