@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roulette</title>
     <meta name="robots" content="noindex, nofollow">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
     <div id="app">
         <header>
@@ -34,10 +29,11 @@
             <aside class="controls-section">
                 <div class="glass-panel">
                     <div class="panel-header">
-                        <h2>Configuration</h2>
                         <div class="action-buttons">
                             <button id="addEntryBtn">Ajouter</button>
-                            <button id="saveBtn">Sauvegarder</button>
+                            <button id="exportBtn">Exporter</button>
+                            <button id="importBtn">Importer</button>
+                            <input type="file" id="importInput" style="display:none" accept=".txt">
                         </div>
                     </div>
                     <div id="entriesList" class="entries-list"></div>
@@ -47,5 +43,4 @@
     </div>
     <script src="script.js"></script>
 </body>
-
 </html>
