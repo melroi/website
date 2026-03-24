@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Roulette</h1>
+        </header>
+
+        <main class="container">
+            <section class="wheel-section">
+                <div class="wheel-container">
+                    <canvas id="wheelCanvas" width="500" height="500"></canvas>
+                    <div class="arrow"></div>
+                    <button id="spinBtn">Lancer</button>
+                </div>
+                <div id="resultDisplay" class="result-card hidden">
+                    <h3>Résultat</h3>
+                    <div class="winner-text"></div>
+                </div>
+            </section>
+
+            <aside class="controls-section">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h2>Configuration</h2>
+                        <div class="action-buttons">
+                            <button id="addEntryBtn">Ajouter</button>
+                            <button id="saveBtn">Sauvegarder</button>
+                        </div>
+                    </div>
+                    <div id="entriesList" class="entries-list"></div>
+                </div>
+            </aside>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
