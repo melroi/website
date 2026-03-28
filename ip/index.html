@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>ip</title></head>
+<body>
+<script>
+fetch('https://api.ipify.org').then(r=>r.text()).then(ip=>document.body.innerText=ip);
+</script>
+</body>
+</html>
