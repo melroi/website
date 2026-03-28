@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pile ou Face (POF)</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>POF</h1>
+            <nav class="top-nav">
+                <a href="../roulette/index.html" class="nav-link">⬅ Roulette</a>
+            </nav>
+        </header>
+
+        <main class="container">
+            <section class="coin-section">
+                <div class="coin-container">
+                    <div id="coin" class="coin">
+                        <div class="side face">
+                            <img src="face1.png" alt="Face">
+                        </div>
+                        <div class="side pile">
+                            <img src="pile1.png" alt="Pile">
+                        </div>
+                    </div>
+                </div>
+                <button id="flipBtn">Lancer la pièce</button>
+                <div id="resultDisplay" class="result-card hidden">
+                    <h3>Résultat</h3>
+                    <div class="winner-text"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
