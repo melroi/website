@@ -32,20 +32,26 @@ function saveToStorage() {
     localStorage.setItem('roulette_history', JSON.stringify(history));
 }
 
-function renderHistory() {
-    const list = document.getElementById('historyList');
+function renderStats() {
+    const list = document.getElementById('statsList');
     list.innerHTML = '';
-    if (history.length === 0) {
-        list.innerHTML = '<div style="color:#555;font-size:0.8rem;padding:4px 8px;">Aucun lancer encore</div>';
-        return;
-    }
-    [...history].reverse().forEach((item, i) => {
+    if (history.length === 0) return;
+    const counts = {};
+    history.forEach(item => {
+        const key = item.name;
+        if (!counts[key]) counts[key] = { count: 0, color: item.color };
+        counts[key].count++;
+    });
+    const sorted = Object.entries(counts).sort((a, b) => b[1].count - a[1].count);
+    sorted.forEach(([name, data]) => {
+        const pct = ((data.count / history.length) * 100).toFixed(1);
         const div = document.createElement('div');
-        div.className = 'history-item';
+        div.className = 'stats-row';
         div.innerHTML = `
-            <span class="history-num">${history.length - i}</span>
-            <span class="history-dot" style="background:${item.color}"></span>
-            <span>${item.name}</span>
+            <span class="stats-dot" style="background:${data.color}"></span>
+            <span class="stats-name">${name}</span>
+            <span class="stats-count">${data.count}x</span>
+            <span class="stats-pct">${pct}%</span>
         `;
         list.appendChild(div);
     });
@@ -54,7 +60,7 @@ function renderHistory() {
 window.clearHistory = () => {
     history = [];
     saveToStorage();
-    renderHistory();
+    renderStats();
 };
 
 function drawWheel() {
@@ -170,7 +176,7 @@ function showWinner() {
         requestAnimationFrame(() => { resultDisplay.style.animation = ''; });
         history.push({ name: winner.name, color: winner.color });
         saveToStorage();
-        renderHistory();
+        renderStats();
     }
 }
 
@@ -297,4 +303,4 @@ importInput.onchange = (e) => {
 
 spinBtn.onclick = spin;
 renderEntries();
-renderHistory();
+renderStats();

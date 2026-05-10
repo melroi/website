@@ -28,14 +28,10 @@
                     <h3>Résultat</h3>
                     <div class="winner-text"></div>
                 </div>
-                <div class="history-panel">
-                    <h3>Historique <button class="history-clear" onclick="clearHistory()">Effacer</button></h3>
-                    <div id="historyList" class="history-list"></div>
-                </div>
             </section>
 
             <aside class="controls-section">
-                <div class="glass-panel">
+                <div class="entries-panel glass-panel">
                     <div class="panel-header">
                         <div class="action-buttons">
                             <button id="addEntryBtn">Ajouter</button>
@@ -45,6 +41,13 @@
                         </div>
                     </div>
                     <div id="entriesList" class="entries-list"></div>
+                </div>
+                <div class="stats-panel glass-panel">
+                    <div class="panel-header">
+                        <span class="stats-title">Stats</span>
+                        <button class="clear-btn" onclick="clearHistory()">Effacer</button>
+                    </div>
+                    <div id="statsList" class="stats-list"></div>
                 </div>
             </aside>
         </main>
