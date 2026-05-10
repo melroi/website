@@ -14,7 +14,7 @@ let entries = JSON.parse(localStorage.getItem('roulette_entries')) || [
     { name: "Anime 2", weight: 20, color: "#4d94ff", id: Date.now() + 1 }
 ];
 
-let history = JSON.parse(localStorage.getItem('roulette_history')) || [];
+let spinHistory = JSON.parse(localStorage.getItem('roulette_spinHistory')) || [];
 
 let isSpinning = false;
 let currentRotation = 0;
@@ -29,22 +29,22 @@ window.onkeyup = (e) => {
 
 function saveToStorage() {
     localStorage.setItem('roulette_entries', JSON.stringify(entries));
-    localStorage.setItem('roulette_history', JSON.stringify(history));
+    localStorage.setItem('roulette_spinHistory', JSON.stringify(spinHistory));
 }
 
 function renderStats() {
     const list = document.getElementById('statsList');
     list.innerHTML = '';
-    if (history.length === 0) return;
+    if (spinHistory.length === 0) return;
     const counts = {};
-    history.forEach(item => {
+    spinHistory.forEach(item => {
         const key = item.name;
         if (!counts[key]) counts[key] = { count: 0, color: item.color };
         counts[key].count++;
     });
     const sorted = Object.entries(counts).sort((a, b) => b[1].count - a[1].count);
     sorted.forEach(([name, data]) => {
-        const pct = ((data.count / history.length) * 100).toFixed(1);
+        const pct = ((data.count / spinHistory.length) * 100).toFixed(1);
         const div = document.createElement('div');
         div.className = 'stats-row';
         div.innerHTML = `
@@ -58,7 +58,7 @@ function renderStats() {
 }
 
 window.clearHistory = () => {
-    history = [];
+    spinHistory = [];
     saveToStorage();
     renderStats();
 };
@@ -174,7 +174,7 @@ function showWinner() {
         // Force re-animation
         resultDisplay.style.animation = 'none';
         requestAnimationFrame(() => { resultDisplay.style.animation = ''; });
-        history.push({ name: winner.name, color: winner.color });
+        spinHistory.push({ name: winner.name, color: winner.color });
         saveToStorage();
         renderStats();
     }
@@ -256,9 +256,9 @@ exportBtn.onclick = () => {
         const proba = ((entry.weight / totalWeight) * 100).toFixed(2);
         content += `Position: ${i + 1}\nNom: ${entry.name}\nCouleur: ${entry.color}\nProbabilite: ${proba}%\nPoids: ${entry.weight}\n--------------------\n`;
     });
-    if (history.length > 0) {
+    if (spinHistory.length > 0) {
         content += "\nHISTORIQUE\n====================\n";
-        history.forEach((item, i) => {
+        spinHistory.forEach((item, i) => {
             content += `Lancer: ${i + 1}\nResultat: ${item.name}\nCouleur: ${item.color}\n--------------------\n`;
         });
     }
