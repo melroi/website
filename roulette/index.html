@@ -20,13 +20,17 @@
         <main class="container">
             <section class="wheel-section">
                 <div class="wheel-container">
-                    <canvas id="wheelCanvas" width="500" height="500"></canvas>
+                    <canvas id="wheelCanvas" width="600" height="600"></canvas>
                     <div class="arrow"></div>
                     <button id="spinBtn">Lancer</button>
                 </div>
                 <div id="resultDisplay" class="result-card hidden">
                     <h3>Résultat</h3>
                     <div class="winner-text"></div>
+                </div>
+                <div class="history-panel">
+                    <h3>Historique <button class="history-clear" onclick="clearHistory()">Effacer</button></h3>
+                    <div id="historyList" class="history-list"></div>
                 </div>
             </section>
 

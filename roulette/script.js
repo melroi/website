@@ -14,6 +14,8 @@ let entries = JSON.parse(localStorage.getItem('roulette_entries')) || [
     { name: "Anime 2", weight: 20, color: "#4d94ff", id: Date.now() + 1 }
 ];
 
+let history = JSON.parse(localStorage.getItem('roulette_history')) || [];
+
 let isSpinning = false;
 let currentRotation = 0;
 let heldKeys = new Set();
@@ -27,7 +29,33 @@ window.onkeyup = (e) => {
 
 function saveToStorage() {
     localStorage.setItem('roulette_entries', JSON.stringify(entries));
+    localStorage.setItem('roulette_history', JSON.stringify(history));
 }
+
+function renderHistory() {
+    const list = document.getElementById('historyList');
+    list.innerHTML = '';
+    if (history.length === 0) {
+        list.innerHTML = '<div style="color:#555;font-size:0.8rem;padding:4px 8px;">Aucun lancer encore</div>';
+        return;
+    }
+    [...history].reverse().forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+            <span class="history-num">${history.length - i}</span>
+            <span class="history-dot" style="background:${item.color}"></span>
+            <span>${item.name}</span>
+        `;
+        list.appendChild(div);
+    });
+}
+
+window.clearHistory = () => {
+    history = [];
+    saveToStorage();
+    renderHistory();
+};
 
 function drawWheel() {
     const radius = canvas.width / 2;
@@ -137,6 +165,12 @@ function showWinner() {
         winnerText.textContent = winner.name;
         winnerText.style.color = winner.color;
         resultDisplay.classList.remove('hidden');
+        // Force re-animation
+        resultDisplay.style.animation = 'none';
+        requestAnimationFrame(() => { resultDisplay.style.animation = ''; });
+        history.push({ name: winner.name, color: winner.color });
+        saveToStorage();
+        renderHistory();
     }
 }
 
@@ -216,6 +250,12 @@ exportBtn.onclick = () => {
         const proba = ((entry.weight / totalWeight) * 100).toFixed(2);
         content += `Position: ${i + 1}\nNom: ${entry.name}\nCouleur: ${entry.color}\nProbabilite: ${proba}%\nPoids: ${entry.weight}\n--------------------\n`;
     });
+    if (history.length > 0) {
+        content += "\nHISTORIQUE\n====================\n";
+        history.forEach((item, i) => {
+            content += `Lancer: ${i + 1}\nResultat: ${item.name}\nCouleur: ${item.color}\n--------------------\n`;
+        });
+    }
     const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -257,3 +297,4 @@ importInput.onchange = (e) => {
 
 spinBtn.onclick = spin;
 renderEntries();
+renderHistory();
