@@ -279,21 +279,41 @@ importInput.onchange = (e) => {
     const reader = new FileReader();
     reader.onload = (ev) => {
         const text = ev.target.result;
-        const blocks = text.split("--------------------");
+
+        const histoMarker = text.indexOf('\nHISTORIQUE\n');
+        const configText = histoMarker !== -1 ? text.slice(0, histoMarker) : text;
+        const histoText  = histoMarker !== -1 ? text.slice(histoMarker)    : '';
+
         const newEntries = [];
-        blocks.forEach(block => {
+        configText.split("--------------------").forEach(block => {
             const lines = block.split("\n");
             let name = "", color = "", weight = 10;
             lines.forEach(line => {
-                if(line.startsWith("Nom: ")) name = line.replace("Nom: ", "").trim();
-                if(line.startsWith("Couleur: ")) color = line.replace("Couleur: ", "").trim();
-                if(line.startsWith("Poids: ")) weight = parseFloat(line.replace("Poids: ", "").trim()) || 10;
+                if (line.startsWith("Nom: "))    name   = line.replace("Nom: ", "").trim();
+                if (line.startsWith("Couleur: ")) color  = line.replace("Couleur: ", "").trim();
+                if (line.startsWith("Poids: "))   weight = parseFloat(line.replace("Poids: ", "").trim()) || 10;
             });
-            if(name && color) newEntries.push({ name, color, weight, id: Date.now() + Math.random() });
+            if (name && color) newEntries.push({ name, color, weight, id: Date.now() + Math.random() });
         });
+
+        const newHistory = [];
+        if (histoText) {
+            histoText.split("--------------------").forEach(block => {
+                const lines = block.split("\n");
+                let name = "", color = "";
+                lines.forEach(line => {
+                    if (line.startsWith("Resultat: ")) name  = line.replace("Resultat: ", "").trim();
+                    if (line.startsWith("Couleur: "))  color = line.replace("Couleur: ", "").trim();
+                });
+                if (name && color) newHistory.push({ name, color });
+            });
+        }
+
         if (newEntries.length > 0) {
             entries = newEntries;
+            spinHistory = newHistory;
             renderEntries();
+            renderStats();
             saveToStorage();
         }
     };
