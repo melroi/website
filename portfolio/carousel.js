@@ -51,8 +51,7 @@ const projectData = {
             {
                 title: 'Stage – LPCA',
                 desc: 'Stage de 2ème année de BUT R&T au Laboratoire de Physique de Clermont Auvergne (LPCA).',
-                img: 'assets/image/icon/lpcalogo.png',
-                link: 'assets/pdf/rapport_de_stage.pdf'
+                img: 'assets/image/icon/lpcalogo.png'
             }
         ],
         perso: []
