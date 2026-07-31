@@ -1,3 +1,22 @@
+// Thème sombre / clair
+function toggleTheme() {
+    const isDark = document.body.classList.toggle('dark');
+    document.getElementById('iconMoon').style.display = isDark ? 'none' : 'block';
+    document.getElementById('iconSun').style.display = isDark ? 'block' : 'none';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
+// Appliquer le thème sauvegardé au chargement
+(function () {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('iconMoon').style.display = 'none';
+            document.getElementById('iconSun').style.display = 'block';
+        });
+    }
+})();
+
 // Fonctions pour le menu latéral
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";

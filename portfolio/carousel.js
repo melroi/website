@@ -47,7 +47,14 @@ const projectData = {
             },]
     },
     2026: {
-        iut: [],
+        iut: [
+            {
+                title: 'Stage – LPCA',
+                desc: 'Stage de 2ème année de BUT R&T au Laboratoire de Physique de Clermont Auvergne (LPCA).',
+                img: 'assets/image/icon/lpcalogo.png',
+                link: 'assets/pdf/rapport_de_stage.pdf'
+            }
+        ],
         perso: []
     }
 };
@@ -133,14 +140,15 @@ class ProjectCarousel {
                             <img src="${project.img}" alt="${project.title}" class="projet-icon" />
                         </div>
                     ` : '';
+                const buttonHtml = project.link
+                    ? `<button class="projet-button" onclick="window.open('${project.link}', '_blank')">Accéder au projet</button>`
+                    : '';
                 this.wrapper.innerHTML = `
                     <div class="project-content">
                         <div class="project-info">
                             <h2>${project.title}</h2>
                             <p>${project.desc}</p>
-                            <button class="projet-button" onclick="window.open('${project.link}', '_blank')">
-                                Accéder au projet
-                            </button>
+                            ${buttonHtml}
                         </div>
                         ${imageHtml}
                     </div>

@@ -1,8 +1,30 @@
 
 /* Définition du jeu de caractères et import de la police */
-@charset "UTF-8"; /* Définit le jeu de caractères comme UTF-8 */
+@charset "UTF-8";
 
-/* Reset CSS - Réinitialise les marges et paddings par défaut */
+:root {
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --border: #b0bec5;
+  --text: #2d3748;
+  --text-muted: #4a5568;
+  --heading: #1a202c;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+body.dark {
+  --bg: #0f1117;
+  --surface: #1a1f2e;
+  --border: #2d3748;
+  --text: #e2e8f0;
+  --text-muted: #a0aec0;
+  --heading: #f7fafc;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* Reset CSS */
 * {
   box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur et la hauteur totales des éléments */
   margin: 0; /* Réinitialise les marges à zéro */
@@ -10,14 +32,20 @@
 }
 
 /* Configuration de base pour html et body */
+html {
+  scroll-behavior: smooth;
+}
+
 html, body {
-  overflow-x: hidden; /* Cache le défilement horizontal */
-  width: 100%; /* Définit la largeur à 100% */
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
-  font-family: Arial, sans-serif; /* Définit la police de base */
-  background-color: #F5F5F5; /* Définit la couleur de fond */
+  font-family: 'Inter', Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s, color 0.3s;
   padding-top: 60px; /* Ajoute un padding en haut */
   line-height: 1.6; /* Définit l'interligne */
   min-height: 100vh; /* Définit la hauteur minimale à 100% de la hauteur de la fenêtre */
@@ -31,17 +59,44 @@ body {
 
 /* Bannière */
 .banner {
-  position: fixed; /* Positionne la bannière de manière fixe */
-  top: 0; /* Aligne la bannière en haut */
-  left: 0; /* Aligne la bannière à gauche */
-  width: 100%; /* Définit la largeur à 100% */
-  background-color: whitesmoke; /* Définit la couleur de fond */
-  height: 60px; /* Définit la hauteur */
-  display: flex; /* Utilise le modèle de boîte flexible */
-  align-items: center; /* Aligne les éléments au centre verticalement */
-  padding: 0 20px; /* Ajoute un padding à gauche et à droite */
-  z-index: 1000; /* Définit l'ordre d'empilement */
-  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2); /* Ajoute une ombre */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--surface);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-bottom: 3px solid #1a73e8;
+}
+
+.banner h1 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  flex: 1;
+}
+
+.theme-toggle {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  line-height: 1;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle:hover {
+  background: var(--bg);
+  border-color: #1a73e8;
 }
 
 .banner img {
@@ -75,8 +130,10 @@ body {
 }
 
 .sidenav a:hover {
-  color: #f1f1f1; /* Change la couleur du texte au survol */
-  transform: translateX(10px); /* Déplace le texte vers la droite au survol */
+  color: #1a73e8;
+  transform: translateX(10px);
+  border-left: 3px solid #1a73e8;
+  padding-left: 29px;
 }
 
 .sidenav .closebtn {
@@ -100,12 +157,31 @@ body {
 }
 
 .content {
-  position: relative; /* Positionne le contenu de manière relative */
-  padding: 20px; /* Ajoute un padding */
-  margin-top: 80px; /* Ajoute une marge en haut */
-  max-width: 1200px; /* Définit la largeur maximale */
-  margin-left: auto; /* Centre le contenu horizontalement */
-  margin-right: auto; /* Centre le contenu horizontalement */
+  position: relative;
+  padding: 20px;
+  margin-top: 80px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content h1 {
+  position: relative;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+  color: var(--heading);
+  font-weight: 700;
+}
+
+.content h1::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 48px;
+  height: 3px;
+  background-color: #1a73e8;
+  border-radius: 2px;
 }
 
 /* Style spécifique pour l'image dans la section À propos */
@@ -131,15 +207,20 @@ body {
 
 /* Conteneurs */
 .container {
-  background-color: #ffffff; /* Définit la couleur de fond */
-  border: 2px solid #ccc; /* Ajoute une bordure */
-  border-radius: 15px; /* Ajoute un bord arrondi */
-  padding: 20px; /* Ajoute un padding */
-  margin: 20px 0; /* Ajoute une marge en haut et en bas */
-  display: flex; /* Utilise le modèle de boîte flexible */
-  align-items: center; /* Aligne les éléments au centre verticalement */
-  gap: 20px; /* Ajoute un espace entre les éléments */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease;
+}
+
+.container:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .text-area {
@@ -160,85 +241,104 @@ body {
 
 /* Compétences */
 .skills-container {
-  display: grid; /* Utilise le modèle de boîte de grille */
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Définit les colonnes de la grille */
-  gap: 20px; /* Ajoute un espace entre les éléments */
-  padding: 20px; /* Ajoute un padding */
-  background-color: #ffffff; /* Définit la couleur de fond */
-  border-radius: 15px; /* Ajoute un bord arrondi */
-  border: 2px solid #ccc; /* Ajoute une bordure */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  background-color: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .skill-box {
-  background-color: #ffffff; /* Définit la couleur de fond */
-  border: 1px solid #ccc; /* Ajoute une bordure */
-  border-radius: 8px; /* Ajoute un bord arrondi */
-  padding: 15px; /* Ajoute un padding */
-  text-align: center; /* Centre le texte */
-  transition: transform 0.3s ease; /* Ajoute une transition */
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-top: 3px solid transparent;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.2s ease, border-top-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .skill-box:hover {
-  transform: translateY(-5px); /* Déplace la boîte vers le haut au survol */
+  transform: translateY(-4px);
+  border-top-color: #1a73e8;
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.12);
 }
 
 /* Section Divers */
 .divers-container {
-  display: grid; /* Utilise le modèle de boîte de grille */
-  grid-template-columns: repeat(2, 1fr); /* Définit les colonnes de la grille */
-  grid-template-rows: repeat(3, auto); /* Définit les lignes de la grille */
-  gap: 20px; /* Ajoute un espace entre les éléments */
-  max-width: 1200px; /* Définit la largeur maximale */
-  margin: 0 auto; /* Centre le conteneur horizontalement */
-  padding: 20px; /* Ajoute un padding */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, auto);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .divers-box {
-  background-color: #ffffff; /* Définit la couleur de fond */
-  border: 1px solid #ccc; /* Ajoute une bordure */
-  border-radius: 8px; /* Ajoute un bord arrondi */
-  padding: 15px; /* Ajoute un padding */
-  text-align: center; /* Centre le texte */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.divers-box:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
 }
 
 /* Section Contact (Footer) */
 .contact-section {
-  width: 100%; /* Définit la largeur à 100% */
-  background-color: #F5F5F5; /* Définit la couleur de fond */
-  padding: 20px; /* Ajoute un padding */
-  text-align: center; /* Centre le texte */
-  border-top: 3px solid black; /* Ajoute une bordure en haut */
-  margin-top: 50px; /* Ajoute une marge en haut */
-  position: relative; /* Positionne la section de manière relative */
-  bottom: 0; /* Aligne la section en bas */
+  width: 100%;
+  background-color: var(--surface);
+  color: var(--text);
+  padding: 40px 20px;
+  text-align: center;
+  border-top: 3px solid #1a73e8;
+  margin-top: 60px;
+  position: relative;
+  bottom: 0;
+}
+
+.contact-section h1 {
+  color: var(--heading);
+  margin-bottom: 12px;
+}
+
+.contact-section p {
+  color: var(--text-muted);
+  margin-bottom: 8px;
 }
 
 /* Style pour les liens de contact */
 .contact-info a {
-  color: black; /* Définit la couleur du texte */
-  text-decoration: none; /* Supprime la décoration du texte */
-  font-weight: bold; /* Met le texte en gras */
-  transition: color 0.3s; /* Ajoute une transition */
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
 }
 
 .contact-info a:hover {
-  color: #0066cc; /* Change la couleur du texte au survol */
+  color: #1557b0;
 }
 
 /* Section CV */
 .cv-section {
-  padding-bottom: 40px; /* Ajoute un padding en bas */
-  background-color: #ffffff; /* Définit la couleur de fond */
-  border: 2px solid #ccc; /* Ajoute une bordure */
-  border-radius: 15px; /* Ajoute un bord arrondi */
-  padding: 20px; /* Ajoute un padding */
-  margin: 20px 0; /* Ajoute une marge en haut et en bas */
-  display: flex; /* Utilise le modèle de boîte flexible */
-  align-items: center; /* Aligne les éléments au centre verticalement */
-  gap: 20px; /* Ajoute un espace entre les éléments */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: var(--shadow-sm);
 }
 
 .cv-preview {
@@ -327,30 +427,16 @@ body {
   font-weight: bold; /* Met le texte en gras */
 }
 
-* {
-  box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur et la hauteur totales des éléments */
-  margin: 0; /* Réinitialise les marges à zéro */
-  padding: 0; /* Réinitialise les paddings à zéro */
-}
-
-body {
-  font-family: Arial, sans-serif; /* Définit la police de base */
-  background-color: #F5F5F5; /* Définit la couleur de fond */
-  padding: 20px; /* Ajoute un padding */
-}
-
-
-
 .techniques-container {
-  background-color: #ffffff; /* Définit la couleur de fond */
-  border: 2px solid #ccc; /* Ajoute une bordure */
-  border-radius: 15px; /* Ajoute un bord arrondi */
-  padding: 20px; /* Ajoute un padding */
-  margin: 20px auto; /* Centre le conteneur horizontalement */
-  display: flex; /* Utilise le modèle de boîte flexible */
-  gap: 20px; /* Ajoute un espace entre les éléments */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une ombre */
-  max-width: 1160px; /* Réduit la largeur maximale */
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px auto;
+  display: flex;
+  gap: 20px;
+  box-shadow: var(--shadow-sm);
+  max-width: 1160px;
 }
 
 
@@ -360,10 +446,10 @@ body {
 }
 
 .main-menu-item {
-  background-color: #fff; /* Définit la couleur de fond */
-  margin-bottom: 10px; /* Ajoute une marge en bas */
-  padding: 12px; /* Ajoute un padding */
-  border: 1px solid #ccc; /* Ajoute une bordure */
+  background-color: var(--surface);
+  margin-bottom: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
   border-radius: 8px; /* Ajoute un bord arrondi */
   cursor: pointer; /* Change le curseur en pointeur */
   transition: all 0.3s ease; /* Ajoute une transition */
@@ -387,10 +473,10 @@ body {
 }
 
 .skill-item {
-  background-color: #fff; /* Définit la couleur de fond */
-  margin-bottom: 10px; /* Ajoute une marge en bas */
-  padding: 15px; /* Ajoute un padding */
-  border: 1px solid #ccc; /* Ajoute une bordure */
+  background-color: var(--surface);
+  margin-bottom: 10px;
+  padding: 15px;
+  border: 1px solid var(--border);
   border-radius: 8px; /* Ajoute un bord arrondi */
   cursor: pointer; /* Change le curseur en pointeur */
   transition: all 0.3s ease; /* Ajoute une transition */
@@ -402,12 +488,12 @@ body {
 }
 
 .skill-content {
-  display: none; /* Cache le contenu par défaut */
-  padding: 15px; /* Ajoute un padding */
-  background-color: #f9f9f9; /* Définit la couleur de fond */
-  margin-top: 10px; /* Ajoute une marge en haut */
-  border-radius: 8px; /* Ajoute un bord arrondi */
-  border: 1px solid #eee; /* Ajoute une bordure */
+  display: none;
+  padding: 15px;
+  background-color: var(--bg);
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }
 
 .progress-bar {
@@ -515,8 +601,8 @@ body {
 /* Styles pour le carrousel de projets */
 .projects-carousel {
     position: relative;
-    background: #fff;
-    border: 2px solid #ccc;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 15px;
     padding: 30px;
     margin: 20px auto;
@@ -552,7 +638,7 @@ body {
     gap: 30px;
     align-items: center;
     padding: 20px;
-    background: #fff;
+    background: var(--surface);
     border-radius: 10px;
     margin: 0;
     min-height: 300px;
@@ -565,12 +651,12 @@ body {
 
 .project-info h2 {
     margin-bottom: 15px;
-    color: #333;
+    color: var(--heading);
 }
 
 .project-info p {
     margin-bottom: 20px;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .project-image {
